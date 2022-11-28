@@ -1,0 +1,47 @@
+﻿@model IncDeliveryOrder
+
+@{
+    ViewData["Title"] = "Put Away Delivery Order";
+    ViewData["MenuKey"] = "Put Away";
+}
+
+<div class="row">
+    <div class="col-12 col-md-4 col-sm-4">
+        <partial name="UpsertDO" />
+
+        <div class="form-group text-end">
+            <a asp-action="Index" class="btn btn-dark">Back to List</a>
+        </div>
+    </div>
+    <div class="col-12 col-md-8 col-sm-8">
+        <partial name="UpsertDOProduct">
+    </div>
+</div>
+
+<partial name="ModalUpsertDOProductPutAway" />
+
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(function () {
+            $('#tbl-products').DataTable({
+                order: [[0, 'desc']],
+            });
+        });
+
+        $('.btn-upsert-putaway').on('click', function () {
+            $('input[name="DOProductId"]').val($(this).data('doproductid'));
+
+            $('.quantity').html($(this).data('quantity'));
+            $('.remaining-quantity').html($(this).data('remaining'));
+
+            $('input[name="Quantity"]').attr({
+                "max": $(this).data('remaining'),
+                "min": 0       
+            });
+            $('input[name="Quantity"]').val($(this).data('remaining'));
+        });
+    </script>
+}

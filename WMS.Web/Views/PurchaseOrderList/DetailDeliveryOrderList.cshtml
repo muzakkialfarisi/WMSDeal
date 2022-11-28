@@ -1,0 +1,58 @@
+﻿@model DeliveryOrderViewModel
+
+<div class="card">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <h5 class="card-title"><strong>Delivery Order Histories</strong></h5>
+        </div>
+    </div>
+    <div class="card-body">
+
+        <div class="table-responsive">
+            <table class="table table-striped" id="table-deliveryorderlist">
+                <thead>
+                    <tr class="text-center">
+                        <th>
+                            DO Number
+                        </th>
+                        <th>
+                            Qty
+                        </th>
+                        <th>
+                            Total Price
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                        <th>
+                            Delivered
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.incDeliveryOrders)
+                    {
+                        <tr>
+                            <td class="text-center">
+                                @Html.DisplayFor(modelItem => item.DOSupplier)
+                            </td>
+                            <td class="text-center">
+                                @item.IncDeliveryOrderProducts.Sum(m => m.Quantity)
+                            </td>
+                            <td class="text-end">
+                                @String.Format("{0:n0}", item.IncDeliveryOrderProducts.Sum(m => m.SubTotal))
+                            </td>
+                            <td class="text-center">
+                                @Html.DisplayFor(modelItem => item.Status)
+                            </td>
+                            <td class="text-center">
+                                @String.Format("{0:dd/MM/yyyy}", item.DateDelivered)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>

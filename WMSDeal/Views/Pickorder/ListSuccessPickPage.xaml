@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WMSDeal.Views.Pickorder.ListSuccessPickPage"
+             Shell.TabBarIsVisible="True"
+             Shell.NavBarIsVisible="False"
+             xmlns:constant="clr-namespace:WMSDeal.Constant"
+             xmlns:viewModels="clr-namespace:WMSDeal.ViewModels.Pickorder"
+             x:DataType="viewModels:SuccessPickViewModel"
+             xmlns:model="clr-namespace:WMSDeal.Models.Outgoing"
+             BackgroundColor="{StaticResource Background3}"
+             Title="ListSuccessPickPage">
+    <StackLayout >
+        <!--searchbar-->
+        <!--<StackLayout Margin="0,0,0,1" BackgroundColor="{StaticResource Blue500}">
+            <Grid RowDefinitions="45" ColumnDefinitions="*,70">
+                <StackLayout Grid.Row="0" Grid.Column="0">
+                    <SearchBar  Placeholder="Search..." FontSize="Subtitle" TextColor="{StaticResource Black}" />
+                </StackLayout>
+                <StackLayout Grid.Row="0" Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center" Margin="0,0,10,0">
+                    <ImageButton x:Name="btnScanSearch"  BackgroundColor="{StaticResource WMSBlue}" Padding="5"
+                             HorizontalOptions="Start"  VerticalOptions="Center"
+                                         Command="{Binding ScanCommand}" 
+                                         Source="{x:Static constant:Icon.Scan}"   
+                                         HeightRequest="42" WidthRequest="50" 
+                                         Aspect="AspectFill" CornerRadius="5" />
+                </StackLayout>
+            </Grid>
+        </StackLayout>-->
+
+        <!--filter-->
+        <StackLayout Margin="0,0,0,5" BackgroundColor="{StaticResource Blue500}" >
+            <Grid RowDefinitions="45" ColumnDefinitions="*,*,Auto,70" Margin="0,0,3,0">
+                <HorizontalStackLayout  Grid.Row="0" Grid.Column="0">
+                    <Picker x:Name="picker" Margin="10,0" WidthRequest="140"
+                            Title="Pilih Periode" TextColor="Black" ItemsSource="{Binding ListPeriode}" 
+                            ItemDisplayBinding="{Binding Name}" SelectedIndex="0" SelectedItem="{Binding SelectedPeriode, Mode=TwoWay}">
+                    </Picker>
+                    <Image Source="{x:Static constant:Icon.PanahBawah}"  WidthRequest="25" HeightRequest="25" Aspect="AspectFit" Margin="-35,0" />
+                </HorizontalStackLayout>
+                <StackLayout Grid.Row="0" Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center" Padding="0" >
+                    <Frame Padding="0" Margin="0,0,20,0" HorizontalOptions="StartAndExpand" VerticalOptions="Center" 
+                           BorderColor="{StaticResource Red}" BackgroundColor="{StaticResource Red}">
+                        <Label x:Name="lblTotal"  Margin="8,0,8,2" Text="{Binding SalesOrders.Count}" VerticalOptions="Center"
+                               TextColor="{StaticResource White}" FontAttributes="None" FontSize="14" FontFamily="Calibri"/>
+                    </Frame>
+                </StackLayout>
+                <StackLayout Grid.Row="0" Grid.Column="2" HorizontalOptions="End" VerticalOptions="Center" Margin="0,0,10,0">
+                    <!--<Button x:Name="btnAssign" Text="{Binding TotalSelected,StringFormat='{0} Assign'}" HeightRequest="30" Padding="8,2,8,2"
+                               VerticalOptions="Center" HorizontalOptions="Center"
+                               CornerRadius="5" Command="{Binding AssignSelectedCommand}"
+                               BackgroundColor="{StaticResource WMSBlue}"/>-->
+                </StackLayout>
+                <StackLayout Grid.Row="0" Grid.Column="3" HorizontalOptions="End" VerticalOptions="Center" Margin="0,0,10,0">
+                    <ImageButton x:Name="btnRefresh" Source="{x:Static constant:Icon.Refresh}" WidthRequest="45" HeightRequest="35" 
+                                 Padding="2" VerticalOptions="Center" HorizontalOptions="Center"
+                                 Aspect="AspectFit" CornerRadius="5" Command="{Binding RefreshCommand}"
+                                 BackgroundColor="{StaticResource WMSBlue}"/>
+                </StackLayout>
+            </Grid>
+        </StackLayout>
+
+        <ActivityIndicator IsRunning="True" IsVisible="{Binding IsBusy}" Color="{StaticResource DarkOrange}"/>
+        <RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
+            <CollectionView ItemsSource="{Binding SalesOrders}"  
+                                VerticalOptions="FillAndExpand" SelectionMode="Multiple"  
+                               >
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:SalesOrder" >
+                        <Frame CornerRadius="5" BackgroundColor="{StaticResource Aqua4}" 
+                                           BorderColor="{StaticResource Aqua4}" 
+                                           Padding="10" HasShadow="True" Margin="5">
+                            <Grid RowDefinitions="Auto" ColumnDefinitions="*,60">
+                                <StackLayout Grid.Row="0" Grid.Column="0">
+                                    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="Auto,*">
+                                        <Label Grid.Row="0" Grid.Column="0" VerticalOptions="Center" Text="Order Id" TextColor="{StaticResource Aqua2}" FontSize="12" FontFamily="OpenSansRegular"/>
+                                        <Label  Grid.Row="1" Grid.Column="0 " VerticalOptions="Center" Text="Tenant" TextColor="{StaticResource Aqua2}" FontSize="12" FontFamily="OpenSansRegular" />
+                                        <Label  Grid.Row="2" Grid.Column="0 " VerticalOptions="Start" Text="Cnee" TextColor="{StaticResource Aqua2}" FontSize="12" FontFamily="OpenSansRegular" />
+                                        <Label  Grid.Row="3" Grid.Column="0" VerticalOptions="Center"  Text="Order Date" TextColor="{StaticResource Aqua2}" FontSize="12" FontFamily="OpenSansRegular" />
+                                        <Label  Grid.Row="4" Grid.Column="0" VerticalOptions="Center"  Text="Total" TextColor="{StaticResource Aqua2}" FontSize="12" FontFamily="OpenSansRegular" />
+
+                                        <Label Grid.Row="0" Grid.Column="1" VerticalOptions="Center" Text="{Binding OrderId,StringFormat=': {0}'}" TextColor="{StaticResource Black}" 
+                                               FontAttributes="Bold" Margin="5,0"/>
+                                        <Label  Grid.Row="1" Grid.Column="1" VerticalOptions="Center"  Text="{Binding Tenant,StringFormat=': {0}'}" FontSize="15" 
+                                                TextColor="{StaticResource Black}" FontAttributes="None" Margin="5,0"/>
+                                        <Label  Grid.Row="2" Grid.Column="1" VerticalOptions="Center" TextTransform="Uppercase"
+                                                TextColor="{StaticResource Black}" FontAttributes="None" Margin="5,0">
+                                            <Label.Text>
+                                                <MultiBinding  StringFormat="{}: {0} ({1})">
+                                                    <Binding Path="CneeName"/>
+                                                    <Binding Path="CneeCity"/>
+                                                </MultiBinding>
+                                            </Label.Text>
+                                        </Label>
+                                        <Label  Grid.Row="3" Grid.Column="1" VerticalOptions="Center" Text="{Binding DateOrdered,StringFormat=': {0:dd/MM/yyyy HH:mm}'}" 
+                                                TextColor="{StaticResource Black}" Margin="5,0" />
+                                        <Label  Grid.Row="4" Grid.Column="1" VerticalOptions="Center" 
+                                                TextColor="{StaticResource Black}" Margin="5,0" >
+                                            <Label.Text>
+                                                <MultiBinding StringFormat="{}: {0}  ({1})">
+                                                    <Binding Path="Total"/>
+                                                    <Binding Path="SalesType"/>
+                                                </MultiBinding>
+                                            </Label.Text>
+                                        </Label>
+                                    </Grid>
+                                </StackLayout>
+                                <StackLayout  Grid.Column="1" VerticalOptions="FillAndExpand" >
+                                    <Grid RowDefinitions="*,30" ColumnDefinitions="*" Padding="0" VerticalOptions="FillAndExpand">
+                                        <Frame  Grid.Row="0" Grid.Column="0" BorderColor="{StaticResource Background1}" HeightRequest="40" WidthRequest="55"
+                                                   CornerRadius="5" Padding="0" HorizontalOptions="End" VerticalOptions="Start">
+                                            <Image  Source="{Binding ImageTenant,StringFormat='{0}'}"
+                                                        Aspect="AspectFill" HeightRequest="40" WidthRequest="55" HorizontalOptions="End" VerticalOptions="Start" />
+                                        </Frame>
+                                        <StackLayout  Grid.Row="1" Grid.Column="0">
+                                            <!--<CheckBox x:Name="cbSalesOrder"  IsChecked="{Binding IsChecked}"
+                                                          Color="{StaticResource Blue300}" >
+                                               
+                                            </CheckBox>-->
+                                        </StackLayout>
+                                    </Grid>
+                                </StackLayout>
+                                <!--<VerticalStackLayout.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding Source={x:RelativeSource AncestorType={x:Type viewModels:PickOrderViewModel}},Path=SelectItemCommand}" 
+                                                              CommandParameter="{Binding .,Mode=TwoWay}" NumberOfTapsRequired="1"/>
+                                    </VerticalStackLayout.GestureRecognizers>-->
+                            </Grid>
+                        </Frame>
+
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+    </StackLayout>
+</ContentPage>

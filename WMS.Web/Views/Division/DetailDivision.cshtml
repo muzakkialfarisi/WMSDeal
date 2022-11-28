@@ -1,0 +1,45 @@
+﻿@model MasDivision
+
+<div class="card">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Detail Division</strong></h5>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <table class="table table-sm table-borderless p-0 m-0">
+            <tbody>
+                <tr>
+                    <td>
+                        Code
+                    </td>
+                    <td>
+                        : @Model.DivCode
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Name
+                    </td>
+                    <td>
+                        : @Model.DivName
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Status
+                    </td>
+                    <td>
+                        : @Model.Flag
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="d-grid gap-2 mt-3">
+            <a asp-controller="Directorate" asp-action="Detail" asp-route-DirCode="@Model.DirCode" class="btn btn-dark">Back to List</a>
+        </div>
+    </div>
+</div>

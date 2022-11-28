@@ -1,0 +1,100 @@
+﻿@model IEnumerable<MasHouseCode>
+
+@{
+    ViewData["Title"] = "Warehouse";
+    ViewData["MenuKey"] = "Operasional";
+}
+
+
+<div class="card" style="min-height:700px">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center py-1">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Warehouse List</strong></h5>
+            </div>
+            <div>
+                <a class="btn btn-outline-primary btn-pill" asp-action="Upsert">Add Warehouse</a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <tr class="text-center">
+                    <th>
+                        Action
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.HouseCode)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.HouseName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Address)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Email)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.OfficePhone)
+                    </th>
+                    <th class="text-center">
+                        @Html.DisplayNameFor(model => model.Flag)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="text-center">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-outline-primary" data-bs-toggle="dropdown"><i class="fas fa-fw fa-ellipsis-h"></i></button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item" asp-action="Upsert" asp-route-HouseCode="@item.HouseCode">Edit</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.HouseCode)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.HouseName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Address)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Email)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.OfficePhone)
+                        </td>
+                        <td class="text-center">
+                            @if (item.Flag == FlagEnum.Active)
+                            {
+                                <span class="badge bg-success"> @Html.DisplayFor(modelItem => item.Flag)</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger"> @Html.DisplayFor(modelItem => item.Flag)</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(function () {
+            $('.table').DataTable({
+            });
+    </script>
+}

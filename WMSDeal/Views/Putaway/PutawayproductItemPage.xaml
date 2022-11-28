@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WMSDeal.Views.Putaway.PutawayproductItemPage"
+             xmlns:viewModels="clr-namespace:WMSDeal.ViewModels.Putaway"
+             x:DataType="viewModels:PutawayProductItemViewModel"
+             xmlns:model="clr-namespace:WMSDeal.Models.Incoming"
+             BackgroundColor="{StaticResource Background1}"
+             Title="PutawayproductItemPage">
+    <StackLayout>
+        <StackLayout.Background>
+            <LinearGradientBrush EndPoint="0,1">
+                <GradientStop Color="{StaticResource WMSBlue}"
+                          Offset="0.1" />
+                <GradientStop Color="{StaticResource White}"
+                          Offset="1.0" />
+            </LinearGradientBrush>
+        </StackLayout.Background>
+        <ScrollView VerticalOptions="FillAndExpand">
+            <VerticalStackLayout>
+                <Frame  Background="{StaticResource Blue100Accent}" Margin="10" Padding="0" BorderColor="{StaticResource Blue100Accent}" HasShadow="True">
+                    <StackLayout>
+                        <Label Text="DO43443432000343" TextColor="{StaticResource Background1}" FontSize="Medium" HorizontalOptions="Center"  Margin="0,10,0,0"
+                   FontFamily="Number" FontAttributes="Bold"/>
+                        <Label Text="TRANSVISION" TextColor="{StaticResource Background1}" FontSize="Medium" HorizontalOptions="Center" Margin="0,5,0,10"
+                   FontAttributes="Bold" FontFamily="Calibri"/>
+                        <StackLayout Grid.Row="0" Grid.Column="0"  Background="{StaticResource Background1}" >
+                            <Grid RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="100,*" Padding="10">
+                                <Frame  Grid.RowSpan="4" Grid.Column="0" BorderColor="{StaticResource Aqua3}"
+                                            CornerRadius="5" Padding="0" VerticalOptions="Center" HorizontalOptions="Start" HeightRequest="90" WidthRequest="90" >
+                                    <Image  Source="{Binding ProductData.BeautyPicture ,StringFormat='https://uat.wmsdeal.com/img/product/{0}'}"
+                                                Aspect="AspectFill"  HorizontalOptions="Start" VerticalOptions="Center" HeightRequest="90" WidthRequest="90" />
+                                </Frame>
+
+                                <Label Grid.Row="0" Grid.Column="1" VerticalOptions="Center" Text="{Binding ProductData.ProductName,StringFormat='{0}'}" TextColor="{StaticResource Black}" 
+                                           FontSize="Subtitle" FontAttributes="Bold" FontFamily="OpenSansRegular"/>
+                                <Label Grid.Row="1" Grid.Column="1" VerticalOptions="Center" Text="{Binding ProductData.SKU,StringFormat='SKU : {0}'}" 
+                                           FontSize="13" TextColor="{StaticResource Black}"  FontAttributes="Bold" FontFamily="Number" />
+                                <Label Grid.Row="2" Grid.Column="1" VerticalOptions="Center"  Text="{Binding ProductData.ProductCondition,StringFormat='{0}'}" 
+                                           FontSize="Default" TextColor="{StaticResource Black}" FontAttributes="None"/>
+
+                                <StackLayout Grid.Row="3" Grid.Column="1" Padding="0">
+                                    <Grid RowDefinitions="Auto" ColumnDefinitions="*,60">
+                                        <Label Grid.Row="0" Grid.Column="0" VerticalOptions="Center"
+                                       FontSize="Default" TextColor="{StaticResource Black}" >
+                                            <Label.Text>
+                                                <MultiBinding StringFormat="{}Total : {0}  {1}   ({2})">
+                                                    <Binding Path="ProductData.Quantity"/>
+                                                    <Binding Path="ProductData.Unit"/>
+                                                    <Binding Path="ProductData.ProductLevel"/>
+                                                </MultiBinding>
+                                            </Label.Text>
+                                        </Label>
+                                    </Grid>
+                                </StackLayout>
+                            </Grid>
+                            <!--<ActivityIndicator IsRunning="True" IsVisible="{Binding IsBusy}" Color="{StaticResource DarkOrange}" HeightRequest="25" WidthRequest="25"/>-->
+                            <HorizontalStackLayout Spacing="40" Margin="0,0,0,10" HorizontalOptions="Center">
+                                <Label Text="{Binding TotalAr,StringFormat='Arrived : {0}'}" FontSize="Default"  FontFamily="Number"  />
+                                <Label Text="{Binding TotalRemaining,StringFormat='Remaining : {0}'}" FontSize="Default"  FontFamily="Number"  />
+                            </HorizontalStackLayout>
+                        </StackLayout>
+                    </StackLayout>
+
+                </Frame>
+                <Frame Margin="10" Padding="10" Background="{StaticResource Blue300Accent}" BorderColor="{StaticResource Blue200Accent}" HasShadow="True">
+                    <StackLayout>
+                        <!--<RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">-->
+                        <CollectionView ItemsSource="{Binding itemProductModel}" VerticalOptions="FillAndExpand" SelectionMode="Single">
+                            <CollectionView.ItemTemplate  >
+                                <DataTemplate x:DataType="model:ItemProduct">
+                                    <Frame CornerRadius="5" BackgroundColor="{StaticResource Background1}" 
+                                           BorderColor="{StaticResource Background1}" 
+                                           Padding="10" HasShadow="True" Margin="5">
+                                        <Grid RowDefinitions="Auto" ColumnDefinitions="*,60">
+                                            <StackLayout Grid.Row="0" Grid.Column="0">
+                                                <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="Auto">
+
+                                                    <Label   VerticalOptions="Center" Text="{Binding IKU ,StringFormat='IKU : {0}'}" 
+                                                           TextColor="{StaticResource Black}" 
+                                                            FontSize="Default" FontAttributes="Bold" FontFamily="Number" Margin="5,0"/>
+                                                    <Label  Grid.Row="1"  VerticalOptions="Center"  Text="{Binding StorageCode,StringFormat='Storage Id : {0}'}" 
+                                                            FontSize="Default" TextColor="{StaticResource Black}" FontAttributes="None" Margin="5,0"/>
+                                                    <Label  Grid.Row="2"   VerticalOptions="Center" 
+                                                            FontSize="Default" TextColor="{StaticResource Black}" FontAttributes="None" Margin="5,0">
+                                                        <Label.Text>
+                                                            <MultiBinding  StringFormat=" {}{0} {1} {2} {3}">
+                                                                <Binding Path="BinCode"/>
+                                                                <Binding Path="SectionCode"/>
+                                                                <Binding Path="LevelCode"/>
+                                                                <Binding Path="RowCode"/>
+                                                            </MultiBinding>
+                                                        </Label.Text>
+                                                    </Label>
+                                                </Grid>
+                                            </StackLayout>
+                                            <StackLayout Grid.Row="0" Grid.Column="1" >
+                                                <Grid RowDefinitions="40,Auto" ColumnDefinitions="*" Padding="0">
+                                                    <Frame  Grid.Row="0" Grid.Column="0" BorderColor="{StaticResource Background1}" HeightRequest="40" WidthRequest="55"
+                                                   CornerRadius="5" Padding="0" HorizontalOptions="End">
+                                                        <!--<Image  Source="{Binding ProfileImageUrl,StringFormat='https://uat.wmsdeal.com/img/tenant/{0}'}"
+                                                        Aspect="AspectFit" HeightRequest="37" WidthRequest="55" HorizontalOptions="End" VerticalOptions="Start" />-->
+                                                    </Frame>
+                                                    <StackLayout  Grid.Row="1" Grid.Column="0">
+                                                    </StackLayout>
+                                                </Grid>
+                                            </StackLayout>
+                                            
+                                        </Grid>
+                                        <Frame.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Source={x:RelativeSource AncestorType={x:Type viewModels:PutawayProductItemViewModel}},Path=SelectItemCommand}" CommandParameter="{Binding .}"/>
+                                        </Frame.GestureRecognizers>
+                                    </Frame>
+
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                        <!--</RefreshView>-->
+                    </StackLayout>
+                </Frame>
+            </VerticalStackLayout>
+        </ScrollView>
+    </StackLayout>
+</ContentPage>

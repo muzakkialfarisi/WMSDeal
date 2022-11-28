@@ -1,0 +1,315 @@
+﻿@model InvStockOpname
+
+@{
+    ViewData["Title"] = "Stock Opname";
+    ViewData["MenuKey"] = "Stock Opname";
+}
+
+<form method="post">
+
+    <div class="card">
+        <div class="card-header border-bottom">
+            <div class="d-flex align-items-center">
+                <div class="flex-grow-1 ps-3">
+                    <h5 class="card-title">
+                        @if (Model == null)
+                        {
+                            <strong>Create New</strong>
+                        }
+                        else
+                        {
+                            <strong>Edit @Model.OpnameId</strong>
+                        }
+                    </h5>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            @if (Model == null)
+            {
+                <div class="row">
+                    <div class="col-12 col-sm-6">
+                        <div class="mb-3 form-group required">
+                            <label class="control-label">Tenant</label>
+                            <select asp-for="TenantId" class="form-control select2" data-bs-toggle="select2" asp-items="ViewBag.TenantId">
+                                <option selected disabled>Select...</option>
+                            </select>
+                            <span asp-validation-for="TenantId" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <div class="mb-3 form-group required">
+                            <label class="control-label">Warehouse</label>
+                            <select asp-for="HouseCode" class="form-control select2" data-bs-toggle="select2" asp-items="ViewBag.HouseCode">
+                            </select>
+                            <span asp-validation-for="HouseCode" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="row">
+                    <div class="col-12 col-sm-4">
+                        Tenant
+                        <br>
+                        Warehouse
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        : @Model.MasDataTenant.Name
+                        <input asp-for="TenantId" hidden>
+                        <br>
+                        : @Model.MasHouseCode.HouseName
+                        <input asp-for="HouseCode" hidden>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header border-bottom">
+            <div class="d-flex align-items-center">
+                <div class="flex-grow-1 ps-3">
+                    <h5 class="card-title"><strong>Add Product</strong></h5>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+
+            <input asp-for="OpnameId" class="form-control" type="hidden" />
+            <div class="mb-3 form-group required">
+                <label class="control-label">Product</label>
+                <select name="InvStockOpnameProducts[0].ProductId" class="form-control select2" data-bs-toggle="select2" asp-items="ViewBag.ProductId">
+                    <option selected disabled>Select...</option>
+                </select>
+            </div>
+
+        </div>
+    </div>
+
+</form>
+
+<div class="card">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Product List</strong></h5>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+           
+        <table class="table table-striped">
+            <thead>
+                <tr class="text-center">
+                    <th>
+                        Action
+                    </th>
+                    <th>
+                        Picture
+                    </th>
+                    <th>
+                        Product
+                    </th>
+                    <th>
+                        WMSDeal Qty
+                    </th>
+                    <th>
+                        Expired Qty
+                    </th>
+                    <th>
+                        Rusak Qty
+                    </th>
+                    <th>
+                        Perbedaan Qty
+                    </th>
+                    <th>
+                        Actual Qty
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null)
+                {
+                    for (int i = 0; i < Model.InvStockOpnameProducts.Count; i++)
+                    {
+                        string status = "false";
+                        if (Model.InvStockOpnameProducts[i].Status == 2)
+                        {
+                            status = "true";
+                        }
+                        <tr>
+                            <form asp-action="OpnameProductDone" method="post">
+                                <td class="text-center">
+                                <input asp-for="OpnameId" class="form-control" type="hidden" />
+                                <input asp-for="HouseCode" class="form-control" type="hidden" />
+
+                                    <input name="OpnameProductId" value="@Model.InvStockOpnameProducts[i].OpnameProductId" hidden>
+
+                                        @if (Model.InvStockOpnameProducts[i].Status < SD.FlagOpnamePro_Done)
+                                        {
+                                            <button class="btn btn-primary btn-submit" type="submit">Opname</button>
+                                            @*<div class="btn-group">
+                                                <button type="button" class="btn btn-outline-tertiary" data-bs-toggle="dropdown"><i class="fas fa-fw fa-ellipsis-h"></i></button>
+                                                <ul class="dropdown-menu">
+                                                    <li><button class="dropdown-item" type="submit" >Opname</button></li>
+                                                    <li><a class="dropdown-item text-danger" href="#">Delete</a></li>
+                                                </ul>
+                                            </div>*@
+                                        }
+                                </td>
+                                <td class="text-center">
+                                    <img src="~/img/product/@Model.InvStockOpnameProducts[i].MasProductData.BeautyPicture" class="rounded-circle" height="50" width="50" asp-append-version="true" /><br>
+                                        @Model.InvStockOpnameProducts[i].MasProductData.ProductLevel
+                                </td>
+                                <td>
+                                        @Model.InvStockOpnameProducts[i].MasProductData.ProductName<br>
+                                    <strong class="text-primary"> @Model.InvStockOpnameProducts[i].MasProductData.SKU </strong><br>
+                                    <strong> @Model.InvStockOpnameProducts[i].MasProductData.ProductCondition </strong>
+                                </td>
+                                <td class="text-center">
+                                        @Model.InvStockOpnameProducts[i].SystemQty
+                                </td>
+                                <td class="text-center">
+                                    @if (Model.InvStockOpnameProducts[i].Status == SD.FlagOpnamePro_Done)
+                                    {
+                                        @Model.InvStockOpnameProducts[i].ExpiredQty
+                                    }
+                                    else
+                                    {
+                                        <input type="text" class="form-control form-control-sm" min="0" required name="ExpiredQty" size="4" style="text-align:center" value="@Model.InvStockOpnameProducts[i].ExpiredQty">
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    @if (Model.InvStockOpnameProducts[i].Status == SD.FlagOpnamePro_Done)
+                                    {
+                                        @Model.InvStockOpnameProducts[i].BrokenQty
+                                    }
+                                    else
+                                    {
+                                    <input type="text" class="form-control form-control-sm" min="0" required name="BrokenQty" size="4" style="text-align:center" value="@Model.InvStockOpnameProducts[i].BrokenQty">
+                                    }
+                                </td>
+                                <td class="text-center">
+                                        @Model.InvStockOpnameProducts[i].DiscrepancyQty
+                                </td>
+                                <td class="text-center">
+                                    @if (Model.InvStockOpnameProducts[i].Status == SD.FlagOpnamePro_Done)
+                                    {
+                                        @Model.InvStockOpnameProducts[i].StockQty
+                                    }
+                                    else
+                                    {
+                                        <input type="text" class="form-control form-control-sm" min="0" required name="StockQty" size="4" style="text-align:center" value="@Model.InvStockOpnameProducts[i].SystemQty">
+                                    }
+                                </td>
+                                <td class="text-center">
+                                        @if (Model.InvStockOpnameProducts[i].Status == SD.FlagOpname_Open)
+                                        {
+                                        <span class="badge bg-primary"> Ongoing </span>
+                                        }
+                                        else if (Model.InvStockOpnameProducts[i].Status == SD.FlagOpname_Done)
+                                        {
+                                        <span class="badge bg-success"> Done </span>
+                                        }
+                                </td>
+                            </form>
+                                
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<form asp-action="OpnameDone" method="post">
+    <input asp-for="OpnameId" hidden />
+    <input asp-for="HouseCode" hidden />
+
+    <div class="form-group text-end div-submit">
+        <a asp-action="Index" class="btn btn-dark">Back to List</a>
+        @if (Model != null)
+        {
+            if (Model.InvStockOpnameProducts.All(m => m.Status == SD.FlagOpnamePro_Done))
+            {
+                @if(Model.Status < SD.FlagOpname_Done){
+                    <button class="btn btn-primary btn-submit" type="submit">Save</button>
+                }
+            }
+        }
+    </div>
+</form>
+                   
+
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(function () {
+            $('.table').DataTable({
+                order: [[8, 'desc']],
+            });
+
+            if ($('input[name="TenantId"]').val()) {
+                $.ajax({
+                    url: '../Product/GetProductsByTenant',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: {
+                        TenantId: $('input[name="TenantId"]').val(),
+                    },
+                    beforeSend: function () {
+                        $('select[name="InvStockOpnameProducts[0].ProductId"]').empty();
+                        $('select[name="InvStockOpnameProducts[0].ProductId"]').append('<option selected disabled>Select...</option>');
+                    },
+                    success: function (data) {
+                        for (let i = 0; i < data.length; i++) {
+                            $('select[name="InvStockOpnameProducts[0].ProductId"]').append('<option value="' + data[i].productId + '">' + data[i].sku + " | (" + data[i].productCondition + ") | " + data[i].productName + '</option>');
+                        }
+                    },
+                    error: function (response) {
+                        console.log(response.responseText);
+                    }
+                });
+            };
+        });
+
+        $('select[name="TenantId"]').on('change', function () {
+            $.ajax({
+                url: '../Product/GetProductsByTenant',
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    TenantId: $(this).val(),
+                },
+                beforeSend: function () {
+                    $('select[name="InvStockOpnameProducts[0].ProductId"]').empty();
+                    $('select[name="InvStockOpnameProducts[0].ProductId"]').append('<option selected disabled>Select...</option>');
+                },
+                success: function (data) {
+                    for (let i = 0; i < data.length; i++) {
+                        $('select[name="InvStockOpnameProducts[0].ProductId"]').append('<option value="' + data[i].productId + '">' + data[i].sku + " | (" + data[i].productCondition + ") | " + data[i].productName + '</option>');
+                    }
+                },
+                error: function (response) {
+                    console.log(response.responseText);
+                }
+            });
+        });
+
+        $('select[name="InvStockOpnameProducts[0].ProductId"]').on('change', function () {
+            this.form.submit();
+        });
+
+    </script>
+}

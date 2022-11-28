@@ -1,0 +1,56 @@
+﻿@model UserViewModel
+
+<div class="text-end mb-4">
+    <button type="button" class="btn btn-outline-primary btn-pill btn-create" data-bs-toggle="modal" data-bs-target="#CreateTenant">Add Tenant</button>
+</div>
+
+<div class="table-responsive">
+    <table class="table tbl-boots">
+        <thead>
+            <tr class="text-center">
+                <th>
+                    Action
+                </th>
+                <th>
+                    Tenant
+                </th>
+                <th >
+                    Status
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if(Model.SecUserTenant != null)
+            {
+                <tr>
+                    <td>
+                        <div class="input-group">
+                            <button type="button" class="btn btn-outline-tertiary" data-bs-toggle="dropdown"><i class="fas fa-fw fa-ellipsis-h"></i></button>
+                            <div class="dropdown-menu">
+                                <form asp-action="DeleteUserTenant" method="post">
+                                    <input name="Id" value="@Model.SecUserTenant.Id" hidden>
+                                    <input name="UserId" value="@Model.SecUserTenant.UserId" hidden>
+                                    <button class="dropdown-item" type="submit">&nbsp;&nbsp;Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        @Model.SecUserTenant.MasDataTenant.Name
+                    </td>
+                    <td class="text-center">
+                        @if (Model.SecUserTenant.Flag == FlagEnum.Active)
+                        {
+                            <span class="badge bg-success"> @Html.DisplayFor(modelItem => Model.SecUserTenant.Flag)</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger"> @Html.DisplayFor(modelItem => Model.SecUserTenant.Flag)</span>
+                        }
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

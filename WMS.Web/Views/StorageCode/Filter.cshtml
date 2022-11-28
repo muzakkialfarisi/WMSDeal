@@ -1,0 +1,71 @@
+﻿<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+	<div class="offcanvas-header">
+		<h5 id="offcanvasRightLabel">Filter</h5>
+		<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+	</div>
+	<div class="offcanvas-body">
+
+		<form>
+
+			<div class="mb-3 row">
+				<label class="col-form-label col-sm-3 ">Row</label>
+				<div class="col-sm-9">
+					<select class="form-control select2 filter" data-bs-toggle="select2" name="RowCode" asp-items="ViewBag.RowCode">
+                        <option selected disabled value="">Select...</option>
+                    </select>
+				</div>
+			</div>
+
+			<div class="mb-3 row">
+				<label class="col-form-label col-sm-3 ">Section</label>
+				<div class="col-sm-9">
+					<select class="form-control select2 filter" data-bs-toggle="select2" name="SectionCode" asp-items="ViewBag.SectionCode">
+						<option selected disabled value="">Select...</option>
+					</select>
+				</div>
+			</div>
+
+			<div class="mb-3 row">
+				<label class="col-form-label col-sm-3 ">Column</label>
+				<div class="col-sm-9">
+					<select class="form-control select2 filter" data-bs-toggle="select2" name="ColumnCode" asp-items="ViewBag.ColumnCode">
+                        <option selected disabled value="">Select...</option>
+                    </select>
+				</div>
+			</div>
+
+			<div class="mb-3 row">
+				<label class="col-form-label col-sm-3 ">Bin</label>
+				<div class="col-sm-9">
+					<select class="form-control select2 filter" data-bs-toggle="select2" name="BinCode" asp-items="ViewBag.BinCode">
+						<option selected disabled value="">Select...</option>
+					</select>
+				</div>
+			</div>
+
+			<div class="mb-3 row">
+				<div class="col text-end">
+					<a class="btn btn-dark btn-clear-filter" data-bs-dismiss="offcanvas" aria-label="Close" asp-controller="StorageCode" asp-action="Index">Clear All</a>
+					<button type="submit" class="btn btn-primary btn-submit-filter" data-bs-dismiss="offcanvas" aria-label="Close">Go!</button>
+				</div>
+			</div>
+		</form>
+		
+	</div>
+</div>
+
+@*<i class="fas fa-fw fa-print"></i>*@
+
+<form asp-action="PrintStorageCode" method="get" id="PrintStorageCode" target="_blank" hidden>
+	<input name="RowCode" />
+	<input name="SectionCode" />
+	<input name="ColumnCode" />
+	<input name="BinCode" />
+</form>
+
+<form asp-action="PrintStorageCodeTronix" method="get" id="PrintStorageCodeTronix" target="_blank" hidden>
+	<input name="RowCode" />
+	<input name="SectionCode" />
+	<input name="ColumnCode" />
+	<input name="BinCode" />
+</form>

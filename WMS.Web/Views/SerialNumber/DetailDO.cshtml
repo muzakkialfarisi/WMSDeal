@@ -1,0 +1,214 @@
+﻿@model IncDeliveryOrderProduct
+
+@{
+    ViewData["Title"] = "Delivery Order";
+    ViewData["MenuKey"] = "Delivery Order";
+}
+
+<div class="row">
+    <div class="col-12 col-sm-5">
+
+        <div class="card">
+            <div class="card-header border-bottom">
+                Product Detail
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12 col-md-5 col-sm-5 text-center">
+                        <img src="~/img/product/@Model.MasProductData.BeautyPicture" height="60" width="60" asp-append-version="true" class="rounded-circle" /><br>
+                        Level @Model.MasProductData.ProductLevel
+                    </div>
+                    <div class="col-12 col-md-7 col-sm-7">
+                        <strong>@Model.MasProductData.ProductName</strong><br>
+                        <div class="row">
+                            <div class="col-5">
+                                SKU
+                            </div>
+                            <div class="col-7">
+                                @Model.MasProductData.SKU
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-5">
+                                Status
+                            </div>
+                            <div class="col-7">
+                                @Model.MasProductData.ProductCondition
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-5 text-primary">
+                                Qty Delivered
+                            </div>
+                            <div class="col-7 text-primary">
+                                @Model.Quantity
+                            </div>
+                        </div>
+                        @if (Model.IncDeliveryOrderArrivals != null)
+                        {
+                            @if (Model.IncDeliveryOrderArrivals.QtyNotArrived > 0)
+                            {
+                                <div class="row">
+                                    <div class="col-5 text-danger">
+                                        Qty Not Arrived
+                                    </div>
+                                    <div class="col-7 text-danger">
+                                        @Model.IncDeliveryOrderArrivals.QtyNotArrived
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-5">
+                                        Note
+                                    </div>
+                                    <div class="col-7">
+                                        @Model.IncDeliveryOrderArrivals.NoteNotArrived
+                                    </div>
+                                </div>
+                            }
+                        }
+                        <div class="row">
+                            <div class="col-5">
+                                Status
+                            </div>
+                            <div class="col-7">
+                                @if (Model.Status == SD.FlagDOProduct_Canceled)
+                                {
+                                    <span class="badge bg-dark">@Model.Status</span>
+                                }
+                                @if (Model.Status == SD.FlagDOProduct_Open)
+                                {
+                                    <span>@Model.Status</span>
+                                }
+                                @if (Model.Status == SD.FlagDOProduct_Booked)
+                                {
+                                    <span class="badge bg-secondary">@Model.Status</span>
+                                }
+                                @if (Model.Status == SD.FlagDOProduct_Arrived)
+                                {
+                                    <span class="badge bg-info">@Model.Status</span>
+                                }
+                                @if (Model.Status == SD.FlagDOProduct_Puted)
+                                {
+                                    <span class="badge bg-primary">@Model.Status</span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
+        <div class="d-grid gap-2 mt-3">
+            <a asp-controller="DeliveryOrderList" asp-action="Detail" asp-route-DONumber="@Model.DONumber" asp-route-TenantId="@Model.IncDeliveryOrder.TenantId" class="btn btn-dark">Back to Detail</a>
+        </div>
+    </div>
+
+    <div class="col-12 col-sm-7">
+        <div class="card">
+            <div class="card-header border-bottom">
+                Serial Number List
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr class="text-center">
+                                @if (User.FindFirst("ProfileId").Value == SD.Role_SuperAdmin)
+                                {
+                                    <th>
+                                        Action
+                                    </th>
+                                }
+                                <th>
+                                    Serial Number
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.IncSerialNumbers)
+                            {
+                                <tr>
+                                    @if (User.FindFirst("ProfileId").Value == SD.Role_SuperAdmin)
+                                    {
+                                    <td class="text-center">
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-sm btn-outline-tertiary" data-bs-toggle="dropdown"><i class="fas fa-fw fa-ellipsis-h"></i></button>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <button class="dropdown-item text-warning btn-edit" data-id="@item.SerialId" data-bs-toggle="modal" data-bs-target="#modaledit">Edit</button>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                    }
+                                    <td>
+                                        @item.SerialNumber
+                                    </td>
+                                    <td class="text-center">
+                                        @if (item.Status == SD.FlagSerialNumber_Open)
+                                        {
+                                            <span class="badge bg-secondary">Created</span>
+                                        }
+                                        @if (item.Status == SD.FlagSerialNumber_IN)
+                                        {
+                                            <span class="badge bg-primary">IN</span>
+                                        }
+                                        @if (item.Status == SD.FlagSerialNumber_OUT)
+                                        {
+                                            <span class="badge bg-success">OUT</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<partial name="ModalEdit" />
+
+@section Scripts{
+    <script>
+        $(function () {
+            $('.table').DataTable({
+                order: [[1, 'desc']],
+            });
+        });
+
+        $('.btn-edit').on('click', function(){
+            $.ajax({
+                type: 'GET',
+                url: '../../SerialNumber/GetSerialBySerialId',
+                data: {
+                    SerialId: $(this).data('id'),
+                },
+                dataType: 'json',
+                beforeSend: function () {
+                    $('input[name="SerialId"]').val("");
+                    $('input[name="ProductId"]').val("");
+                    $('input[name="DOProductId"]').val("");
+                    $('input[name="SerialNumber"]').val("");
+                },
+                success: function (data) {
+                    if (data) {
+                        $('input[name="SerialId"]').val(data.serialId);
+                        $('input[name="ProductId"]').val(data.productId);
+                        $('input[name="DOProductId"]').val(data.doProductId);
+                        $('input[name="SerialNumber"]').val(data.serialNumber);
+                    }
+                },
+                error: function (response) {
+                    console.log(response.responseText);
+                }
+            });
+        });
+    </script>
+    }

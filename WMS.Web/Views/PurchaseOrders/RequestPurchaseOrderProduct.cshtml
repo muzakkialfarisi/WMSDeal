@@ -1,0 +1,71 @@
+﻿@model PurchaseOrderViewModel
+
+<div class="card">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Request Product</strong></h5>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+
+        <div class="table-responsive">
+            <table class="table table-sm">
+                <thead>
+                    <tr class="text-center">
+                        <th>
+                            Product
+                        </th>
+                        <th>
+                            Qty
+                        </th>
+                        <th>
+                            Price
+                        </th>
+                        <th>
+                            Total
+                        </th>
+                        <th>
+                            Action
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.IncRequestPurchase.IncRequestPurchaseProducts)
+                    {
+                        <tr>
+                            <td>
+                                <div class="row">
+                                    <div class="col-12 col-sm-4">
+                                        <img class="rounded-circle" height="60" width="60" src="~/img/product/@item.MasProductData.BeautyPicture">
+                                    </div>
+                                    <div class="col-12 col-sm-8">
+                                        <strong>@Html.DisplayFor(modelItem => item.MasProductData.SKU)</strong><br>
+                                        @Html.DisplayFor(modelItem => item.MasProductData.ProductName)
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                @Html.DisplayFor(modelItem => item.ApprovedQuantity)
+                            </td>
+                            <td class="text-end">
+                                @String.Format("{0:n0}", item.FinalPrice)
+                            </td>
+                            <td class="text-end">
+                                @String.Format("{0:n0}", (int)Math.Ceiling(item.FinalPrice) * item.ApprovedQuantity)
+                            </td>
+                            <td class="text-center">
+                                @if(item.Status == "Approved")
+                                {
+                                    <i class="fas fa-fw fa-angle-double-right btn link-primary btn-add" data-id="@item.RequestProductId"></i>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>       
+        
+    </div>
+</div>

@@ -1,0 +1,70 @@
+﻿@model DeliveryOrderViewModel
+
+<div class="text-end mb-4">
+    <a class="btn btn-outline-primary btn-pill" asp-action="Upsert">Add Delivery Order</a>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-striped" id="tbl-deliveryorder">
+        <thead>
+            <tr class="text-center">
+                <th>
+                    Action
+                </th>
+                <th>
+                    DO Number
+                </th>
+                <th>
+                    Tenant
+                </th>
+                <th>
+                    Warehouse
+                </th>
+                <th>
+                    Product
+                </th>
+                <th>
+                    Quantity
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.incDeliveryOrders)
+            {
+                <tr>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-outline-tertiary" data-bs-toggle="dropdown"><i class="fas fa-fw fa-ellipsis-h"></i></button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a class="dropdown-item" asp-action="Upsert" asp-route-DONumber="@item.DONumber">Manage</a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form asp-action="DeleteDeliveryOrder" method="post">
+                                    <input name="DONumber" value="@item.DONumber" hidden>
+                                    <input name="TenantId" value="@item.TenantId" hidden>
+                                    <button class="dropdown-item text-danger" type="submit">Delete</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </td>
+                    <td class="text-center">
+                        @Html.DisplayFor(modelItem => item.DOSupplier)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MasDataTenant.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MasHouseCode.HouseName)
+                    </td>
+                    <td class="text-center">
+                        @String.Format("{0:n0}", item.IncDeliveryOrderProducts.Count)
+                    </td>
+                    <td class="text-center">
+                        @String.Format("{0:n0}", item.IncDeliveryOrderProducts.Sum(m => m.Quantity))
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,30 @@
+﻿@model MasProductData
+
+@{
+    ViewData["Title"]   = "Detail Product";
+    ViewData["MenuKey"] = "Dashboards";
+}
+
+<div class="row">
+    <div class="col-12 col-sm-4">
+        <partial name="DetailMasProductData" />
+    </div>
+    <div class="col-12 col-sm-8">
+        <partial name="DetailIncDeliveryOrderProduct" />
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        $(function () {
+            $('#tbl-iku').DataTable({
+                order: [[0, 'desc'], [2, 'desc']],
+            });
+
+
+            $('#tbl-sku').DataTable({
+                order: [[0, 'desc'], [2, 'desc']],
+            });
+        });
+    </script>
+}

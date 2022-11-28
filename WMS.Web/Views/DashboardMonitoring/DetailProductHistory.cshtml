@@ -1,0 +1,94 @@
+﻿@model ProductMonitoringViewModel
+
+<div class="card">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Product Hystory</strong></h5>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+
+        <div class="table-responsive">
+            <table class="table table-striped" id="tbl-hystori">
+                <thead>
+                    <tr class="text-center">
+                        <th>
+                            No
+                        </th>
+                        @if (Model.masProductData.SerialNumber == "SN")
+                        {
+                            <th>
+                                Action
+                            </th>
+                        }
+                        <th>
+                            Type
+                        </th>
+                        <th>
+                            Trx Number
+                        </th>
+                        <th>
+                            Date
+                        </th>
+                        <th>
+                            Qty
+                        </th>
+                        <th>
+                            Qty Stock
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.invProductHistories.Count(); i++)
+                    {
+                        <tr>
+                            <td class="text-center">
+                                @{var no = i + 1;
+                                    <span>@no</span>
+                                }
+                            </td>
+                            @if (Model.masProductData.SerialNumber == "SN")
+                            {
+                                <td class="text-center">
+                                    <button type="button" class="btn btn-outline-tertiary btn-serialnumber"
+                                    data-bs-toggle="modal" data-bs-target="#SerialNumber" data-type="@Model.invProductHistories[i].HistoryType"
+                                    data-productid="@Model.invProductHistories[i].ProductId" data-trxno="@Model.invProductHistories[i].TrxNo">
+                                        SN
+                                    </button>
+                                </td>
+                            }
+                            <td class="text-center">
+                                @Model.invProductHistories[i].HistoryType
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => Model.invProductHistories[i].TrxNo)
+                            </td>
+                            <td class="text-center">
+                                @String.Format("{0:dd/MM/yyyy}", Model.invProductHistories[i].DatedTime)
+                            </td>
+                            <td class="text-end">
+                                @{
+                                    var Qty = Model.invProductHistories[i].Quantity;
+                                    if (Qty < 0)
+                                    {
+                                        Qty = Qty * -1;
+                                        <span>(@Qty)</span>
+                                    }
+                                    else
+                                    {
+                                        <span>@Qty</span>
+                                    }
+                                }
+                            </td>
+                            <td class="text-end">
+                                @Html.DisplayFor(modelItem => Model.invProductHistories[i].Stock)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

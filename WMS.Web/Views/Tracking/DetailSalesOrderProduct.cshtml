@@ -1,0 +1,96 @@
+﻿@model OutSalesOrder
+
+<div class="card">
+    <div class="card-body">
+        <table class="table table-sm table-borderless p-0 m-0">
+            <tbody>
+                <tr>
+                    <th colspan="2" class="text-nowrap">
+                        Delivery
+                    </th>
+                </tr>
+                <tr>
+                    <td class="align-baseline">
+                        Courier
+                    </td>
+                    <td>
+                        : @Model.OutsalesOrderDelivery.MasSalesCourier.Name - @Model.OutsalesOrderDelivery.OrdCourierService
+                    </td>
+                </tr>
+                <tr>
+                    <td class="align-baseline">
+                        Grand Weight
+                    </td>
+                    <td>
+                        : @String.Format("{0:n0}", Model.OutSalesOrderProducts.Sum(m => m.TotalWeight)) Gram
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap align-baseline">
+                        Air Way Bill
+                    </td>
+                    <td>
+                        : @Model.OutsalesOrderDelivery.AirwayBill <br /><br />
+                    </td>
+                </tr>
+            </tbody>
+        </table><br />
+
+        <div class="table-responsive">
+            <table class="table table-striped" id="tbl-salesorderproducts">
+                <thead>
+                    <tr class="text-center">
+                        <th>
+                            Picture
+                        </th>
+                        <th>
+                            Product
+                        </th>
+                        <th>
+                            Quantity
+                        </th>
+                        <th>
+                            Weight (Gram)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.OutSalesOrderProducts.Count(); i++)
+                    {
+                        <tr>
+                            <td class="text-center">
+                                <img class="rounded-circle" height="50" width="50" src="~/img/product/@Model.OutSalesOrderProducts[i].MasProductData.BeautyPicture">
+                            </td>
+                            <td>
+                                @Model.OutSalesOrderProducts[i].MasProductData.ProductName<br>
+                                <strong class="text-primary">@Model.OutSalesOrderProducts[i].MasProductData.SKU</strong>
+                            </td>
+                            <td class="text-center">
+                                @Model.OutSalesOrderProducts[i].Quantity
+                            </td>
+                            <td class="text-end">
+                                @String.Format("{0:n0}", Model.OutSalesOrderProducts[i].TotalWeight)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>
+                            Total
+                        </th>
+                        <th class="text-center">
+                            @Model.OutSalesOrderProducts.Count Item
+                        </th>
+                        <th class="text-center">
+                            @Model.OutSalesOrderProducts.Sum(m => m.Quantity)
+                        </th>
+                        <th class="text-end">
+                            @String.Format("{0:n0}", Model.OutSalesOrderProducts.Sum(m => m.TotalWeight)) Gram
+                        </th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,127 @@
+﻿@model IEnumerable<OutSalesOrder>
+
+@{
+    ViewData["Title"] = "List Pack";
+    ViewData["MenuKey"] = "Pick and Pack";
+}
+
+<div class="card" style="min-height:700px">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Sales Order Pack</strong></h5>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr class="text-center">
+                        <th>
+                            Action
+                        </th>
+                        <th>
+                            Sales Order
+                        </th>
+                        <th>
+                            Date
+                        </th>
+                        <th>
+                            Type
+                        </th>
+                        <th>
+                            Tenant
+                        </th>
+                        <th>
+                            Warehouse
+                        </th>
+                        <th>
+                            Product
+                        </th>
+                        <th>
+                            Quantity
+                        </th>
+                        <th>
+                            Weight (Gram)
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var item in Model) {
+                    <tr data-id="@item.OrderId">
+                        <td>
+                            <button type="button" class="btn btn-outline-tertiary" data-bs-toggle="dropdown"><i class="fas fa-fw fa-ellipsis-h"></i></button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" asp-action="Create" asp-route-OrderId="@item.OrderId">Manage</a></li>
+                            </ul>
+                        </td>
+                        <td>
+                            @item.OrderId
+                        </td>
+                        <td>
+                            @String.Format("{0:dd/MM/yyyy}", item.DateOrdered)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.MasSalesType.StyName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.MasDataTenant.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.MasHouseCode.HouseName)
+                        </td>
+                        <td class="text-center">
+                            @item.OutSalesOrderProducts.Count
+                        </td>
+                        <td class="text-center">
+                            @item.OutSalesOrderProducts.Sum(m => m.Quantity)
+                        </td>
+                        <td class="text-end">
+                            @String.Format("{0:n0}", item.OutSalesOrderProducts.Sum(m => m.TotalWeight))
+                        </td>
+                        <td class="text-center">
+                            @if (item.Status == 0)
+                            {
+                                <span class="badge bg-dark">Cancelled</span>
+                            }
+                            @if (item.Status == 1)
+                            {
+                                <span> Open </span>
+                            }
+                            @if (item.Status == 2)
+                            {
+                                <span class="badge bg-secondary">Ordered</span>
+                            }
+                            @if (item.Status == 3 || item.Status == 4)
+                            {
+                                <span class="badge bg-info">Picked</span>
+                            }
+                            @if (item.Status == 5)
+                            {
+                                <span class="badge bg-primary">Packed</span>
+                            }
+                            @if (item.Status == 6)
+                            {
+                                <span class="badge bg-success">Dispatch</span>
+                            }
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(function(){
+            $('.table').DataTable({
+            });
+        });
+    </script>
+}

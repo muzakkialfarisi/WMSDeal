@@ -1,0 +1,102 @@
+﻿@model IEnumerable<MasInvoicing>
+
+@{
+    ViewData["Title"] = "Create Invoice";
+    ViewData["MenuKey"] = "Invoicing";
+}
+
+<div class="card" style="min-height:700px">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Create Invoice</strong></h5>
+            </div>
+            <div>
+                @*<a class="btn btn-outline-primary btn-pill" data-bs-toggle="modal" data-bs-target="#modalCreate">Add User</a>*@
+                <a class="btn btn-outline-primary btn-pill" asp-action="Create">Generate Invoice</a>
+                &nbsp;&nbsp;
+                <button class="btn btn-outline-primary btn-md px-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample"
+                        aria-controls="offcanvasExample">
+                    <i class="fas fa-fw fa-filter"></i>
+                </button>
+            </div>
+        </div>
+    </div><br />
+    <div class="card-body">
+
+        <table id="tbUsers" class="table" width="100%">
+            <thead>
+                <tr class="text-center">
+                    <th>
+                        Action
+                    </th>
+                    <th>
+                        Invoice Number
+                    </th>
+                    <th>
+                        Tenant
+                    </th>
+                    <th>
+                        Periode
+                    </th>
+                    <th>
+                        Created Date
+                    </th>
+                    <th>
+                        Created By
+                    </th>
+                    <th>
+                        Total
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <div class="input-group">
+                                <button type="button" class="btn btn-outline-tertiary" data-bs-toggle="dropdown"><i class="fas fa-fw fa-ellipsis-h"></i></button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" asp-action="PrintInvoice" asp-route-InvoiceNumber="@item.InvoiceNumber" target="_blank"><i class="align-middle me-1 fas fa-fw fa-print"></i>&nbsp;&nbsp;Print</a>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.InvoiceNumber)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.MasDataTenant.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.InvoicePeriod)
+                        </td>
+                        <td>
+                            @String.Format("{0:dd/MM/yyyy}", item.CreatedDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CreatedBy)
+                        </td>
+                        <td class="text-end">
+                            @String.Format("{0:n0}", item.TotalAmount)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(function() {
+            $('.table').DataTable({
+                responsive: true,
+                fixedHeader: true
+            });
+    </script>
+
+@{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

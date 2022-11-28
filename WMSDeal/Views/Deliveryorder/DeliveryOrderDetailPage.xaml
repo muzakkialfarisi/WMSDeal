@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WMSDeal.Views.Deliveryorder.DeliveryOrderDetailPage"
+             xmlns:constant="clr-namespace:WMSDeal.Constant"
+             xmlns:viewModels="clr-namespace:WMSDeal.ViewModels.Deliveryorder"
+             x:DataType="viewModels:DeliveryOrderDetailViewModel"
+             xmlns:model="clr-namespace:WMSDeal.Models.Incoming"
+             BackgroundColor="{StaticResource Background1}"
+             Title="Delivery Order Product">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="RecentChatAdornerStyle" TargetType="BoxView">
+                <Setter Property="Color" Value="{StaticResource Blue100Accent}" />
+                <Setter Property="CornerRadius" Value="50, 50, 0, 0" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <StackLayout>
+        <StackLayout.Background>
+            <LinearGradientBrush EndPoint="0,1">
+                <GradientStop Color="{StaticResource Blue100Accent}"
+                          Offset="0.1" />
+                <GradientStop Color="{StaticResource White}"
+                          Offset="1.0" />
+            </LinearGradientBrush>
+        </StackLayout.Background>
+        <!--<Grid RowDefinitions="Auto,*,500" ColumnDefinitions="*" >-->
+        <StackLayout  BackgroundColor="{StaticResource WMSBlue}"  Margin="0,.1">
+            <Grid RowDefinitions="Auto" ColumnDefinitions="*,130">
+                <StackLayout Grid.Row="0" Grid.Column="0" Margin="20,10">
+                    <Grid RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="*">
+                        <Label Grid.Row="0" Grid.Column="1" VerticalOptions="Center" Text="{Binding DeliveryOrder.DoNumber,StringFormat='{0}'}" TextColor="{StaticResource Alabaster}" 
+                               FontAttributes="Bold" />
+                        <Label  Grid.Row="1" Grid.Column="1" VerticalOptions="Center"  Text="{Binding DeliveryOrder.Name}"  
+                                TextColor="{StaticResource Alabaster}" FontAttributes="None"/>
+                        <Label  Grid.Row="2" Grid.Column="1" VerticalOptions="Center"  
+                                TextColor="{StaticResource Alabaster}" FontAttributes="None">
+                            <Label.Text>
+                                <MultiBinding StringFormat="{}{0} {1}">
+                                    <Binding Path="DeliveryOrder.Address"/>
+                                    <Binding Path="DeliveryOrder.ProName"/>
+                                </MultiBinding>
+                            </Label.Text>
+                        </Label>
+                        <Label  Grid.Row="3" Grid.Column="1" VerticalOptions="Center"  Text="{Binding DeliveryOrder.DateDelivered,StringFormat='Delivery Date : {0:dd/MM/yyyy}'}" 
+                                TextColor="{StaticResource Alabaster}"/>
+                    </Grid>
+                </StackLayout>
+                <StackLayout Grid.Row="0" Grid.Column="1"  Margin="10"   VerticalOptions="Center" HorizontalOptions="Center" >
+                    <Frame  Grid.Row="0" Grid.Column="0" BorderColor="{StaticResource Background1}" HeightRequest="70" WidthRequest="100"
+                                                   CornerRadius="10" Padding="0" >
+                        <Image  Source="{Binding DeliveryOrder.ProfileImageUrl,StringFormat='{0}'}"
+                                                        Aspect="AspectFill" HeightRequest="70" WidthRequest="100" HorizontalOptions="Center" VerticalOptions="Center" />
+                    </Frame>
+                </StackLayout>
+            </Grid>
+
+            <BoxView HeightRequest="40" Margin="0,10,0,0" Style="{StaticResource RecentChatAdornerStyle}" />
+        </StackLayout>
+
+        <StackLayout  WidthRequest="350" HorizontalOptions="Center" VerticalOptions="Start"  Margin="0,-30">
+            <Grid RowDefinitions="Auto" ColumnDefinitions="*,*,*">
+                <HorizontalStackLayout Grid.Row="0" Grid.Column="0" Spacing="10" HorizontalOptions="Center">
+                    <Label Text="Item:" TextColor="White"/>
+                    <Frame Padding="0" Margin="0,0,20,0" HorizontalOptions="StartAndExpand" VerticalOptions="Center" 
+                           BorderColor="{StaticResource Aqua}" BackgroundColor="{StaticResource Aqua}">
+                        <Label x:Name="lblItem"  Margin="8,0,8,2" Text="{Binding DeliveryOrder.Count}" VerticalOptions="Center"
+                               TextColor="{StaticResource White}" />
+                    </Frame>
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Grid.Row="0" Grid.Column="1" Spacing="10" HorizontalOptions="Center">
+                    <Label Text="Arrived:"  TextColor="White"/>
+                    <Frame Padding="0" Margin="0,0,20,0" HorizontalOptions="StartAndExpand" VerticalOptions="Center" 
+                           BorderColor="{StaticResource Aqua}" BackgroundColor="{StaticResource Aqua}">
+                        <Label x:Name="lblArrival"  Margin="8,0,8,2" Text="{Binding TotalAr}" VerticalOptions="Center"
+                               TextColor="{StaticResource White}"  />
+                    </Frame>
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Grid.Row="0" Grid.Column="2" Spacing="10" HorizontalOptions="Center">
+                    <Label Text="Qty:"  TextColor="White"/>
+
+                    <Frame Padding="0" Margin="0,0,20,0" HorizontalOptions="StartAndExpand" VerticalOptions="Center" 
+                           BorderColor="{StaticResource Aqua}" BackgroundColor="{StaticResource Aqua}">
+                        <Label x:Name="lblQty"  Margin="8,0,8,2" Text="{Binding Qty}" VerticalOptions="Center"
+                               TextColor="{StaticResource White}"  />
+                    </Frame>
+                </HorizontalStackLayout>
+            </Grid>
+        </StackLayout>
+
+        <!--<StackLayout Margin="5,30">-->
+
+        <ActivityIndicator IsRunning="True" IsVisible="{Binding IsBusy}" Color="{StaticResource WMSOrange}"/>
+        <!--<ScrollView VerticalOptions="FillAndExpand" Margin="5,5">-->
+        <CollectionView ItemsSource="{Binding productData}" VerticalOptions="FillAndExpand" SelectionMode="Single">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="model:ProductData">
+                    <Frame CornerRadius="5" BackgroundColor="{Binding Color}" 
+                           BorderColor="{Binding Color}" 
+                           Padding="0" HasShadow="True" Margin="10,5">
+                        <Grid RowDefinitions="Auto" ColumnDefinitions="*,0">
+                            <StackLayout Grid.Row="0" Grid.Column="0" Padding="5">
+                                <Grid RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="100,*">
+                                    <Frame  Grid.RowSpan="4" Grid.Column="0" BorderColor="{StaticResource Aqua3}"
+                                            CornerRadius="5" Padding="0" VerticalOptions="Center" HorizontalOptions="Start" HeightRequest="90" WidthRequest="90" >
+                                        <Image  Source="{Binding BeautyPicture ,StringFormat='{0}'}"
+                                                Aspect="AspectFill"  HorizontalOptions="Start" VerticalOptions="Center" HeightRequest="90" WidthRequest="90" />
+                                        <Frame.GestureRecognizers>
+                                            <TapGestureRecognizer NumberOfTapsRequired="2" Command="{Binding Source={x:RelativeSource AncestorType={x:Type viewModels:DeliveryOrderDetailViewModel}},Path=SelectItemCommand}" CommandParameter="{Binding .}"/>
+                                        </Frame.GestureRecognizers>
+                                    </Frame>
+
+                                    <Label Grid.Row="0" Grid.Column="1" VerticalOptions="Center" Text="{Binding ProductName,StringFormat='{0}'}" TextColor="{StaticResource Black}" 
+                                           FontAttributes="Bold"/>
+                                    <!--<Label Grid.Row="1" Grid.Column="1" VerticalOptions="Center" Text="{Binding ProductLevel}" 
+                                           FontSize="13" TextColor="{StaticResource Black}"  FontAttributes="Bold" FontFamily="Number" />-->
+                                    <Grid Grid.Row="1" Grid.Column="1" RowDefinitions="Auto,Auto" ColumnDefinitions="*,40" HorizontalOptions="FillAndExpand">
+                                        <Label   VerticalOptions="Center" Text="{Binding SKU,StringFormat='SKU : {0}'}" 
+                                                TextColor="{StaticResource Black}"  FontAttributes="Bold" />
+                                        <Label Grid.Row="1" VerticalOptions="Center"  Text="{Binding ProductCondition,StringFormat='{0}'}" 
+                                                TextColor="{StaticResource Black}" />
+                                        <Image Grid.RowSpan="2" Grid.Column="1" Source="{x:Static constant:Icon.Arrival}" IsVisible="{Binding isArrival}"
+                                                Aspect="AspectFill"  HorizontalOptions="Start" VerticalOptions="Center" HeightRequest="40" WidthRequest="30" />
+
+                                    </Grid>
+
+                                    <StackLayout Grid.Row="3" Grid.Column="1" Padding="0">
+                                        <Grid RowDefinitions="Auto" ColumnDefinitions="*,Auto">
+                                            <Label Grid.Row="0" Grid.Column="0" VerticalOptions="Center"
+                                                   TextColor="{StaticResource Black}" >
+                                                <Label.Text>
+                                                    <MultiBinding StringFormat="{}Total : {0}  {1}   ({2})">
+                                                        <Binding Path="Quantity"/>
+                                                        <Binding Path="Unit"/>
+                                                        <Binding Path="SerialNumber"/>
+                                                    </MultiBinding>
+                                                </Label.Text>
+                                            </Label>
+                                            <Label Grid.Row="0" Grid.Column="1" Margin="10,0" Text="{Binding Status}" HorizontalOptions="Start" TextColor="{Binding StatusColor}"/>
+                                        </Grid>
+                                    </StackLayout>
+
+                                </Grid>
+                            </StackLayout>
+                            <StackLayout Grid.Row="0" Grid.Column="1" >
+                                <!--<Grid RowDefinitions="40,Auto" ColumnDefinitions="*" Padding="0">
+                                    <StackLayout  Grid.Row="1" Grid.Column="0">
+                                        <Image Source="{Static constant:Icon.PanahKanan}" 
+                                                   WidthRequest="20" HeightRequest="20" VerticalOptions="Center" HorizontalOptions="End"/>
+                                    </StackLayout>
+                                </Grid>-->
+                            </StackLayout>
+                            
+                        </Grid>
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer NumberOfTapsRequired="2" Command="{Binding Source={x:RelativeSource AncestorType={x:Type viewModels:DeliveryOrderDetailViewModel}},Path=SelectItemCommand}" CommandParameter="{Binding .}"/>
+                        </Frame.GestureRecognizers>
+                    </Frame>
+
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        <!--<CollectionView ItemsSource="{Binding deliveryOrderProductsSuccess}">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate x:DataType="model:IncDeliveryOrderProduct">
+                                        <Frame CornerRadius="5" BackgroundColor="{StaticResource Cyan300Accent}" 
+                                           BorderColor="{StaticResource Cyan300Accent}" 
+                                           Padding="0" HasShadow="True" Margin="0,5">
+                                            <Grid RowDefinitions="Auto" ColumnDefinitions="*,0">
+                                                <StackLayout Grid.Row="0" Grid.Column="0" Padding="5">
+                                                    <Grid RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="100,*">
+
+                                                        <Frame  Grid.RowSpan="4" Grid.Column="0" BorderColor="White"
+                                                            CornerRadius="5" Padding="0" VerticalOptions="Center" HorizontalOptions="Start" HeightRequest="90" WidthRequest="90" >
+                                                            <Image  Source="{Binding  MasProductData.BeautyPicture,StringFormat='https://uat.wmsdeal.com/img/product/{0}'}"
+                                                                Aspect="AspectFill"  HorizontalOptions="Start" VerticalOptions="Center" HeightRequest="90" WidthRequest="90" />
+                                                        </Frame>
+
+                                                        <Label Grid.Row="0" Grid.Column="1" VerticalOptions="Center" Text="{Binding MasProductData.ProductName,StringFormat='{0}'}" TextColor="{StaticResource Black}" 
+                                                           FontSize="15" FontAttributes="Bold" FontFamily="Number"/>
+                                                        <Label Grid.Row="1" Grid.Column="1" VerticalOptions="Center"  Text="{Binding MasProductData.ProductLevel,StringFormat='{0}: '}" 
+                                                           FontSize="15" TextColor="{StaticResource Black}" FontAttributes="None"/>
+                                                        <Label Grid.Row="1" Grid.Column="1" VerticalOptions="Center" Margin="30,0"  Text="{Binding  MasProductData.SKU}" FontSize="15" 
+                                                           TextColor="{StaticResource Black}" FontAttributes="None"/>
+                                                        <Label Grid.Row="2" Grid.Column="1" VerticalOptions="Center"  Text="{Binding MasProductData.ProductCondition,StringFormat='{0}'}" 
+                                                           FontSize="14" TextColor="{StaticResource Black}" FontAttributes="None"/>
+                                                        <Label Grid.Row="3" Grid.Column="1" VerticalOptions="Center" Text="{Binding Quantity,StringFormat='Total : {0}'}" 
+                                                           FontSize="14" TextColor="{StaticResource Black}"  />
+                                                        <Label Grid.Row="3" Grid.Column="1" VerticalOptions="Center" Text="{Binding MasProductData.Unit,StringFormat='{0}'}" 
+                                                           FontSize="14" TextColor="{StaticResource Black}" Margin="60,0"  />
+
+                                                    </Grid>
+                                                </StackLayout>
+                                                <StackLayout Grid.Row="0" Grid.Column="1" >
+                                                    <Grid RowDefinitions="40,Auto" ColumnDefinitions="*" Padding="0">
+                                                        -->
+        <!--<StackLayout  Grid.Row="1" Grid.Column="0">
+                                                            <Image Source="{Static constant:Icon.PanahKanan}" 
+                                                   WidthRequest="20" HeightRequest="20" VerticalOptions="Center" HorizontalOptions="End"/>
+                                                        </StackLayout>-->
+        <!--
+                                                    </Grid>
+                                                </StackLayout>
+                                                -->
+        <!--<HorizontalStackLayout.GestureRecognizers>
+                                                    <TapGestureRecognizer Command="{Binding Source={x:RelativeSource AncestorType={x:Type viewModels:DeliveryOrderDetailViewModel}},Path=SelectItemCommand}" CommandParameter="{Binding .}"/>
+                                                </HorizontalStackLayout.GestureRecognizers>-->
+        <!--
+                                            </Grid>
+                                        </Frame>
+
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>-->
+        <!--</ScrollView>-->
+
+
+        <!--</StackLayout>-->
+        <!--</Grid>-->
+    </StackLayout>
+</ContentPage>

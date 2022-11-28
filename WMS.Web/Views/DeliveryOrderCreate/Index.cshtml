@@ -1,0 +1,57 @@
+﻿@model DeliveryOrderViewModel
+
+@{
+    ViewData["Title"] = "Delivery Order";
+    ViewData["MenuKey"] = "Delivery Order";
+}
+
+<div class="card tab bg-transparent p-0 m-0">
+    <div class="card-header p-0 m-0">
+        <ul class="nav nav-tabs bg-light" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" href="#tab-1" data-bs-toggle="tab" role="tab" aria-selected="false">
+                    Delivery Order Cart
+                    @if (Model.incDeliveryOrders.Count() > 0)
+                    {
+                        <span class="badge rounded-pill bg-danger">@Model.incDeliveryOrders.Count()</span>
+                    }
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#tab-2" data-bs-toggle="tab" role="tab" aria-selected="false">
+                    Purchase Orders
+                    @if (Model.incPurchaseOrders.Count() > 0)
+                    {
+                        <span class="badge rounded-pill bg-danger">@Model.incPurchaseOrders.Count()</span>
+                    }
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="card-body p-0 m-0">
+        <div class="tab-content">
+            <div class="tab-pane active" id="tab-1" role="tabpanel">
+                <div class="table-responsive">
+                    <partial name="IndexDeliveryOrder" model="@Model" />
+                </div>
+            </div>
+            <div class="tab-pane" id="tab-2" role="tabpanel">
+                <div class="table-responsive">
+                    <partial name="IndexPurchaseOrder" model="@Model" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(function () {
+            $('#tbl-deliveryorder').DataTable({
+            });
+
+            $('#tbl-purchaseorder').DataTable({
+            });
+        });
+    </script>
+}

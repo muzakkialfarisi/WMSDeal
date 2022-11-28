@@ -1,0 +1,73 @@
+﻿@model MasInvoicing
+
+@{
+    ViewData["Title"] = "Create Invoice";
+    ViewData["MenuKey"] = "Invoicing";
+}
+
+<div class="card">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Generate new Invoicing</strong></h5>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <form enctype="multipart/form-data" method="post" asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row">
+                <div class="form-group required col-lg-6 mb-3">
+                    <label class="control-label mb-1">Tenant</label>
+                    <select asp-for="TenantId" class="form-control page1 select2" data-bs-toggle="select2" asp-items="ViewBag.TenantId">
+                        <option selected disabled value="">Select...</option>
+                    </select>
+                    <span asp-validation-for="TenantId" class="text-danger"></span>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group required mb-3">
+                        <label class="control-label mb-1">Periode</label>
+                        <div class="input-group" id="datetimepicker-view-mode" data-target-input="nearest">
+                            <input type="text" asp-for="InvoicePeriod" class="form-control" data-target="#datetimepicker-view-mode" maxlength="7" minlength="7"/>
+                            <div class="input-group-text" data-target="#datetimepicker-view-mode" data-toggle="datetimepicker">
+                                <i class="fa fa-calendar"></i>
+                            </div>
+                        </div>
+                         <span asp-validation-for="InvoicePeriod" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group required col-lg-6 mb-3">
+                <label class="control-label mb-1">Packing Material</label>
+                <input class="form-control" name="InputMaterial" value="0" required type="number"/>
+                <span class="text-danger field-validation-valid spanQuantity" data-valmsg-for="InputMaterial" data-valmsg-replace="true"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Generate" class="btn btn-primary" /> &nbsp;
+                <a asp-action="Index" class="btn btn-dark">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(function() {
+            $('#datetimepicker-view-mode').datetimepicker({
+                viewMode: 'months',
+                format: 'MM-YYYY'
+            });
+
+            $('.table').DataTable({
+                responsive: true,
+
+                fixedHeader: true
+            });
+        });
+
+    </script>
+}

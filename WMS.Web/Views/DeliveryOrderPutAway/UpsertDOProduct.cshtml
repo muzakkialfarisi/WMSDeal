@@ -1,0 +1,151 @@
+﻿@model IncDeliveryOrder
+
+<div class="card">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Products</strong></h5>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped" id="tbl-products">
+                <thead>
+                    <tr class="text-center">
+                        <th>
+                            Action
+                        </th>
+                        <th>
+                            Picture
+                        </th>
+                        <th>
+                            Product
+                        </th>
+                        <th>
+                            Qty
+                        </th>
+                        <th>
+                            Storage
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.IncDeliveryOrderProducts)
+                    {
+                        <tr>
+                            <td class="text-center">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-sm btn-outline-tertiary" data-bs-toggle="dropdown"><i class="fas fa-fw fa-ellipsis-h"></i></button>
+                                    <ul class="dropdown-menu">
+                                        @if (item.Status != SD.FlagDOProduct_Puted)
+                                        {
+                                            var remaining = item.IncDeliveryOrderArrivals.Quantity;
+                                            if(item.IncDeliveryOrderArrivals.InvProductPutaways.Count > 0)
+                                            {
+                                                remaining = remaining - item.IncDeliveryOrderArrivals.InvProductPutaways.Sum(m => m.Quantity);
+                                            }
+
+                                            <li>
+                                                <button class="dropdown-item btn-upsert-putaway" 
+                                                data-doproductid="@item.DOProductId"
+                                                data-quantity="@item.IncDeliveryOrderArrivals.Quantity"
+                                                data-remaining="@remaining"
+                                                data-bs-toggle="modal" data-bs-target="#ModalUpsertDeliveryOrderProductArrival">PutAway</button>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <img class="rounded-circle" height="50" width="50" src="~/img/product/@item.MasProductData.BeautyPicture">
+                            </td>
+                            <td>
+                                <strong class="text-primary">@item.MasProductData.SKU</strong><br>
+                                @item.MasProductData.ProductName<br>
+                                <strong >@item.MasProductData.ProductCondition</strong><br>
+                            </td>
+                            <td class="text-end">
+                                <ul class="list-group">
+                                    <li class="d-flex justify-content-between align-items-center">
+                                        AR
+                                        <span class="badge bg-success rounded-pill">@item.IncDeliveryOrderArrivals.Quantity</span>
+                                    </li>
+                                    <li class="d-flex justify-content-between align-items-center">
+                                        PUT
+                                    @if (item.IncDeliveryOrderArrivals.InvProductPutaways.Count < 1)
+                                    {
+                                        <span class="badge bg-danger rounded-pill">0</span>
+                                    }
+                                    else
+                                    {
+                                        var putaway = item.IncDeliveryOrderArrivals.InvProductPutaways.Sum(m => m.Quantity);
+                                        @if (putaway != item.IncDeliveryOrderArrivals.Quantity)
+                                        {
+                                            <span class="badge bg-warning rounded-pill">@putaway</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-success rounded-pill">@putaway</span>
+                                        }
+                                    }
+                                    </li>
+                                </ul>
+                            </td>
+                            <td class="text-center">
+                                @if (item.IncDeliveryOrderArrivals.InvProductPutaways.Count < 1)
+                                { 
+                                    <span>0</span>
+                                }
+                                else
+                                {
+                                    <span>@item.IncDeliveryOrderArrivals.InvProductPutaways.GroupBy(m => m.StorageCode).Count()</span>
+                                }
+                            </td>
+                            <td class="text-center">
+                                @if (item.Status == SD.FlagDOProduct_Canceled)
+                                {
+                                            <span class="badge bg-dark">@item.Status</span>
+                                }
+                                @if (item.Status == SD.FlagDOProduct_Open)
+                                {
+                                            <span>@item.Status</span>
+                                }
+                                @if (item.Status == SD.FlagDOProduct_Booked)
+                                {
+                                            <span class="badge bg-secondary">@item.Status</span>
+                                }
+                                @if (item.Status == SD.FlagDOProduct_Arrived)
+                                {
+                                            <span class="badge bg-info">@item.Status</span>
+                                }
+                                @if (item.Status == SD.FlagDOProduct_Puted)
+                                {
+                                            <span class="badge bg-primary">@item.Status</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th class="text-center" colspan="2">
+                            Total
+                        </th>
+                        <th>
+                            @Model.IncDeliveryOrderProducts.Count Item
+                        </th>
+                        <th class="text-end">
+                            @Model.IncDeliveryOrderProducts.Sum(m => m.Quantity)
+                        </th>
+                        <th>
+                        </th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>

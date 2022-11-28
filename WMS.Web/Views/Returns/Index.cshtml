@@ -1,0 +1,87 @@
+﻿@model IEnumerable<InvReturn>
+
+@{
+    ViewData["Title"] = "Return Mangement";
+    ViewData["MenuKey"] = "Dispatch";
+}
+
+<div class="card" style="min-height:700px">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Returns</strong></h5>
+            </div>
+            <div>
+                <button type="button" class="btn btn-outline-primary btn-pill btn-create" data-bs-toggle="modal" data-bs-target="#Search">Add New</button>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr class="text-center">
+                        <th>
+                            Return Number
+                        </th>
+                        <th>
+                            Tenant
+                        </th>
+                        <th>
+                            Warehouse
+                        </th>
+                        <th>
+                            Product
+                        </th>
+                        <th>
+                            Quantity
+                        </th>
+                        <th>
+                            Action
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @item.ReturnNumber
+                            </td>
+                            <td>
+                                @item.MasDataTenant.Name
+                            </td>
+                            <td>
+                                @item.MasHouseCode.HouseName
+                            </td>
+                            <td>
+                                @item.InvReturnProducts.Count()
+                            </td>
+                            <td>
+                                @item.InvReturnProducts.Sum(m => m.Quantity)
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-outline-tertiary" data-bs-toggle="dropdown"><i class="fas fa-fw fa-ellipsis-h"></i></button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item" href="#">Edit</a>
+                                    </li>
+                                    <li>
+                                        <button class="dropdown-item btn-delete" href="#">Delete</button>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<partial name="ModalSearch" />
+
+@section Scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/js/Returns/Index.js"> </script>
+}

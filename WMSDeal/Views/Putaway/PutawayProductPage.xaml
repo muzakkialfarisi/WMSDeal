@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WMSDeal.Views.Putaway.PutawayProductPage"
+             xmlns:constant="clr-namespace:WMSDeal.Constant"
+             xmlns:viewModels="clr-namespace:WMSDeal.ViewModels.Putaway"
+             x:DataType="viewModels:PutawayProductViewModel"
+             xmlns:model="clr-namespace:WMSDeal.Models.Incoming"
+             xmlns:customControls="clr-namespace:WMSDeal.CustomControl"
+             BackgroundColor="{StaticResource Background1}"
+             Title="Putting Product">
+    <StackLayout>
+        <StackLayout.Background>
+            <LinearGradientBrush EndPoint="0,1">
+                <GradientStop Color="{StaticResource WMSBlue}"
+                          Offset="0.1" />
+                <GradientStop Color="{StaticResource White}"
+                          Offset="1.0" />
+            </LinearGradientBrush>
+        </StackLayout.Background>
+        <ScrollView VerticalOptions="FillAndExpand">
+            <VerticalStackLayout VerticalOptions="FillAndExpand">
+                <Frame  Background="{StaticResource Blue100Accent}" Margin="10" Padding="0" BorderColor="{StaticResource Blue100Accent}" HasShadow="True">
+                    <StackLayout>
+                        <Label Text="{Binding ProductData.DONumber}" TextColor="{StaticResource Background1}" HorizontalOptions="Center"  Margin="0,10,0,0"
+                   FontFamily="Number" FontAttributes="Bold"/>
+                        <Label Text="{Binding ProductData.Tenant}" TextColor="{StaticResource Background1}" HorizontalOptions="Center" Margin="0,5,0,10"
+                   FontAttributes="Bold" FontFamily="Calibri"/>
+                        <StackLayout Grid.Row="0" Grid.Column="0"  Background="{StaticResource Background1}" >
+                            <Grid RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="100,*" Padding="10">
+                                <Frame Grid.RowSpan="4" Grid.Column="0" BorderColor="{StaticResource Aqua3}"
+                                       CornerRadius="5" Padding="0" VerticalOptions="Center" HorizontalOptions="Start" HeightRequest="90" WidthRequest="90" >
+                                    <Image Source="{Binding ProductData.BeautyPicture ,StringFormat='{0}'}"
+                                           Aspect="AspectFill"  HorizontalOptions="Start" VerticalOptions="Center" HeightRequest="90" WidthRequest="90" />
+                                </Frame>
+
+                                <Label Grid.Row="0" Grid.Column="1" VerticalOptions="Center" Text="{Binding ProductData.ProductName,StringFormat='{0}'}" TextColor="{StaticResource Black}" 
+                                       FontAttributes="Bold" />
+                                <Label Grid.Row="1" Grid.Column="1" VerticalOptions="Center" Text="{Binding ProductData.SKU,StringFormat='SKU : {0}'}" 
+                                       TextColor="{StaticResource Black}"  FontAttributes="Bold" />
+                                <Label Grid.Row="2" Grid.Column="1" VerticalOptions="Center"  Text="{Binding ProductData.ProductCondition,StringFormat='{0}'}" 
+                                       TextColor="{StaticResource Black}"/>
+
+                                <StackLayout Grid.Row="3" Grid.Column="1" Padding="0">
+                                    <Grid RowDefinitions="Auto" ColumnDefinitions="*,60">
+                                        <Label Grid.Row="0" Grid.Column="0" VerticalOptions="Center"
+                                               TextColor="{StaticResource Black}" >
+                                            <Label.Text>
+                                                <MultiBinding StringFormat="{}Total : {0}  {1}   ({2})">
+                                                    <Binding Path="ProductData.Quantity"/>
+                                                    <Binding Path="ProductData.Unit"/>
+                                                    <Binding Path="ProductData.ProductLevel"/>
+                                                </MultiBinding>
+                                            </Label.Text>
+                                        </Label>
+                                    </Grid>
+                                </StackLayout>
+                            </Grid>
+                            <!--<ActivityIndicator IsRunning="True" IsVisible="{Binding IsBusy}" Color="{StaticResource DarkOrange}" HeightRequest="25" WidthRequest="25"/>-->
+                            <HorizontalStackLayout Spacing="40" Margin="0,0,0,10" HorizontalOptions="Center">
+                                <Label Text="{Binding TotalPut,StringFormat='Puted : {0}'}" TextColor="{StaticResource Black}"  />
+                                <Label Text="{Binding TotalRemaining,StringFormat='Remaining : {0}'}" TextColor="{StaticResource Black}" />
+                            </HorizontalStackLayout>
+                        </StackLayout>
+                    </StackLayout>
+
+                </Frame>
+                <Frame Margin="10,0,10,0" Padding="10" Background="{StaticResource Blue300Accent}" BorderColor="{StaticResource Blue300Accent}" HasShadow="True">
+                    <StackLayout  >
+                        <Label Text="Storage" TextColor="Black" Margin="0,0,0,5"/>
+                        <Frame HeightRequest="45" Margin="0" Padding="0" HasShadow="True" BorderColor="WhiteSmoke" 
+                                   HorizontalOptions="FillAndExpand">
+                            <Grid RowDefinitions="*" ColumnDefinitions="*,Auto" HorizontalOptions="FillAndExpand">
+                                <Entry  x:Name="etrStorageCode" Text="{Binding Storage }" Margin="10,0,0,0" VerticalOptions="Center" Placeholder="Scan Storage Code"
+                                       ClearButtonVisibility="WhileEditing" ReturnType="Next" IsReadOnly="True">
+                                    <Entry.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding ScanCommand}"/>
+                                    </Entry.GestureRecognizers>
+                                </Entry>
+                                <ImageButton Grid.Column="1" x:Name="btnScanSearch"  BackgroundColor="{StaticResource WMSBlue}" Padding="5"
+                                             HorizontalOptions="End" VerticalOptions="Center"
+                                             Command="{Binding ScanCommand}"
+                                             Source="{x:Static constant:Icon.Scan}"
+                                             HeightRequest="42" WidthRequest="50"
+                                             Aspect="AspectFill" CornerRadius="5" />
+                               
+                            </Grid>
+                        </Frame>
+
+                        <Label Text="Quantity" TextColor="Black" Margin="0,10,0,5"/>
+                        <Frame HeightRequest="45" Margin="0" Padding="0" HasShadow="True" BorderColor="WhiteSmoke" 
+                                   HorizontalOptions="FillAndExpand">
+                            <Entry Text="{Binding Total}" Margin="10,0,0,0" VerticalOptions="Center"  
+                                       ReturnType="Done" Keyboard="Numeric" HeightRequest="45"  Placeholder="123" MaxLength="3" />
+                        </Frame>
+                        <Grid RowDefinitions="Auto" ColumnDefinitions="Auto" Margin="20,10" IsVisible="{Binding IsVisible}" >
+                            <StackLayout >
+                                <Label Text="Storage Id" Margin="0,10,0,5"/>
+                                <Label Text="{Binding Storage}" MaxLines="2" FontAttributes="Bold" LineBreakMode="CharacterWrap" WidthRequest="300" HorizontalOptions="CenterAndExpand"/>
+                                <Grid RowDefinitions="40,25,25,25,25" ColumnDefinitions="Auto,*" Margin="0,10,0,5">
+                                    <Label Text="Storage Code " VerticalOptions="Center" />
+                                    <Label Grid.Column="1" Text="{Binding StorageName,StringFormat=': {0}'}" HorizontalOptions="Start" VerticalOptions="Center" FontAttributes="Bold"/>
+
+                                    <Label Grid.Row="1" Text="Warehouse " VerticalOptions="Center" />
+                                    <Label Grid.Row="1" Grid.Column="1" Text="{Binding HouseName,StringFormat=': {0}'}" HorizontalOptions="Start" VerticalOptions="Center" />
+
+                                    <Label Grid.Row="2" Text="Size " VerticalOptions="Center" />
+                                    <Label Grid.Row="2" Grid.Column="1" Text="{Binding SizeName,StringFormat=': {0}'}" HorizontalOptions="Start" VerticalOptions="Center"/>
+
+                                    <Label Grid.Row="3" Text="Zone " VerticalOptions="Center"/>
+                                    <Label Grid.Row="3" Grid.Column="1" Text="{Binding ZoneName,StringFormat=': {0}'}" HorizontalOptions="Start" VerticalOptions="Center"/>
+
+                                    <Label Grid.Row="4" Text="Row " VerticalOptions="Center"/>
+                                    <Label Grid.Row="4" Grid.Column="1" Text="{Binding Row,StringFormat=': {0}'}" HorizontalOptions="Start" VerticalOptions="Center"/>
+                                </Grid>
+                            </StackLayout>
+                        </Grid>
+                    </StackLayout>
+                </Frame>
+            </VerticalStackLayout>
+        </ScrollView>
+        <StackLayout HeightRequest="60" VerticalOptions="End" BackgroundColor="{StaticResource  Background2}">
+            <customControls:ButtonControl Margin="10,7"  
+                                          Text="SAVE"
+                                          IsInProgress="{Binding IsBusy}"    
+                                          Command="{Binding SimpanCommand}"
+                                          HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
+        </StackLayout>
+    </StackLayout>
+</ContentPage>

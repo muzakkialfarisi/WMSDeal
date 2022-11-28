@@ -1,0 +1,101 @@
+﻿@model IEnumerable<MasProductData>
+
+@{
+    ViewData["Title"] = "Product Data";
+    ViewData["MenuKey"] = "Product";
+}
+
+<div class="card" style="min-height:700px">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Product List</strong></h5>
+            </div>
+            <div>
+                <a class="btn btn-outline-primary btn-pill" asp-action="Upsert">Add Product</a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr class="text-center">
+                        <th>
+                            Action
+                        </th>
+                        <th>
+                            Picture
+                        </th>
+                        <th>
+                            Name
+                        </th>
+                        <th>
+                            SKU
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                        <th>
+                            UOM
+                        </th>
+                        <th>
+                            Tenant
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="text-center">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-outline-tertiary" data-bs-toggle="dropdown"><i class="fas fa-fw fa-ellipsis-h"></i></button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" asp-action="Upsert" asp-route-ProductId="@item.ProductId" asp-route-TenantId="@item.TenantId">Edit</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <img src="~/img/product/@item.BeautyPicture" class="rounded-circle" height="50" width="50" asp-append-version="true" /> <br> @item.ProductLevel
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ProductName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SKU)
+                            </td>
+                            <td>
+                                @item.ProductCondition
+                            </td>
+                            <td>
+                                @item.Unit
+                            </td>
+                            <td class="text-center">
+                                @Html.DisplayFor(modelItem => item.MasDataTenant.Name)<br>
+                                @if (item.Flag == FlagEnum.Active)
+                                {
+                                    <span class="badge bg-success"> @Html.DisplayFor(modelItem => item.Flag)</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger"> @Html.DisplayFor(modelItem => item.Flag)</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(function () {
+            $('.table').DataTable({
+                fixedHeader: true
+            });
+        });
+    </script>
+}

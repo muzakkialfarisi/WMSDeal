@@ -1,0 +1,56 @@
+﻿@model StorageViewModel
+
+<div class="modal fade" id="modalupsertlevel" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Level</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-action="UpsertLevel" method="post">
+                <div class="modal-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <input name="RowCode" value="@Model.invStorageRow.RowCode" hidden />   
+                    
+                    <div class="mb-3 form-group required">
+                        <label class="control-label">Section Code</label>
+                        <select asp-for="invStorageLevel.SectionCode" class="form-control select2" data-bs-toggle="select2" required asp-items="ViewBag.SectionCode">
+                            <option selected disabled value="">Select...</option>
+                        </select>
+                        <span asp-validation-for="invStorageLevel.SectionCode" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3 form-group required">
+                        <label class="control-label">Column Code</label>
+                        <select asp-for="invStorageLevel.ColumnCode" class="form-control select2" data-bs-toggle="select2" required asp-items="ViewBag.ColumnCode">
+                            <option selected disabled value="">Select...</option>
+                        </select>
+                        <span asp-validation-for="invStorageLevel.ColumnCode" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3 form-group required">
+                        <label class="control-label">Level Code</label>
+                        <input name="LevelCode" class="form-control" required readonly />
+                        <input asp-for="invStorageLevel.LevelCode" class="form-control" required hidden/>
+                        <span asp-validation-for="invStorageLevel.LevelCode" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3 form-group required">
+                        <label class="control-label">Status</label>
+                        <select asp-for="invStorageLevel.Flag" class="form-control select2" data-bs-toggle="select2" asp-items="Html.GetEnumSelectList<FlagEnum>()">
+                        </select>
+                        <span asp-validation-for="invStorageLevel.Flag" class="text-danger"></span>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group">
+                        <input type="submit" value="Save" class="btn btn-primary" />
+                        <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

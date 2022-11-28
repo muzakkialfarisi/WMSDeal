@@ -1,0 +1,359 @@
+﻿@model DeliveryOrderCreateViewModel
+
+@{
+    ViewData["Title"] = "Delivery Order";
+    ViewData["MenuKey"] = "Delivery Order";
+}
+
+@{
+    var active_do = "active";
+    var active_product = string.Empty;
+
+    if (Model.incDeliveryOrder != null)
+    { 
+        active_do = string.Empty;
+        active_product = "active";
+    }
+}
+
+<div class="row">
+    <div class="col-12 col-sm-5 mb-3">
+
+        <div class="card tab bg-transparent p-0 m-0">
+            <div class="card-header p-0 m-0">
+                <ul class="nav nav-tabs bg-light w-100 text-center font-weight-bold" role="tablist">
+                    <li class="nav-item w-50">
+                        <a class="nav-link @active_do" href="#tab-1" data-bs-toggle="tab" role="tab" aria-selected="false">
+                            Delivery Order <br /> Details
+                        </a>
+                    </li>
+                    @if (Model.incDeliveryOrder != null)
+                    {
+                        <li class="nav-item w-25">
+                            <a class="nav-link @active_product" href="#tab-2" data-bs-toggle="tab" role="tab" aria-selected="false">
+                                Product <br /> List
+                            </a>
+                        </li>
+                        <li class="nav-item w-25">
+                            <a class="nav-link" href="#tab-3" data-bs-toggle="tab" role="tab" aria-selected="false">
+                                Product <br /> Bundling
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+            <div class="card-body p-0 m-0">
+                <div class="tab-content">
+                    <div class="tab-pane @active_do" id="tab-1" role="tabpanel">
+                        <form asp-action="Upsert" method="post">
+                            <partial name="UpsertDeliveryOrder" />
+                        </form>
+
+                    </div>
+                    @if (Model.incDeliveryOrder != null)
+                    { 
+                        <div class="tab-pane @active_product" id="tab-2" role="tabpanel">
+                            <partial name="ProductList" />
+                        </div>
+                        <div class="tab-pane" id="tab-3" role="tabpanel">
+                            <partial name="ProductBundling" />
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="d-grid gap-2 mt-3">
+            @if (Model.incDeliveryOrder == null)
+            { 
+                <a asp-action="Index" class="btn btn-dark">Back to List</a>
+            }
+        </div>
+    </div>
+    <div class="col-12 col-sm-7">
+        @if (Model.incDeliveryOrder != null)
+        {
+            <partial name="UpsertDeliveryOrderProduct" />
+            
+            <form asp-action="Order" method="post">
+                @if (Model.incDeliveryOrder != null)
+                {
+                <input asp-for="incDeliveryOrder.DONumber" hidden>
+                <input asp-for="incDeliveryOrder.TenantId" hidden>
+                }
+                <div class="d-grid gap-2">
+                    @if (Model.incDeliveryOrder != null)
+                    { 
+                        <button class="btn btn-primary" type="submit">Order</button>
+                    }
+                    <a asp-action="Index" class="btn btn-dark">Back to List</a>
+                </div>
+            </form>
+        }
+    </div>
+</div>
+
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(function () {
+            $('#tbl-productlist').DataTable({
+                lengthMenu: [
+                    [5, 10],
+                    [5, 10],
+                ],
+            });
+
+            $('#tbl-productbundling').DataTable({
+                lengthMenu: [
+                    [5, 10],
+                    [5, 10],
+                ],
+            });
+
+            $('#tbl-deliveryorderproduct').DataTable({
+                lengthMenu: [
+                    [20, 50],
+                    [20, 50],
+                ],
+            });
+        });
+
+        $('select[name="incDeliveryOrder.TenantId"]').on('change', function () {
+            $.ajax({
+                url: '../../Supplier/GetSupplierByTenantId',
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    TenantId: $(this).val(),
+                },
+                beforeSend: function () {
+                    $('select[name="incDeliveryOrder.SupplierId"]').empty();
+                    $('select[name="incDeliveryOrder.SupplierId"]').append('<option selected disabled value="">Select...</option>');
+                },
+                success: function (data) {
+                    for (let i = 0; i < data.length; i++) {
+                        $('select[name="incDeliveryOrder.SupplierId"]').append('<option value="' + data[i].supplierId + '">' + data[i].name + '</option>');
+                    }
+                },
+                error: function (response) {
+                    console.log(response.responseText);
+                }
+            });
+        });
+
+        $("#DOSupplier").on('click', function () {
+            if ($(this).is(":checked")) {
+                $("input[name='incDeliveryOrder.DOSupplier']").attr('readonly', true);
+                $("input[name='incDeliveryOrder.DOSupplier']").val("@SD.AutoGenerated");
+            }
+            else {
+                $("input[name='incDeliveryOrder.DOSupplier']").attr('readonly', false);
+                $("input[name='incDeliveryOrder.DOSupplier']").val("");
+            }
+        });
+
+        function DOProductClick(DONumber, ProductId, Field, event)
+        {
+            UpsertDOProduct(true, DONumber, ProductId, Field, event);
+        }
+
+        function DOProductChange(DONumber, ProductId, Field, event)
+        {
+            UpsertDOProduct(false, DONumber, ProductId, Field, event);
+        }
+
+        function DOProductDelete(DONumber, ProductId, Field, event)
+        {
+            UpsertDOProduct(false, DONumber, ProductId, Field, event);
+        }
+
+        function ProductBundlingClick(DONumber, BundlingId, TenantId)
+        {
+            var model = "";
+            var Type = "";
+            UpsertDOProductProcess(model, Type, DONumber, BundlingId, TenantId);
+        }
+
+        function UpsertDOProduct(Type, DONumber, ProductId, Field, event) {
+            var model;
+            var result;
+
+            if(Type == true)
+            {
+                model = "DONumber="+DONumber+"&ProductId="+ProductId+"&Quantity=1";
+                UpsertDOProductProcess(model, Type, false, false, false);
+            }
+            else
+            {
+                $.ajax({
+                    url: '../../DeliveryOrderCreate/GetDeliveryOrderProductByDONumberByProductId',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: {
+                        DONumber: DONumber,
+                        ProductId: ProductId,
+                    },
+                    success: function (data) {
+                        if (data.statusCode == 200)
+                        {
+                            result = data.value;
+                            if (Field == "Quantity") {
+                                model = "DONumber=" + DONumber + "&ProductId=" + ProductId + "&Quantity=" + event.target.value + "&UnitPrice=" + result.unitPrice + "&DateOfExpired=" + result.dateOfExpired;
+                            }
+                            else if (Field == "UnitPrice") {
+                                model = "DONumber=" + DONumber + "&ProductId=" + ProductId + "&Quantity=" + result.quantity + "&UnitPrice=" + event.target.value + "&DateOfExpired=" + result.dateOfExpired;
+                            }
+                            else if (Field == "DateOfExpired") {
+                                model = "DONumber=" + DONumber + "&ProductId=" + ProductId + "&Quantity=" + result.quantity + "&UnitPrice=" + result.unitPrice + "&DateOfExpired=" + event.target.value;
+                            }
+                            else if (Field == "DeleteProduct") {
+                                model = "DONumber=" + DONumber + "&ProductId=" + ProductId + "&Quantity=" + 0 + "&UnitPrice=";
+                            }
+
+                            UpsertDOProductProcess(model, Type, false, false, false);
+                        }
+                        else
+                        {
+                            toastr.error(data.value, '', {
+                                positionClass: 'toast-top-right',
+                                closeButton: false,
+                                progressBar: false,
+                                newestOnTop: true,
+                                rtl: $("body").attr("dir") === "rtl" || $("html").attr("dir") === "rtl",
+                                timeOut: 3000
+                            });
+                        }
+                    },
+                    error: function (response) {
+                        console.log(response.responseText);
+                    }
+                });
+            }
+        }
+
+        function UpsertDOProductProcess(model, Type, DONumber, BundlingId, TenantId) {
+            var URL;
+            var DATA;
+            
+            if(BundlingId != false) {
+                URL = '../../DeliveryOrderCreate/AddProductByBundlingId';
+                DATA = "DONumber=" + DONumber + "&BundlingId=" + BundlingId + "&TenantId=" + TenantId;
+            }
+            else
+            {
+                URL = '../../DeliveryOrderCreate/AddProductByProductId';
+                DATA = model + "&Type=" + Type;
+            }
+
+            $.ajax({
+                url: URL,
+                type: 'POST',
+                dataType: 'json',
+                data: DATA,
+                success: function (data) {
+                    if (data.statusCode == 200) {
+                        
+                        $("#tbl-deliveryorderproduct").DataTable().clear().draw();
+                        data = data.value.incDeliveryOrderProducts;
+
+                        var dataTable = $("#tbl-deliveryorderproduct").dataTable().api();
+                        var Quantity = 0;
+                        var SubTotal = 0;
+
+                        for (let i = 0; i < data.length; i++) {
+                            SubTotal = SubTotal + data[i].subTotal;
+                            Quantity = Quantity + data[i].quantity;
+
+                            var serialnumber = "";
+                            if(data[i].masProductData.serialNumber == "SN")
+                            {
+                                if (data[i].incSerialNumbers.length == data[i].quantity) 
+                                {
+                                    serialnumber = '<a class="btn btn-outline-tertiary btn-sm mt-2" href="../../SerialNumber/Upsert?DONumber='+ data[i].doNumber +'&DOProductCode='+ data[i].doProductCode +'">SN</a>';
+                                }
+                                else
+                                {
+                                    serialnumber = '<a class="btn btn-outline-warning btn-sm mt-2" href="../../SerialNumber/Upsert?DONumber=' + data[i].doNumber + '&DOProductCode=' + data[i].doProductCode + '">SN</a>';
+                                }
+                            }
+
+                            var dateofexpired = "";
+                            if(data[i].masProductData.storageMethod == "FEFO")
+                            {
+                                var thisdate = data[i].dateOfExpired.split('T');
+                                dateofexpired = '<input onchange="DOProductChange(\'' + data[i].doNumber + '\',\'' + data[i].productId + '\',\'' + 'DateOfExpired' + '\', event)" name="DateOfExpired" value="' + thisdate[0] + '" type="date" size="4" style="text-align:center">';
+                            }
+
+                            tr = document.createElement("tr");
+                            tr.innerHTML = '' +
+                                '<tr>' +
+                                '<td class="text-center">' +
+                                '<button onclick="DOProductDelete(\'' + data[i].doNumber + '\',\'' + data[i].productId + '\',\'' + 'DeleteProduct' + '\', event)" class="btn btn-outline-danger btn-sm"><i class="far fa-fw fa-trash-alt"></i></button>' +
+                                '<br>' +
+                                serialnumber +
+                                '</td>' +
+                                '<td class="text-center">' +
+                                '<img src="../../../img/product/' + data[i].masProductData.beautyPicture + '" class="rounded-circle" height="50" width="50"/>' +
+                                '</td>' +
+                                '<td>' +
+                                data[i].masProductData.productName + '<br>' +
+                                '<strong class="text-primary">' + data[i].masProductData.sku + '</strong> <br>' +
+                                data[i].masProductData.productCondition +
+                                '</td>' +
+                                '<td class="text-center">' +
+                                dateofexpired +
+                                '</td>' +
+                                '<td class="text-center">' +
+                                '<input onchange="DOProductChange(\'' + data[i].doNumber + '\',\'' + data[i].productId + '\',\'' + 'UnitPrice' + '\', event)" name="UnitPrice" value="' + data[i].unitPrice + '" size="3" style="text-align:end">' +
+                                '</td>' +
+                                '<td class="text-center">' +
+                                '<input onchange="DOProductChange(\'' + data[i].doNumber + '\',\'' + data[i].productId + '\',\'' + 'Quantity' + '\', event)" name="Quantity" value="' + data[i].quantity + '" size="3" style="text-align:center">' +
+                                '</td>' +
+                                '</tr>';
+
+                            dataTable.row.add(tr);
+                            dataTable.draw();
+                        }
+
+                        $('#Count').html(data.length)
+                        $('#SubTotal').html(SubTotal)
+                        $('#Quantity').html(Quantity)
+
+                        toastr.success('Product berhasil diupdate', '', {
+                            positionClass: 'toast-top-right',
+                            closeButton: false,
+                            progressBar: false,
+                            newestOnTop: true,
+                            rtl: $("body").attr("dir") === "rtl" || $("html").attr("dir") === "rtl",
+                            timeOut: 3000
+                        });
+                    }
+                    else {
+                        toastr.error(data.value, '', {
+                            positionClass: 'toast-top-right',
+                            closeButton: false,
+                            progressBar: false,
+                            newestOnTop: true,
+                            rtl: $("body").attr("dir") === "rtl" || $("html").attr("dir") === "rtl",
+                            timeOut: 3000
+                        });
+                    }
+                },
+                error: function (response) {
+                    toastr.error("Internal Server Error!", '', {
+                        positionClass: 'toast-top-right',
+                        closeButton: false,
+                        progressBar: false,
+                        newestOnTop: true,
+                        rtl: $("body").attr("dir") === "rtl" || $("html").attr("dir") === "rtl",
+                        timeOut: 3000
+                    });
+                }
+            });
+        }
+
+    </script>
+}   

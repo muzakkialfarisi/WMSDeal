@@ -1,0 +1,29 @@
+﻿@model IncRequestPurchase
+
+@{
+    ViewData["Title"] = "Request Purchases Order Create";
+    ViewData["MenuKey"] = "Purchase Order";
+}
+
+<form asp-action="Create" method="post">
+    <partial name="CreateRequest" />
+
+    <div class="row">
+        <div class="col-12 col-sm-6">
+            <partial name="ListProduct" />
+        </div>
+        <div class="col-12 col-sm-6">
+            <partial name="CreateRequestProduct" />
+        </div>
+    </div>
+
+    <div class="form-group text-end">
+        <input type="submit" value="Apply" class="btn btn-primary" />
+        <a asp-action="Index" class="btn btn-dark">Back to List</a>
+    </div>
+</form>
+
+@section Scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/lib/js/PurchaseOrderRequests/Create.js"> </script>
+}

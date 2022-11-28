@@ -1,0 +1,72 @@
+﻿@model UserLoginViewModel
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="card">
+    <div class="card-body">
+        <div class="m-sm-4">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <img src="~/img/logo/wms_logo.png" alt="Linda Miller" class="img-fluid" width="150" height="40" />
+                </div>
+            </div>
+            <br />
+            <form method="post">
+                <div class="form-floating mb-3">
+				    <input class="form-control" asp-for="username" placeholder="username">
+				    <label for="username">Username</label>
+                    <span asp-validation-for="username" class="text-danger"></span>
+			    </div>
+
+                <div class="input-group mb-3">
+                    <div class="form-floating flex-grow-1">
+                        <input type="password" class="form-control" asp-for="password" placeholder="password">
+                        <label for="password">Password</label>
+                        <span asp-validation-for="password" class="text-danger"></span>
+                    </div>
+                    <span class="input-group-text "><i toggle="#password-field" class="fas fa-fw fa-eye-slash toggle-password"></i></span>
+                </div>
+
+                <small>
+                    <a asp-action="ForgotPassword">Forgot password?</a>
+                </small>
+                <div class="mb-3">
+                    <label class="form-label">
+                        Security code
+                    </label>
+                </div>
+                <div>
+                    <div class="form-check align-items-center">
+                        <input id="customControlInline" type="checkbox" class="form-check-input" value="remember-me" name="remember-me"
+                                checked>
+                        <label class="form-check-label text-small" for="customControlInline">Remember me next time</label>
+                    </div>
+                </div>
+                <div class="text-center mt-3">
+                    <button type="submit" class="btn btn-lg btn-primary ">Sign in</button>
+                </div>
+               
+            </form>
+        </div>
+        <div class="text-end">
+            <label class="text-sm">Powered by </label>
+            <img src="~/img/avatars/ncslogo.jpg" class="img-fluid" width="50" height="50" />
+        </div>
+    </div>
+
+</div>
+
+@section Scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).on('click', '.toggle-password', function () {
+
+            $(this).toggleClass("fa-eye fa-eye-slash");
+
+            var input = $('input[name="password"]');
+            input.attr('type') === 'password' ? input.attr('type', 'text') : input.attr('type', 'password')
+        });
+    </script>
+}

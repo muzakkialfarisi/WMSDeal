@@ -1,0 +1,139 @@
+﻿@model MasProductData
+
+<div class="card">
+    <div class="card-body my-3">
+        <div class="row text-center mb-3">
+            <div class="col-12 col-sm-6">
+                <img src="~/img/product/@Model.BeautyPicture" class="rounded-circle" height="60" width="60" asp-append-version="true" />
+            </div>
+            <div class="col-12 col-sm-6">
+                <img src="~/img/product/@Model.CloseUpPicture" class="rounded-circle" height="60" width="60" asp-append-version="true" />
+            </div>
+        </div>
+        <table class="table table-sm table-borderless p-0 m-0">
+            <tbody>
+                <tr>
+                    <td class="align-baseline">
+                        Product Name
+                    </td>
+                    <td>
+                        : <strong>@Model.ProductName</strong>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="align-baseline">
+                        SKU
+                    </td>
+                    <td>
+                        : <span class="text-primary">@Model.SKU</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Zone
+                    </td>
+                    <td>
+                        : @Model.InvStorageZone.ZoneName
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Category
+                    </td>
+                    <td>
+                        : @Model.InvStorageCategory.StorageCategoryName
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Size
+                    </td>
+                    <td>
+                        : @Model.InvStorageSize.SizeName 
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        P x L x T
+                    </td>
+                    <td>
+                        : @Model.Panjang x @Model.Lebar x @Model.Tinggi Cm
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Actual Weight
+                    </td>
+                    <td>
+                        : @String.Format("{0:n0}", Model.ActualWeight) Gram
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        VolWeight
+                    </td>
+                    <td>
+                        : @String.Format("{0:n0}", Model.VolWight) Gram
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">
+                        Savety Stock
+                    </td>
+                    <td>
+                        : @String.Format("{0:n0}", Model.SafetyStock)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="align-baseline text-nowrap">
+                        Storage Method
+                    </td>
+                    <td>
+                        : @{
+                            var StorageMethod = "- First In First Out";
+                            if(Model.StorageMethod == "FEFO")
+                            {
+                                StorageMethod = "- First Expired First Out";
+                            }
+                            <span>@Model.StorageMethod @StorageMethod</span>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <hr />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">
+                        Total Incoming
+                    </td>
+                    <th>
+                        : @Model.IncDeliveryOrderProducts.Where(m => m.Status != "Open").Sum(m => m.Quantity)
+                    </th>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">
+                        Total Outgoing
+                    </td>
+                    <th>
+                        : @Model.OutSalesOrderProducts.Where(m => m.Flag > 1).Sum(m => m.Quantity)
+                    </th>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <hr />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="text-nowrap">
+                        Total Stock
+                    </th>
+                    <th>
+                        : @Model.InvProductStocks.Sum(m => m.Stock)
+                    </th>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

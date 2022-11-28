@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xaml-comp compile="true" ?>
+<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <Color x:Key="Primary">#0B698B</Color>
+    <Color x:Key="Secondary">#0396A6</Color>
+    <Color x:Key="Tertiary">#EFEEE5</Color>
+    <Color x:Key="White">White</Color>
+    <Color x:Key="Black">Black</Color>
+    <Color x:Key="Red">Red</Color>
+    <Color x:Key="Background">#EBECF0</Color>
+    <Color x:Key="Background1">#FFFFFF</Color>
+    <Color x:Key="Background2">#FAFAFA</Color>
+    <Color x:Key="Background3">#F5F5F5</Color>
+    <Color x:Key="Alabaster">#EFEEE5</Color>
+    <Color x:Key="Tiber">#274546</Color>
+    <Color x:Key="FloralWhite">#FFFCF6</Color>
+    <Color x:Key="Nero">#232323</Color>
+    <Color x:Key="BlueLagoon">#006A6A</Color>
+    <Color x:Key="DeepTeal">#064439</Color>
+    <Color x:Key="OrangeWhite">#EEE7CD</Color>
+    <Color x:Key="Maron">#6A0000</Color>
+    <Color x:Key="Serenade">#FBE3D1</Color>
+    <Color x:Key="DarkOrange">#FF8C00</Color>
+    <Color x:Key="Sukses">#F2F2F2</Color>
+    <Color x:Key="Gray100">#E1E1E1</Color>
+    <Color x:Key="Gray200">#C8C8C8</Color>
+    <Color x:Key="Gray300">#ACACAC</Color>
+    <Color x:Key="Gray400">#919191</Color>
+    <Color x:Key="Gray500">#6E6E6E</Color>
+    <Color x:Key="Gray600">#404040</Color>
+    <Color x:Key="Gray900">#212121</Color>
+    <Color x:Key="Gray950">#141414</Color>
+    <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Primary}"/>
+    <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource Secondary}"/>
+    <SolidColorBrush x:Key="TertiaryBrush" Color="{StaticResource Tertiary}"/>
+    <SolidColorBrush x:Key="WhiteBrush" Color="{StaticResource White}"/>
+    <SolidColorBrush x:Key="BlackBrush" Color="{StaticResource Black}"/>
+    <SolidColorBrush x:Key="Gray100Brush" Color="{StaticResource Gray100}"/>
+    <SolidColorBrush x:Key="Gray200Brush" Color="{StaticResource Gray200}"/>
+    <SolidColorBrush x:Key="Gray300Brush" Color="{StaticResource Gray300}"/>
+    <SolidColorBrush x:Key="Gray400Brush" Color="{StaticResource Gray400}"/>
+    <SolidColorBrush x:Key="Gray500Brush" Color="{StaticResource Gray500}"/>
+    <SolidColorBrush x:Key="Gray600Brush" Color="{StaticResource Gray600}"/>
+    <SolidColorBrush x:Key="Gray900Brush" Color="{StaticResource Gray900}"/>
+    <SolidColorBrush x:Key="Gray950Brush" Color="{StaticResource Gray950}"/>
+    <SolidColorBrush x:Key="DarkOrangeBrush" Color="{StaticResource DarkOrange}"/>
+    <SolidColorBrush x:Key="AlabasterBrush" Color="{StaticResource Alabaster}"/>
+    <SolidColorBrush x:Key="TiberBrush" Color="{StaticResource Tiber}"/>
+    <SolidColorBrush x:Key="FloralWhiteBrush" Color="{StaticResource FloralWhite}"/>
+    <SolidColorBrush x:Key="NeroBrush" Color="{StaticResource Nero}"/>
+    <SolidColorBrush x:Key="BlueLagoonBrush" Color="{StaticResource BlueLagoon}"/>
+    <SolidColorBrush x:Key="DeepTealBrush" Color="{StaticResource DeepTeal}"/>
+    <SolidColorBrush x:Key="OrangeWhiteBrush" Color="{StaticResource OrangeWhite}"/>
+    <SolidColorBrush x:Key="MaronBrush" Color="{StaticResource Maron}"/>
+    <SolidColorBrush x:Key="SerenadeBrush" Color="{StaticResource Serenade}"/>
+    
+    <Color x:Key="Yellow100Accent">#F7B548</Color>
+    <Color x:Key="Yellow200Accent">#FFD590</Color>
+    <Color x:Key="Yellow300Accent">#FFE5B9</Color>
+    <Color x:Key="Cyan100Accent">#28C2D1</Color>
+    <Color x:Key="Cyan200Accent">#7BDDEF</Color>
+    <Color x:Key="Cyan300Accent">#C3F2F4</Color>
+    <Color x:Key="Blue100Accent">#3E8EED</Color>
+    <Color x:Key="Blue200Accent">#72ACF1</Color>
+    <Color x:Key="Blue300Accent">#A7CBF6</Color>
+
+
+    <?Aqua?>
+    <Color x:Key="Aqua">#0B698B</Color>
+    <Color x:Key="Aqua2">#0396A6</Color>
+    <Color x:Key="Aqua3">#9CD3D8</Color>
+    <Color x:Key="Aqua4">#F2F2F2</Color>
+
+    <?WMS?>
+    <Color x:Key="WMSBackgroundDefault">#F2F2F2</Color>
+
+    <Color x:Key="WMSBlue">#0149af</Color>
+    <Color x:Key="WMSOrange">#ff9457</Color>
+    <Color x:Key="WMSRed">#b92132</Color>
+
+    <Color x:Key="Blue100">#001b48</Color>
+    <Color x:Key="Blue200">#02457a</Color>
+    <Color x:Key="Blue300">#018abe</Color>
+    <Color x:Key="Blue400">#97cadb</Color>
+    <Color x:Key="Blue500">#d6eBee</Color>
+
+    <Color x:Key="Green100">#235d3a</Color>
+    <Color x:Key="Green200">#397d54</Color>
+    <Color x:Key="Green300">#73c088</Color>
+    <Color x:Key="Green400">#a8e0b7</Color>
+    <Color x:Key="Green500">#c8ead1</Color>
+
+    <Color x:Key="Grey1">#747995</Color>
+    <Color x:Key="Grey2">#8d9bc8</Color>
+</ResourceDictionary>

@@ -1,0 +1,134 @@
+﻿@model IncDeliveryOrder
+
+<div class="card">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Products</strong></h5>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped" id="tbl-products">
+                <thead>
+                    <tr class="text-center">
+                        <th>
+                            Action
+                        </th>
+                        <th>
+                            Picture
+                        </th>
+                        <th>
+                            Product
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                        <th>
+                            Qty
+                        </th>
+                        <th>
+                            UOM
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.IncDeliveryOrderProducts)
+                    {
+                        <tr>
+                            <td class="text-center">
+                                @if (item.IncSerialNumbers.Count > 0)
+                                {
+
+                                    <button type="button" class="btn btn-outline-tertiary" data-bs-toggle="dropdown"><i class="fas fa-fw fa-ellipsis-h"></i></button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" asp-controller="SerialNumber" asp-action="DetailDO" asp-route-DONumber="@item.DONumber" asp-route-DOProductCode="@item.DOProductCode">Details</a></li>
+                                        <li>
+                                            <form asp-controller="SerialNumber" asp-action="Print" method="post" target="_blank">
+                                                <input name="DONumber" value="@item.DONumber" hidden>
+                                                <input name="DOProductCode" value="@item.DOProductCode" hidden>
+                                                <button class="dropdown-item" type="submit">Print Serial Number</button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                }
+                            </td>
+                            <td class="text-center">
+                                <img class="rounded-circle" height="50" width="50" src="~/img/product/@item.MasProductData.BeautyPicture">
+                            </td>
+                            <td>
+                                @item.MasProductData.ProductName<br>
+                                <strong class="text-primary">@item.MasProductData.SKU</strong>
+                            </td>
+                            <td>
+                                @item.MasProductData.ProductCondition
+                            </td>
+                            <td class="text-end text-nowrap">
+                                @{
+                                    var bgAR = "bg-danger";
+                                    var valAR = 0;
+                                    var bgPUT = "bg-danger";
+                                    var valPUT = 0;
+
+                                    if (item.IncDeliveryOrderArrivals != null)
+                                    {
+                                        bgAR = "bg-warning";
+                                        valAR = item.IncDeliveryOrderArrivals.Quantity;
+                                        if (valAR == item.Quantity)
+                                        {
+                                            bgAR = "bg-success";
+                                        }
+
+                                        if (item.IncDeliveryOrderArrivals.InvProductPutaways.Count > 0)
+                                        {
+                                            bgPUT = "bg-warning";
+                                            valPUT = item.IncDeliveryOrderArrivals.InvProductPutaways.Sum(m => m.Quantity);
+                                            if (valPUT == valAR)
+                                            {
+                                                bgPUT = "bg-success";
+                                            }
+                                        }
+                                    }
+                                    
+                                }
+                                <ul class="list-group">
+                                    <li class="d-flex justify-content-between align-items-center">
+                                        DO
+                                        <span class="badge bg-success rounded-pill">@item.Quantity</span>
+                                    </li>
+                                    <li class="d-flex justify-content-between align-items-center">
+                                        AR
+                                        <span class="badge @bgAR rounded-pill">@valAR</span>
+                                    </li>
+                                    <li class="d-flex justify-content-between align-items-center">
+                                        PUT
+                                        <span class="badge @bgPUT rounded-pill">@valPUT</span>
+                                    </li>
+                                </ul>
+                            </td>
+                            <td>
+                                @item.MasProductData.Unit
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th class="text-center" colspan="2">
+                            Total
+                        </th>
+                        <th colspan="2">
+                            @Model.IncDeliveryOrderProducts.Count Item
+                        </th>
+                        <th class="text-end">
+                            @Model.IncDeliveryOrderProducts.Sum(m => m.Quantity)
+                        </th>
+                        <th class="text-center">
+                        </th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>

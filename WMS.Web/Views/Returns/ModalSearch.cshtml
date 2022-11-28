@@ -1,0 +1,27 @@
+﻿<div class="modal fade" id="Search" tabindex="-1" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create New Platform</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-action="Create" method="get">
+                <div class="modal-body m-3">
+
+                    <div class="mb-3 form-group required">
+                        <label class="control-label">Name</label>
+                        <input name="OrderId" class="form-control" required/>
+                        <span class="text-danger field-validation-valid" data-valmsg-for="OrderId" data-valmsg-replace="true"></span>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <div class="text-center">
+                        <button class="btn btn-primary btn-pill" type="submit">Save</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>

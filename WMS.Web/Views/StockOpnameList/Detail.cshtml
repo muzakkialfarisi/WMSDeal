@@ -1,0 +1,137 @@
+﻿@model InvStockOpname
+
+@{
+    ViewData["Title"] = "Stock Opname";
+    ViewData["MenuKey"] = "Stock Opname";
+}
+
+<div class="card">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title">
+                    <strong>Detail @Model.OpnameId</strong>
+                </h5>
+            </div>
+            <a class="btn btn-primary btn-md px-2" asp-controller="Print" asp-action="StockOpnameManifest" asp-route-OpnameId="@Model.OpnameId" target="_blank">
+                <i class="fas fa-fw fa-print"></i>
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="row">
+            <div class="col-12 col-sm-4">
+                Tenant
+                <br>
+                Warehouse
+            </div>
+            <div class="col-12 col-sm-6">
+                : @Model.MasDataTenant.Name
+                <br>
+                : @Model.MasHouseCode.HouseName
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<div class="card">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Product List</strong></h5>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+
+        <table class="table table-striped">
+            <thead>
+                <tr class="text-center">
+                    <th>
+                        Picture
+                    </th>
+                    <th>
+                        Product
+                    </th>
+                    <th>
+                        WMSDeal Qty
+                    </th>
+                    <th>
+                        Expired Qty
+                    </th>
+                    <th>
+                        Rusak Qty
+                    </th>
+                    <th>
+                        Perbedaan Qty
+                    </th>
+                    <th>
+                        Actual Qty
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null)
+                {
+                    for (int i = 0; i < Model.InvStockOpnameProducts.Count; i++)
+                    {
+                        <tr>
+                            <td class="text-center">
+                                <img src="~/img/product/@Model.InvStockOpnameProducts[i].MasProductData.BeautyPicture" class="rounded-circle" height="50" width="50" asp-append-version="true" /><br>
+                                @Model.InvStockOpnameProducts[i].MasProductData.ProductLevel
+                            </td>
+                            <td>
+                                @Model.InvStockOpnameProducts[i].MasProductData.ProductName<br>
+                                <strong class="text-primary"> @Model.InvStockOpnameProducts[i].MasProductData.SKU </strong><br>
+                                <strong> @Model.InvStockOpnameProducts[i].MasProductData.Unit </strong>
+                            </td>
+                            <td class="text-center">
+                                    @Model.InvStockOpnameProducts[i].SystemQty
+                            </td>
+                            <td class="text-center">
+                                @Model.InvStockOpnameProducts[i].ExpiredQty
+                            </td>
+                            <td class="text-center">
+                                @Model.InvStockOpnameProducts[i].BrokenQty
+                            </td>
+                            <td class="text-center">
+                                    @Model.InvStockOpnameProducts[i].DiscrepancyQty
+                            </td>
+                            <td class="text-center">
+                                @Model.InvStockOpnameProducts[i].StockQty
+                            </td>
+                            <td class="text-center">
+                                @if (Model.InvStockOpnameProducts[i].Status == SD.FlagOpname_Open)
+                                {
+                                <span class="badge bg-primary"> Ongoing </span>
+                                }
+                                else if (Model.InvStockOpnameProducts[i].Status == SD.FlagOpname_Done)
+                                {
+                                <span class="badge bg-success"> Done </span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="form-group text-end">
+    <a asp-action="Index" class="btn btn-dark">Back to List</a>
+</div>
+
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/js/StockOpname/Upsert.js"> </script>
+}

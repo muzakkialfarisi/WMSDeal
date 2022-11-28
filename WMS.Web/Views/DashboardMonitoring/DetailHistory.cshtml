@@ -1,0 +1,64 @@
+﻿@using System.Text.Json
+@model ProductMonitoringViewModel
+
+@{
+    ViewData["Title"] = "Detail Product History";
+    ViewData["MenuKey"] = "Dashboards";
+}
+
+<div class="row">
+    <div class="col-12 col-sm-4">
+        <partial name="DetailProduct" />
+    </div>
+    <div class="col-12 col-sm-8">
+        <partial name="DetailProductHistory" />
+    </div>
+</div>
+<partial name="ModalSerialNumber" />
+
+@section Scripts{
+    <script>
+        $(function () {
+            $('#tbl-hystori').DataTable({
+            });
+        });
+         
+        $('.btn-serialnumber').on('click', function () {
+            var TrxNo = $(this).data('trxno');
+            $.ajax({
+                url: "../../DashboardMonitoring/GetSerialNumberByTrxNo",
+                type: 'GET',
+                data: {
+                    TrxNo: TrxNo,
+                    ProductId: $(this).data('productid'),
+                },
+                beforeSend: function () {
+                    $("#tbl-serialnumber").DataTable().clear().draw();
+                },
+                success: function (data) {
+                    console.log(data);
+
+                    if (data.statusCode == 200) {
+                        //$("#ProductName").html(data.value.masProductData.productName);
+                        //$("#SKU").html(data.value.masProductData.sku);
+                        $("#TrxNo").html(TrxNo);
+
+                        var dataTable = $("#tbl-serialnumber").dataTable().api();
+                        for (let i = 0; i < data.value.length; i++) {
+                            tr = document.createElement("tr");
+                            tr.innerHTML = '' +
+                                '<tr>' +
+                                '<td>' + data.value[i].serialNumber + '</td>' +
+                                '</tr>';
+                            dataTable.row.add(tr);
+                            dataTable.draw();
+                        }
+                    }
+                },
+                error: function (response) {
+                    console.log(response.responseText);
+                }
+            });
+        });
+    </script>
+}

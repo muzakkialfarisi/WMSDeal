@@ -1,0 +1,42 @@
+﻿@model OutSalesOrder
+
+@{
+    ViewData["Title"] = "Orders";
+    ViewData["MenuKey"] = "Dispatch";
+}
+
+@section Styles{
+    <link href="~/css/Tracking/Index.css" rel="stylesheet">
+}
+
+<div class="card">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center py-1">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Sales Orders</strong></h5>
+            </div>
+        </div>
+    </div><br />
+    <div class="card-body">
+
+        <div class="row">
+            <div class="col-12 col-sm-4">
+                <div class="mb-3">
+					<div class="input-group">
+						<input type="text" class="form-control" placeholder="SealesOrder Number" asp-for="OrderId">
+						<button class="btn btn-primary btn-tracker" type="button"><i class="align-middle fas fa-fw fa-search"></i> </button>
+					</div>
+				</div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="partial-detail">
+</div>
+
+@section Scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script type="text/javascript" src="~/lib/js/Tracking/Index.js"></script>
+}

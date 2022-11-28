@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WMSDeal.Views.Startup.UserProfilePage"
+             xmlns:constant="clr-namespace:WMSDeal.Constant"
+             xmlns:viewmodel="clr-namespace:WMSDeal.ViewModels.Startup"
+             xmlns:model="clr-namespace:WMSDeal.Models"
+             x:DataType="viewmodel:UserProfileViewModel"
+             Title="Account">
+    <ScrollView>
+        <StackLayout>
+            <StackLayout.Background>
+                <LinearGradientBrush EndPoint="0,1">
+                    <GradientStop Color="{StaticResource WMSBlue}"
+                          Offset="0.1" />
+                    <GradientStop Color="{StaticResource White}"
+                          Offset="1.0" />
+                </LinearGradientBrush>
+            </StackLayout.Background>
+            <Frame ZIndex="1" HeightRequest="80" WidthRequest="80" BackgroundColor="{StaticResource Aqua4}" 
+                   CornerRadius="40" Margin="10,0,5,0" BorderColor="{StaticResource Aqua4}">
+                <Image Source="{Binding ProfileImage}" HeightRequest="80" WidthRequest="80" BackgroundColor="Transparent" Aspect="AspectFill" />
+            </Frame>
+
+            <StackLayout Margin="5">
+                <Grid RowDefinitions="Auto,Auto,Auto" VerticalOptions="FillAndExpand" >
+                    <StackLayout>
+                        <Frame HorizontalOptions="FillAndExpand" VerticalOptions="Center" Margin="10,10" Padding="10,10"
+                               BackgroundColor="{StaticResource Aqua4}" BorderColor="{StaticResource Aqua4}" HasShadow="True" CornerRadius="10">
+                            <StackLayout>
+                                <Grid ColumnDefinitions="*,25" Margin="0,0,0,10">
+                                    <Label Text="User Information" FontAttributes="Bold" FontSize="12" TextColor="{StaticResource Grey2}" VerticalOptions="Center" />
+                                    <ImageButton Grid.Column="1" HeightRequest="20" WidthRequest="20" Padding="0"/>
+                                </Grid>
+                                <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="80,*"  Margin="3">
+                                    <Label Text="FirsName" VerticalOptions="Center" TextColor="{StaticResource Grey1}"/>
+                                    <Frame Grid.Column="1" HeightRequest="35" Margin="10,0,0,0" Padding="-5" HasShadow="True" 
+                                           BorderColor="{StaticResource FloralWhite}" BackgroundColor="{StaticResource FloralWhite}" 
+                                           HorizontalOptions="FillAndExpand">
+                                        <Label Text="{Binding UserInfo.FirstName }" Margin="15,0,0,0" 
+                                               VerticalOptions="Center" >
+                                        </Label>
+                                    </Frame>
+                                </Grid>
+                                <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="80,*" Margin="3">
+                                    <Label Text="LastName" VerticalOptions="Center" TextColor="{StaticResource Grey1}"/>
+                                    <Frame Grid.Column="1" HeightRequest="35" Margin="10,0,0,0" Padding="-5" HasShadow="True"
+                                           BorderColor="{StaticResource FloralWhite}" BackgroundColor="{StaticResource FloralWhite}"  
+                                           HorizontalOptions="FillAndExpand">
+                                        <Label Text="{Binding UserInfo.LastName}"  Margin="15,0,0,0" 
+                                               VerticalOptions="Center"  >
+                                        </Label>
+                                    </Frame>
+                                </Grid>
+                                <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="80,*" Margin="3">
+                                    <Label Text="Email" VerticalOptions="Center" TextColor="{StaticResource Grey1}"/>
+                                    <Frame Grid.Column="1" HeightRequest="35" Margin="10,0,0,0" Padding="-5" HasShadow="True"
+                                           BorderColor="{StaticResource FloralWhite}" BackgroundColor="{StaticResource FloralWhite}"  
+                                           HorizontalOptions="FillAndExpand">
+                                        <Label  Text="{Binding UserInfo.Email}"  Margin="15,0,0,0" 
+                                                VerticalOptions="Center"  >
+                                        </Label>
+                                    </Frame>
+                                </Grid>
+                                <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="80,*" Margin="3">
+                                    <Label Text="Phone" VerticalOptions="Center" TextColor="{StaticResource Grey1}"/>
+                                    <Frame Grid.Column="1" HeightRequest="35" Margin="10,0,0,0" Padding="-5" HasShadow="True"
+                                           BorderColor="{StaticResource FloralWhite}" BackgroundColor="{StaticResource FloralWhite}"  
+                                           HorizontalOptions="FillAndExpand">
+                                        <Label Text="{Binding UserInfo.PhoneNumber}" Margin="15,0,0,0" 
+                                               VerticalOptions="Center"  >
+                                        </Label>
+                                    </Frame>
+                                </Grid>
+                            </StackLayout>
+                        </Frame>
+                    </StackLayout>
+                    <ActivityIndicator WidthRequest="50" HorizontalOptions="Center" IsRunning="True" IsVisible="{Binding IsBusy}" Color="{StaticResource DarkOrange}"/>
+                    <StackLayout Grid.Row="1" >
+                        <StackLayout>
+                            <Frame HorizontalOptions="FillAndExpand" VerticalOptions="Center" Margin="10,10" Padding="10,10"
+                                   BackgroundColor="{StaticResource Aqua4}" BorderColor="{StaticResource Aqua4}" HasShadow="True" CornerRadius="10">
+                                <StackLayout>
+                                    <Grid ColumnDefinitions="*,25" Margin="0,0,0,10">
+                                        <Label Text="Profiles Information" FontAttributes="Bold" FontSize="12" TextColor="{StaticResource Grey2}" VerticalOptions="Center" />
+                                        <ImageButton Grid.Column="1"  HeightRequest="20" WidthRequest="20" Padding="0"/>
+                                    </Grid>
+                                    <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="80,*"  Margin="3">
+                                        <Label Text="JobPos" VerticalOptions="Center" TextColor="{StaticResource Grey1}"/>
+                                        <Frame Grid.Column="1" HeightRequest="35" Margin="10,0,0,0" Padding="-5" HasShadow="True" 
+                                               BorderColor="{StaticResource FloralWhite}" BackgroundColor="{StaticResource FloralWhite}"  
+                                               HorizontalOptions="FillAndExpand">
+                                            <Label Text="{Binding UserInfo.JobPosName}"  Margin="15,0,0,0" 
+                                                   VerticalOptions="Center"   >
+                                            </Label>
+                                        </Frame>
+                                    </Grid>
+                                    <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="80,*" Margin="3">
+                                        <Label Text="Profile" VerticalOptions="Center" TextColor="{StaticResource Grey1}"/>
+                                        <Frame Grid.Column="1" HeightRequest="35" Margin="10,0,0,0" Padding="-5" HasShadow="True"
+                                               BorderColor="{StaticResource FloralWhite}" BackgroundColor="{StaticResource FloralWhite}"  
+                                               HorizontalOptions="FillAndExpand">
+                                            <Label Text="{Binding UserInfo.Profile}"  Margin="15,0,0,0" 
+                                                   VerticalOptions="Center"  >
+                                            </Label>
+                                        </Frame>
+                                    </Grid>
+                                    <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="80,*" Margin="3">
+                                        <Label Text="Expired" VerticalOptions="Center" TextColor="{StaticResource Grey1}"/>
+                                        <Frame Grid.Column="1" HeightRequest="35" Margin="10,0,0,0" Padding="-5" HasShadow="True"
+                                               BorderColor="{StaticResource FloralWhite}" BackgroundColor="{StaticResource FloralWhite}"  
+                                               HorizontalOptions="FillAndExpand">
+                                            <Label  Text="{Binding UserInfo.ExpireDate,StringFormat='{0:dd/MM/yyyy HH:mm}'}" Margin="15,0,0,0" 
+                                                    VerticalOptions="Center"  >
+                                            </Label>
+                                        </Frame>
+                                    </Grid>
+                                    <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="80,*" Margin="3">
+                                        <Label Text="Warehouse" VerticalOptions="Center" TextColor="{StaticResource Grey1}"/>
+                                        <Frame Grid.Column="1" HeightRequest="35" Margin="10,0,0,0" Padding="-5" HasShadow="True"
+                                               BorderColor="{StaticResource FloralWhite}" BackgroundColor="{StaticResource FloralWhite}"  
+                                               HorizontalOptions="FillAndExpand">
+                                            <Label Text="{Binding UserInfo.Warehouse}"  Margin="15,0,0,0" 
+                                                   VerticalOptions="Center" >
+                                            </Label>
+                                        </Frame>
+                                    </Grid>
+                                </StackLayout>
+                            </Frame>
+                        </StackLayout>
+                    </StackLayout>
+                    <StackLayout Grid.Row="2" >
+                        <StackLayout>
+                            <Frame HorizontalOptions="FillAndExpand" VerticalOptions="Center" Margin="10,10" Padding="10,10"
+                                   BackgroundColor="{StaticResource Aqua4}" BorderColor="{StaticResource Aqua4}" HasShadow="True" CornerRadius="10">
+                                <StackLayout>
+                                    <Grid ColumnDefinitions="*,25" Margin="0,0,0,10">
+                                        <Label Text="Login Information" FontAttributes="Bold" FontSize="12" TextColor="{StaticResource Grey2}" VerticalOptions="Center" />
+                                        <ImageButton Grid.Column="1" Source="{Static constant:Icon.edit}"  HeightRequest="20" WidthRequest="20" Padding="0"/>
+                                    </Grid>
+                                    <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="80,*"  Margin="3">
+                                        <Label Text="UserName" VerticalOptions="Center" TextColor="{StaticResource Grey1}"/>
+                                        <Frame Grid.Column="1" HeightRequest="35" Margin="10,0,0,0" Padding="-5" HasShadow="True" 
+                                               BorderColor="{StaticResource FloralWhite}" BackgroundColor="{StaticResource FloralWhite}" 
+                                               HorizontalOptions="FillAndExpand">
+                                            <Label Text="{Binding UserInfo.UserName}" Margin="15,0,0,0" 
+                                                   VerticalOptions="Center" >
+                                            </Label>
+                                        </Frame>
+                                    </Grid>
+                                    <!--<Grid RowDefinitions="Auto,Auto" ColumnDefinitions="70,*" Margin="3">
+                                        <Label Text="Password" VerticalOptions="Center" TextColor="{StaticResource Grey1}"/>
+                                        <Frame Grid.Column="1" HeightRequest="35" Margin="10,0,0,0" Padding="-5" HasShadow="True"
+                                               BorderColor="{StaticResource FloralWhite}" BackgroundColor="{StaticResource FloralWhite}"  
+                                               HorizontalOptions="FillAndExpand">
+                                            <Label Text="{Binding Username}" Keyboard="Default"  Margin="15,0,0,0" 
+                                                   VerticalOptions="Center" IsReadOnly="True" IsPassword="True" >
+                                            </Label>
+                                        </Frame>
+                                    </Grid>-->
+                                </StackLayout>
+                            </Frame>
+                        </StackLayout>
+                    </StackLayout>
+                </Grid>
+            </StackLayout>
+        </StackLayout>
+    </ScrollView>
+</ContentPage>

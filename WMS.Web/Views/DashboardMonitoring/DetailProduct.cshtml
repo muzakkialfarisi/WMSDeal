@@ -1,0 +1,122 @@
+﻿@model ProductMonitoringViewModel
+
+<div class="card">
+    <div class="card-body my-3">
+        <div class="row text-center mb-3">
+            <div class="col-12 col-sm-6">
+                <img src="~/img/product/@Model.masProductData.BeautyPicture" class="rounded-circle" height="60" width="60" asp-append-version="true" />
+            </div>
+            <div class="col-12 col-sm-6">
+                <img src="~/img/product/@Model.masProductData.CloseUpPicture" class="rounded-circle" height="60" width="60" asp-append-version="true" />
+            </div>
+        </div>
+        <table class="table table-sm table-borderless p-0 m-0">
+            <tbody>
+                <tr>
+                    <td class="align-baseline">
+                        Product Name
+                    </td>
+                    <td>
+                        : <strong>@Model.masProductData.ProductName</strong>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="align-baseline">
+                        SKU
+                    </td>
+                    <td>
+                        : <span class="text-primary">@Model.masProductData.SKU</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Status
+                    </td>
+                    <td>
+                        : @Model.masProductData.ProductCondition
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        UOM
+                    </td>
+                    <td>
+                        : @Model.masProductData.Unit
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">
+                        Savety Stock
+                    </td>
+                    <td>
+                        : @String.Format("{0:n0}", Model.masProductData.SafetyStock)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="align-baseline text-nowrap">
+                        Storage Method
+                    </td>
+                    <td>
+                        : @{
+                            var StorageMethod = "- First In First Out";
+                            if (Model.masProductData.StorageMethod == "FEFO")
+                            {
+                                StorageMethod = "- First Expired First Out";
+                            }
+                            <span>@Model.masProductData.StorageMethod @StorageMethod</span>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <hr />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">
+                        Total Incoming
+                    </td>
+                    <th>
+                        : @Model.masProductData.IncDeliveryOrderProducts.Sum(m => m.Quantity)
+                    </th>
+                </tr>
+                @if (ViewData["Title"] == "Detail Product History")
+                {
+                    <tr>
+                        <td class="text-nowrap">
+                            Total Outgoing
+                        </td>
+                        <th>
+                            : @Model.masProductData.OutSalesOrderProducts.Sum(m => m.Quantity)
+                        </th>
+                    </tr>
+                }
+                <tr>
+                    <td colspan="2">
+                        <hr />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">
+                        Stock Ordered
+                    </td>
+                    <td>
+                        : @Model.masProductData.InvProductStocks.Sum(m => m.QtyOrder)
+                    </td>
+                </tr>
+                <tr>
+                    <th class="text-nowrap">
+                        Stock Active
+                    </th>
+                    <th>
+                        : @Model.masProductData.InvProductStocks.Sum(m => m.Stock)
+                    </th>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="d-grid gap-2 mt-3">
+    <a asp-action="Index" class="btn btn-dark">Back to List</a>
+</div>

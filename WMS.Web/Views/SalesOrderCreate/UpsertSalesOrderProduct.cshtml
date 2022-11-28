@@ -1,0 +1,139 @@
+﻿@model SalesOrderCreateViewModel
+
+<div class="card">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Product List</strong></h5>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+
+        <div class="table-responsive">
+            <table class="table table-striped" id="tbl-salesorderproduct">
+                <thead>
+                    <tr class="text-center">
+                        @if (ViewData["Title"] == "Create Sales Order")
+                        {
+                            <th>
+                                Action
+                            </th>
+                        }
+                        <th>
+                            Picture
+                        </th>
+                        <th>
+                            Product
+                        </th>
+                        <th>
+                            Qty
+                        </th>
+                        <th>
+                            UOM
+                        </th>
+                        @if (ViewData["Title"] != "Create Sales Order")
+                        {
+                            <th>
+                                Wight <br>
+                                Gram
+                            </th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.outSalesOrder != null)
+                    {
+                        @foreach (var item in Model.outSalesOrder.OutSalesOrderProducts)
+                        {
+                            <tr>
+                                @if (ViewData["Title"] == "Create Sales Order")
+                                {
+                                    <td class="text-center">
+                                        <button onclick="SOProductDelete('@Model.outSalesOrder.OrderId', @item.ProductId, 'DeleteProduct', event)" class="btn btn-outline-danger btn-sm"><i class="far fa-fw fa-trash-alt"></i></button>
+                                    </td>
+                                }
+                                <td class="text-center">
+                                    <img class="rounded-circle" height="50" width="50" src="~/img/product/@item.MasProductData.BeautyPicture"><br>
+                                </td>
+                                <td>
+                                    @item.MasProductData.ProductName <br>
+                                    <strong class="text-primary">@item.MasProductData.SKU</strong><br>
+                                    @item.MasProductData.ProductCondition
+                                </td>
+                                <td class="text-center">
+                                    @if (ViewData["Title"] == "Create Sales Order")
+                                    {
+                                        <input onchange="SOProductChange('@Model.outSalesOrder.OrderId', @item.ProductId, 'Quantity', event)"
+                                        name="Quantity" value="@item.Quantity" size="3" style="text-align:center">
+                                    }
+                                    else
+                                    {
+                                        @String.Format("{0:n0}", item.Quantity)
+                                    }
+                                </td>
+                                <td>
+                                    @item.MasProductData.Unit
+                                </td>
+                                @if (ViewData["Title"] != "Create Sales Order")
+                                {
+                                    <td class="text-end">
+                                        @String.Format("{0:n0}", item.TotalWeight)
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    }
+                </tbody>
+                <tfoot>
+                    <tr class="bg-light">
+                        @if (ViewData["Title"] == "Create Sales Order")
+                        {
+                            <th class="text-center" colspan="2">
+                                Total
+                            </th>
+                        }
+                        else
+                        {
+                            <th class="text-center">
+                                Total
+                            </th>
+                        }
+                        <th>
+                            <span id="Count">
+                                @if (Model.outSalesOrder != null)
+                                {
+                                    @String.Format("{0:n0}", Model.outSalesOrder.OutSalesOrderProducts.Count)
+                                }
+                                else
+                                {
+                                    <span>0</span>
+                                }
+                            </span>
+                            Products
+                        </th>
+                        <th class="text-center" colspan="2">
+                            <span id="Quantity">
+                                @if (Model.outSalesOrder != null)
+                                {
+                                    @String.Format("{0:n0}", Model.outSalesOrder.OutSalesOrderProducts.Sum(m => m.Quantity))
+                                }
+                                else
+                                {
+                                    <span>0</span>
+                                }
+                            </span>
+                        </th>
+                        @if (ViewData["Title"] != "Create Sales Order")
+                        {
+                            <th class="text-end">
+                                @String.Format("{0:n0}", Model.outSalesOrder.OutSalesOrderProducts.Sum(m => m.TotalWeight))
+                            </th>
+                        }
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+    </div>
+</div>

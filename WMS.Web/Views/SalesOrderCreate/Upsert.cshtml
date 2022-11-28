@@ -1,0 +1,620 @@
+﻿@model SalesOrderCreateViewModel
+
+@{
+    ViewData["Title"] = "Create Sales Order"; //jangan diubah
+    ViewData["MenuKey"] = "Sales Order";
+}
+
+@{
+    var active_so = "active";
+    var active_product = string.Empty;
+
+    var collapsed_so = "";
+    var collapsed_ad = "collapsed";
+    var true_so = "true";
+    var true_ad = "false";
+    var show_so = "show";
+    var show_ad = "";
+    var CneeName = "";
+    var CneePhone = "";
+    var CneePro = "";
+    var CneeCity = "";
+    var CneeKec = "";
+    var KelId = "";
+    var CneeAddress = "";
+    var OrdZipCode = "";
+
+    var d_none = "";
+
+    if (Model.outSalesOrder != null)
+    {
+        collapsed_so = "collapsed";
+        collapsed_ad = "";
+        true_so = "false";
+        true_ad = "true";
+        show_so = "";
+        show_ad = "show";
+
+        if (Model.outSalesOrder.OrdSalesType == SD.SOType_Retrieval)
+        {
+            d_none = "d-none";
+        }
+
+        if (Model.outSalesOrder.OutSalesOrderCustomer != null && Model.outSalesOrder.OutSalesOrderConsignee != null)
+        {
+            active_so = string.Empty;
+            active_product = "active";
+
+            CneeName = @Model.outSalesOrder.OutSalesOrderConsignee.CneeName;
+            CneePhone = @Model.outSalesOrder.OutSalesOrderConsignee.CneePhone;
+            CneePro = @Model.outSalesOrder.OutSalesOrderConsignee.MasKelurahan.MasKecamatan.MasKabupaten.ProId;
+            CneeCity = @Model.outSalesOrder.OutSalesOrderConsignee.MasKelurahan.MasKecamatan.KabId;
+            CneeKec = @Model.outSalesOrder.OutSalesOrderConsignee.MasKelurahan.KecId;
+            KelId = @Model.outSalesOrder.OutSalesOrderConsignee.KelId;
+            CneeAddress = @Model.outSalesOrder.OutSalesOrderConsignee.CneeAddress;
+            OrdZipCode = @Model.outSalesOrder.OutSalesOrderConsignee.OrdZipCode;
+        }
+    }
+}
+
+<div class="row">
+    <div class="col-12 col-sm-6 mb-3">
+
+        <div class="card tab bg-transparent p-0 m-0">
+            <div class="card-header p-0 m-0">
+                <ul class="nav nav-tabs bg-light w-100 text-center font-weight-bold" role="tablist">
+                    <li class="nav-item w-50">
+                        <a class="nav-link @active_so" href="#tab-1" data-bs-toggle="tab" role="tab" aria-selected="false">
+                            Sales Order <br />
+                            Details
+                        </a>
+                    </li>
+                    @if (Model.outSalesOrder != null)
+                    {
+                        @if (Model.outSalesOrder.OutSalesOrderCustomer != null && Model.outSalesOrder.OutSalesOrderConsignee != null)
+                        {
+                            <li class="nav-item w-25">
+                                <a class="nav-link @active_product" href="#tab-2" data-bs-toggle="tab" role="tab" aria-selected="false">
+                                    Product <br /> List
+                                </a>
+                            </li>
+                            <li class="nav-item w-25">
+                                <a class="nav-link" href="#tab-3" data-bs-toggle="tab" role="tab" aria-selected="false">
+                                    Product <br /> Bundling
+                                </a>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+            <div class="card-body p-0 m-0">
+                <div class="tab-content">
+                    <div class="tab-pane @active_so" id="tab-1" role="tabpanel">
+
+                        <div class="accordion p-0 m-0" id="accordionExample">
+                            <div class="accordion-item bg-transparent">
+                                <h2 class="accordion-header" id="headingOne">
+                                    <button class="accordion-button @collapsed_so" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="@true_so" aria-controls="collapseOne">
+                                        Sales Order
+                                    </button>
+                                </h2>
+                                <div id="collapseOne" class="accordion-collapse collapse @show_so" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <form asp-action="Upsert" method="post" id="form-upsert">
+                                            <partial name="UpsertSalesOrder" />
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            @if (Model.outSalesOrder != null)
+                            {
+                                <div class="accordion-item bg-transparent">
+                                    <h2 class="accordion-header" id="headingTwo">
+                                        <button class="accordion-button @collapsed_ad" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="@true_ad" aria-controls="collapseTwo">
+                                            Address
+                                        </button>
+                                    </h2>
+                                    <div id="collapseTwo" class="accordion-collapse collapse @show_ad" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            <form asp-action="UpsertAddress" method="post" id="form-upsertaddress">
+                                                <input asp-for="outSalesOrder.OrderId" hidden>
+                                                <input asp-for="outSalesOrder.TenantId" hidden>
+                                                <div class="row">
+                                                    <div class="col-12 col-sm-6">
+                                                        <h5 class="text-center">Customer</h5>
+                                                        <partial name="UpsertSalesOrderCustomer" />
+                                                    </div>
+                                                    <div class="col-12 col-sm-6 @d_none">
+                                                        <h5 class="text-center">Consignee</h5>
+                                                        <partial name="UpsertSalesOrderConsignee" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group text-end">
+                                                    @if (Model.outSalesOrder.OutSalesOrderCustomer != null && Model.outSalesOrder.OutSalesOrderConsignee != null)
+                                                    {
+                                                        <button type="button" class="btn btn-primary" id="btn-updateaddress">Update</button>
+                                                    }
+                                                    else
+                                                    {
+                                                        <button type="submit" class="btn btn-primary">Next</button>
+                                                    }
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            }
+                        </div>
+                        
+                        <div class="d-grid gap-2 mt-3">
+                            @if (Model.outSalesOrder == null)
+                            { 
+                                <a asp-action="Index" class="btn btn-dark">Back to List</a>
+                            }
+                            else
+                            {
+                                if (Model.outSalesOrder.OutSalesOrderCustomer == null && Model.outSalesOrder.OutSalesOrderConsignee == null)
+                                {
+                                    <a asp-action="Index" class="btn btn-dark">Back to List</a>
+                                }
+                            }
+                        </div>
+                        
+                    </div>
+
+                    @if (Model.outSalesOrder != null)
+                    {
+                        @if (Model.outSalesOrder.OutSalesOrderCustomer != null && Model.outSalesOrder.OutSalesOrderConsignee != null)
+                        {
+                            <div class="tab-pane @active_product" id="tab-2" role="tabpanel">
+                                <partial name="ProductList" />
+                            </div>
+                            <div class="tab-pane" id="tab-3" role="tabpanel">
+                                <partial name="ProductBundling" />
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-12 col-sm-6">
+        @if (Model.outSalesOrder != null)
+        {
+            @if (Model.outSalesOrder.OutSalesOrderCustomer != null && Model.outSalesOrder.OutSalesOrderConsignee != null)
+            {
+                <partial name="UpsertSalesOrderProduct" />
+
+                <div class="d-grid gap-2">
+                    <a class="btn btn-primary" asp-action="Order" asp-route-OrderId="@Model.outSalesOrder.OrderId" asp-route-TenantId="@Model.outSalesOrder.TenantId">Next</a>
+                    <a asp-action="Index" class="btn btn-dark">Back to List</a>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(function () {
+            $('#tbl-productlist').DataTable({
+                lengthMenu: [
+                    [5, 10],
+                    [5, 10],
+                ],
+            });
+            $('#tbl-productbundling').DataTable({
+                lengthMenu: [
+                    [5, 10],
+                    [5, 10],
+                ],
+            });
+            $('#tbl-salesorderproduct').DataTable({
+                lengthMenu: [
+                    [20, 50],
+                    [20, 50],
+                ],
+            });
+        });
+
+        $('#btn-updatesalesorder').on('click', function(){
+            $.ajax({
+                url: '../../SalesOrderCreate/Upsert',
+                type: 'POST',
+                data: $('#form-upsert').serialize(),
+                success: function (data) {
+                    if(data.statusCode == 200)
+                    {
+                        toastr.success(data.value.message, '', {
+                            positionClass: 'toast-top-right',
+                            closeButton: false,
+                            progressBar: false,
+                            newestOnTop: true,
+                            rtl: $("body").attr("dir") === "rtl" || $("html").attr("dir") === "rtl",
+                            timeOut: 3000
+                        });
+                    }
+                },
+                error: function (response) {
+                    toastr.error("Internal Server Error!", '', {
+                        positionClass: 'toast-top-right',
+                        closeButton: false,
+                        progressBar: false,
+                        newestOnTop: true,
+                        rtl: $("body").attr("dir") === "rtl" || $("html").attr("dir") === "rtl",
+                        timeOut: 3000
+                    });
+                }
+            });
+        });
+
+        $('#btn-updateaddress').on('click', function(){
+            $.ajax({
+                url: '../../SalesOrderCreate/UpsertAddress',
+                type: 'POST',
+                data: $('#form-upsertaddress').serialize(),
+                success: function (data) {
+                    if(data.statusCode == 200)
+                    {
+                        toastr.success(data.value.message, '', {
+                            positionClass: 'toast-top-right',
+                            closeButton: false,
+                            progressBar: false,
+                            newestOnTop: true,
+                            rtl: $("body").attr("dir") === "rtl" || $("html").attr("dir") === "rtl",
+                            timeOut: 3000
+                        });
+                    }
+                },
+                error: function (response) {
+                    toastr.error("Internal Server Error!", '', {
+                        positionClass: 'toast-top-right',
+                        closeButton: false,
+                        progressBar: false,
+                        newestOnTop: true,
+                        rtl: $("body").attr("dir") === "rtl" || $("html").attr("dir") === "rtl",
+                        timeOut: 3000
+                    });
+                }
+            });
+        });
+    </script>
+
+    <script>
+        $('select[name="outSalesOrder.TenantId"]').on('change', function () {
+            $('select[name="outSalesOrder.PlatformId"]').val("").change();
+            $('select[name="outSalesOrder.StoreId"]').empty();
+            $('select[name="outSalesOrder.StoreId"]').append('<option selected disabled value="">Select...</option>');
+        });
+
+        $('select[name="outSalesOrder.PlatformId"]').on('change', function () {
+            $.ajax({
+                url: '../../Store/GetStoresByTenantIdAndPlatformId',
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    TenantId: $('select[name="outSalesOrder.TenantId"]').val(),
+                    PlatformId: $(this).val(),
+                },
+                beforeSend: function () {
+                    $('select[name="outSalesOrder.StoreId"]').empty();
+                    $('select[name="outSalesOrder.StoreId"]').append('<option selected disabled value="">Select...</option>');
+                },
+                success: function (data) {
+                    for (let i = 0; i < data.length; i++) {
+                        $('select[name="outSalesOrder.StoreId').append('<option value="' + data[i].storeId + '">' + data[i].name + '</option>');
+                    }
+                },
+                error: function (response) {
+                    console.log(response.responseText);
+                }
+            });
+        });
+
+        $("select[name='outSalesOrder.OutSalesOrderCustomer.CustPro']").on('change', function () {
+            $.ajax({
+                url: "../../Kelurahans/GetKabupatensByProId",
+                type: 'GET',
+                data: {
+                    ProId: $(this).val(),
+                },
+                beforeSend: function () {
+                    $("select[name='outSalesOrder.OutSalesOrderCustomer.CustCity']").empty();
+                    $("select[name='outSalesOrder.OutSalesOrderCustomer.CustCity']").append('<option selected disabled value="">Select...</option>');
+                    $("select[name='outSalesOrder.OutSalesOrderCustomer.CustKec']").empty();
+                    $("select[name='outSalesOrder.OutSalesOrderCustomer.CustKec']").append('<option selected disabled value="">Select...</option>');
+                    $("select[name='outSalesOrder.OutSalesOrderCustomer.KelId']").empty();
+                    $("select[name='outSalesOrder.OutSalesOrderCustomer.KelId']").append('<option selected disabled value="">Select...</option>');
+                },
+                success: function (data) {
+                    for (let i = 0; i < data.length; i++) {
+                        $("select[name='outSalesOrder.OutSalesOrderCustomer.CustCity']").append('<option value="' + data[i].kabId + '">' + data[i].kabName + '</option>');
+                    }
+                },
+                error: function (response) {
+                    console.log(response.responseText);
+                }
+            });
+        });
+
+        $("select[name='outSalesOrder.OutSalesOrderConsignee.CneePro']").on('change', function () {
+            $.ajax({
+                url: "../../Kelurahans/GetKabupatensByProId",
+                type: 'GET',
+                data: {
+                    ProId: $(this).val(),
+                },
+                beforeSend: function () {
+                    $("select[name='outSalesOrder.OutSalesOrderConsignee.CneeCity']").empty();
+                    $("select[name='outSalesOrder.OutSalesOrderConsignee.CneeCity']").append('<option selected disabled value="">Select...</option>');
+                    $("select[name='outSalesOrder.OutSalesOrderConsignee.CneeKec']").empty();
+                    $("select[name='outSalesOrder.OutSalesOrderConsignee.CneeKec']").append('<option selected disabled value="">Select...</option>');
+                    $("select[name='outSalesOrder.OutSalesOrderConsignee.KelId']").empty();
+                    $("select[name='outSalesOrder.OutSalesOrderConsignee.KelId']").append('<option selected disabled value="">Select...</option>');
+                },
+                success: function (data) {
+                    for (let i = 0; i < data.length; i++) {
+                        $("select[name='outSalesOrder.OutSalesOrderConsignee.CneeCity']").append('<option value="' + data[i].kabId + '">' + data[i].kabName + '</option>');
+                    }
+                },
+                error: function (response) {
+                    console.log(response.responseText);
+                }
+            });
+        });
+
+        $("select[name='outSalesOrder.OutSalesOrderCustomer.CustCity']").on('change', function () {
+            $.ajax({
+                url: "../../Kelurahans/GetKecamatansByKabId",
+                type: 'GET',
+                data: {
+                    KabId: $(this).val(),
+                },
+                beforeSend: function () {
+                    $("select[name='outSalesOrder.OutSalesOrderCustomer.CustKec']").empty();
+                    $("select[name='outSalesOrder.OutSalesOrderCustomer.CustKec']").append('<option selected disabled value="">Select...</option>');
+                    $("select[name='outSalesOrder.OutSalesOrderCustomer.KelId']").empty();
+                    $("select[name='outSalesOrder.OutSalesOrderCustomer.KelId']").append('<option selected disabled value="">Select...</option>');
+                },
+                success: function (data) {
+                    for (let i = 0; i < data.length; i++) {
+                        $("select[name='outSalesOrder.OutSalesOrderCustomer.CustKec']").append('<option value="' + data[i].kecId + '">' + data[i].kecName + '</option>');
+                    }
+                },
+                error: function (response) {
+                    console.log(response.responseText);
+                }
+            });
+        });
+
+        $("select[name='outSalesOrder.OutSalesOrderConsignee.CneeCity']").on('change', function () {
+            $.ajax({
+                url: "../../Kelurahans/GetKecamatansByKabId",
+                type: 'GET',
+                data: {
+                    KabId: $(this).val()
+                },
+                beforeSend: function () {
+                    $("select[name='outSalesOrder.OutSalesOrderConsignee.CneeKec']").empty();
+                    $("select[name='outSalesOrder.OutSalesOrderConsignee.CneeKec']").append('<option selected disabled value="">Select...</option>');
+                    $("select[name='outSalesOrder.OutSalesOrderConsignee.KelId']").empty();
+                    $("select[name='outSalesOrder.OutSalesOrderConsignee.KelId']").append('<option selected disabled value="">Select...</option>');
+                },
+                success: function (data) {
+                    for (let i = 0; i < data.length; i++) {
+                        $("select[name='outSalesOrder.OutSalesOrderConsignee.CneeKec']").append('<option value="' + data[i].kecId + '">' + data[i].kecName + '</option>');
+                    }
+                },
+                error: function (response) {
+                    console.log(response.responseText);
+                }
+            });
+        });
+
+        $("select[name='outSalesOrder.OutSalesOrderCustomer.CustKec']").on('change', function () {
+            $.ajax({
+                url: "../../Kelurahans/GetKelurahansByKecId",
+                type: 'GET',
+                data: {
+                    KecId: $(this).val(),
+                },
+                beforeSend: function () {
+                    $("select[name='outSalesOrder.OutSalesOrderCustomer.KelId']").empty();
+                    $("select[name='outSalesOrder.OutSalesOrderCustomer.KelId']").append('<option selected disabled value="">Select...</option>');
+                },
+                success: function (data) {
+                    for (let i = 0; i < data.length; i++) {
+                        $("select[name='outSalesOrder.OutSalesOrderCustomer.KelId']").append('<option value="' + data[i].kelId + '">' + data[i].kelName + '</option>');
+                    }
+                },
+                error: function (response) {
+                    console.log(response.responseText);
+                }
+            });
+        });
+
+        $("select[name='outSalesOrder.OutSalesOrderConsignee.CneeKec']").on('change', function () {
+            $.ajax({
+                url: "../../Kelurahans/GetKelurahansByKecId",
+                type: 'GET',
+                data: {
+                    KecId: $(this).val(),
+                },
+                beforeSend: function () {
+                    $("select[name='outSalesOrder.OutSalesOrderConsignee.KelId']").empty();
+                    $("select[name='outSalesOrder.OutSalesOrderConsignee.KelId']").append('<option selected disabled value="">Select...</option>');
+                },
+                success: function (data) {
+                    for (let i = 0; i < data.length; i++) {
+                        $("select[name='outSalesOrder.OutSalesOrderConsignee.KelId']").append('<option value="' + data[i].kelId + '">' + data[i].kelName + '</option>');
+                    }
+                },
+                error: function (response) {
+                    console.log(response.responseText);
+                }
+            });
+        });
+
+        $("#flexSwitchCheckChecked").click(function () {
+            if ($(this).is(':checked')) 
+            {
+                $("input[name='outSalesOrder.OutSalesOrderConsignee.CneeName']").val($("input[name='outSalesOrder.OutSalesOrderCustomer.CustName']").val());
+                $("input[name='outSalesOrder.OutSalesOrderConsignee.CneePhone']").val($("input[name='outSalesOrder.OutSalesOrderCustomer.CustPhone']").val());
+                $("select[name='outSalesOrder.OutSalesOrderConsignee.CneePro']").val($("select[name='outSalesOrder.OutSalesOrderCustomer.CustPro']").val()).change();        
+                setTimeout(function () {
+                    $("select[name='outSalesOrder.OutSalesOrderConsignee.CneeCity']").val($("select[name='outSalesOrder.OutSalesOrderCustomer.CustCity']").val()).change();
+                }, 300);
+                setTimeout(function () {
+                    $("select[name='outSalesOrder.OutSalesOrderConsignee.CneeKec']").val($("select[name='outSalesOrder.OutSalesOrderCustomer.CustKec']").val()).change();
+                }, 600);
+                setTimeout(function () {
+                    $("select[name='outSalesOrder.OutSalesOrderConsignee.KelId']").val($("select[name='outSalesOrder.OutSalesOrderCustomer.KelId']").val()).change();
+                }, 900);
+                $("textarea[name='outSalesOrder.OutSalesOrderConsignee.CneeAddress']").html($("textarea[name='outSalesOrder.OutSalesOrderCustomer.CustAddress']").val());
+                $("input[name='outSalesOrder.OutSalesOrderConsignee.OrdZipCode']").val($("input[name='outSalesOrder.OutSalesOrderCustomer.CustZipCode']").val()); 
+            }
+            else 
+            {
+                $("input[name='outSalesOrder.OutSalesOrderConsignee.CneeName']").val("@CneeName");
+                $("input[name='outSalesOrder.OutSalesOrderConsignee.CneePhone']").val("@CneePhone");
+                $("select[name='outSalesOrder.OutSalesOrderConsignee.CneePro']").val("@CneePro").change();
+                setTimeout(function () {
+                    $("select[name='outSalesOrder.OutSalesOrderConsignee.CneeCity']").val("@CneeCity").change();
+                }, 300);
+                setTimeout(function () {
+                    $("select[name='outSalesOrder.OutSalesOrderConsignee.CneeKec']").val("@CneeKec").change();
+                }, 600);
+                setTimeout(function () {
+                    $("select[name='outSalesOrder.OutSalesOrderConsignee.KelId']").val("@KelId").change();
+                }, 900);
+                $("textarea[name='outSalesOrder.OutSalesOrderConsignee.CneeAddress']").html("@CneeAddress.ToString()");
+                $("input[name='outSalesOrder.OutSalesOrderConsignee.OrdZipCode']").val("@OrdZipCode");
+            }
+        });
+
+        function SOProductClick(OrderId, ProductId, Field, event) {
+            var model = "OrderId=" + OrderId + "&ProductId=" + ProductId + "&Quantity=1";
+            UpsertSOProductProcess(model, true, false, false, false);
+        }
+
+        function SOProductChange(OrderId, ProductId, Field, event) {
+            var model = "OrderId=" + OrderId + "&ProductId=" + ProductId + "&Quantity=" + event.target.value;
+            UpsertSOProductProcess(model, false, false, false, false);
+        }
+
+        function SOProductDelete(OrderId, ProductId, Field, event) {
+            var model = "OrderId=" + OrderId + "&ProductId=" + ProductId + "&Quantity=" + 0;
+            UpsertSOProductProcess(model, false, false, false, false);
+        }
+
+        function ProductBundlingClick(OrderId, BundlingId, TenantId) {
+            var model = "";
+            var Type = "";
+            UpsertSOProductProcess(model, Type, OrderId, BundlingId, TenantId);
+        }
+        
+        function UpsertSOProductProcess(model, Type, OrderId, BundlingId, TenantId) {
+            var URL;
+            var DATA;
+
+            if (BundlingId != false) {
+                URL = '../../SalesOrderCreate/AddProductByBundlingId';
+                DATA = "OrderId=" + OrderId + "&BundlingId=" + BundlingId + "&TenantId=" + TenantId;
+            }
+            else {
+                URL = '../../SalesOrderCreate/AddProductByProductId';
+                DATA = model + "&Type=" + Type;
+            }
+
+            $.ajax({
+                url: URL,
+                type: 'POST',
+                dataType: 'json',
+                data: DATA,
+                success: function (data) {
+                    if (data.statusCode == 200) {
+                        toastr.success(data.value.message, '', {
+                            positionClass: 'toast-top-right',
+                            closeButton: false,
+                            progressBar: false,
+                            newestOnTop: true,
+                            rtl: $("body").attr("dir") === "rtl" || $("html").attr("dir") === "rtl",
+                            timeOut: 3000
+                        });
+                    }
+                    else {
+                        toastr.error(data.value.message, '', {
+                            positionClass: 'toast-top-right',
+                            closeButton: false,
+                            progressBar: false,
+                            newestOnTop: true,
+                            rtl: $("body").attr("dir") === "rtl" || $("html").attr("dir") === "rtl",
+                            timeOut: 3000
+                        });
+                    }
+
+                    console.log(data.value);
+
+                    if(data.value.data != "")
+                    {
+                        $("#tbl-salesorderproduct").DataTable().clear().draw();
+
+                        data = data.value.data.outSalesOrderProducts;
+
+                        var dataTable = $("#tbl-salesorderproduct").dataTable().api();
+                        var Quantity = 0;
+
+                        for (let i = 0; i < data.length; i++) {
+                            Quantity = Quantity + data[i].quantity;
+
+                            tr = document.createElement("tr");
+                            tr.innerHTML = '' +
+                                '<tr>' +
+                                '<td class="text-center">' +
+                                '<button onclick="SOProductDelete(\'' + data[i].orderId + '\',\'' + data[i].productId + '\',\'' + 'DeleteProduct' + '\', event)" class="btn btn-outline-danger btn-sm"><i class="far fa-fw fa-trash-alt"></i></button>' +
+                                '</td>' +
+                                '<td class="text-center">' +
+                                '<img src="../../../img/product/' + data[i].masProductData.beautyPicture + '" class="rounded-circle" height="50" width="50"/>' +
+                                '</td>' +
+                                '<td>' +
+                                data[i].masProductData.productName + '<br>' +
+                                '<strong class="text-primary">' + data[i].masProductData.sku + '</strong> <br>' +
+                                data[i].masProductData.productCondition +
+                                '</td>' +
+                                '<td class="text-center">' +
+                                '<input onchange="SOProductChange(\'' + data[i].orderId + '\',\'' + data[i].productId + '\',\'' + 'Quantity' + '\', event)" name="Quantity" value="' + data[i].quantity + '" size="3" style="text-align:center">' +
+                                '</td>' +
+                                '<td>' +
+                                data[i].masProductData.unit +
+                                '</td>' +
+                                '</tr>';
+
+                            dataTable.row.add(tr);
+                            dataTable.draw();
+                        }
+
+                        $('#Count').html(data.length)
+                        $('#Quantity').html(Quantity)
+                    }
+                    
+                },
+                error: function (response) {
+                    toastr.error("Internal Server Error!", '', {
+                        positionClass: 'toast-top-right',
+                        closeButton: false,
+                        progressBar: false,
+                        newestOnTop: true,
+                        rtl: $("body").attr("dir") === "rtl" || $("html").attr("dir") === "rtl",
+                        timeOut: 3000
+                    });
+                }
+            });
+        }
+    </script>
+}

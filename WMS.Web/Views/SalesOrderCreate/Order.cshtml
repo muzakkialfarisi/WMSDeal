@@ -1,0 +1,244 @@
+﻿@model SalesOrderCreateViewModel
+
+@{
+    ViewData["Title"] = "Sales Order"; //jangan diubah
+    ViewData["MenuKey"] = "Sales Order";
+}
+
+<div class="row">
+    <div class="col-12 col-sm-5 mb-3">
+
+        <div class="card">
+            <div class="card-header border-bottom">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1 ps-3">
+                        <h5 class="card-title"><strong>Details</strong></h5>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <table class="table table-sm table-borderless p-0 m-0">
+                    <tbody>
+                        <tr>
+                            <td>
+                                Tenant
+                            </td>
+                            <td>
+                                : @Model.outSalesOrder.MasDataTenant.Name
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Type
+                            </td>
+                            <td>
+                                : @Model.outSalesOrder.MasSalesType.StyName
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Warehouse
+                            </td>
+                            <td>
+                                : @Model.outSalesOrder.MasHouseCode.HouseName
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Platform
+                            </td>
+                            <td>
+                                : @Model.outSalesOrder.MasPlatform.Name
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Store
+                            </td>
+                            <td>
+                                : @Model.outSalesOrder.StoreName
+                            </td>
+                        </tr>
+                        <tr>
+                            <th colspan="2">
+                                Customer
+                            </th>
+                        </tr>
+                        <tr>
+                            <td>
+                                ID Card
+                            </td>
+                            <td>
+                                : @Model.outSalesOrder.OutSalesOrderCustomer.KTP
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Name
+                            </td>
+                            <td>
+                                : @Model.outSalesOrder.OutSalesOrderCustomer.CustName
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-nowrap">
+                                Phone Number
+                            </td>
+                            <td>
+                                : @Model.outSalesOrder.OutSalesOrderCustomer.CustPhone
+                            </td>
+                        </tr>
+                        @*<tr>
+                            <td class="align-baseline">
+                                Address
+                            </td>
+                            <td>
+                                : @Model.outSalesOrder.OutSalesOrderCustomer.CustAddress,
+                                @Model.outSalesOrder.OutSalesOrderCustomer.MasKelurahan.KelName,
+                                @Model.outSalesOrder.OutSalesOrderCustomer.MasKelurahan.MasKecamatan.KecName,
+                                @Model.outSalesOrder.OutSalesOrderCustomer.MasKelurahan.MasKecamatan.MasKabupaten.KabName,
+                                @Model.outSalesOrder.OutSalesOrderCustomer.MasKelurahan.MasKecamatan.MasKabupaten.MasProvinsi.ProName,
+                                @Model.outSalesOrder.OutSalesOrderCustomer.CustZipCode.
+                            </td>
+                        </tr>*@
+                        @if (Model.outSalesOrder.OrdSalesType == SD.SOType_Sales)
+                        {
+
+                            <tr>
+                                <th colspan="2" class="text-nowrap">
+                                    Consignee
+                                </th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Name
+                                </td>
+                                <td>
+                                    : @Model.outSalesOrder.OutSalesOrderConsignee.CneeName
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-nowrap">
+                                    Phone Number
+                                </td>
+                                <td>
+                                    : @Model.outSalesOrder.OutSalesOrderConsignee.CneePhone
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="align-baseline">
+                                    Address
+                                </td>
+                                <td>
+                                    : @Model.outSalesOrder.OutSalesOrderConsignee.CneeAddress, @Model.outSalesOrder.OutSalesOrderConsignee.MasKelurahan.KelName,
+                                    @Model.outSalesOrder.OutSalesOrderConsignee.MasKelurahan.MasKecamatan.KecName,
+                                    @Model.outSalesOrder.OutSalesOrderConsignee.MasKelurahan.MasKecamatan.MasKabupaten.KabName,
+                                    @Model.outSalesOrder.OutSalesOrderConsignee.MasKelurahan.MasKecamatan.MasKabupaten.MasProvinsi.ProName,
+                                    @Model.outSalesOrder.OutSalesOrderConsignee.OrdZipCode.
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-7 mb-3">
+        <partial name="UpsertSalesOrderProduct" />
+        <form asp-action="Order" method="post">
+            <partial name="UpsertSalesOrderDelivery" />
+        </form>
+    </div>
+</div>
+
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+
+        $(function () {
+            $('#tbl-salesorderproduct').DataTable({
+                lengthMenu: [
+                    [20, 50],
+                    [20, 50],
+                ],
+            });
+
+            window.location.href = window.location.href + "#card-order";
+        });
+
+        $('select[name="outSalesOrder.OutsalesOrderDelivery.OrdCourier"]').on('change', function () {
+
+            $('#tempat').html("");
+            $('select[name="outSalesOrder.OutsalesOrderDelivery.OrdCourierService"]').empty(); 
+            $('input[name="outSalesOrder.OutsalesOrderDelivery.ShippingCost"]').val("0");
+
+            if ($(this).val() == 1) {
+                $('select[name="outSalesOrder.OutsalesOrderDelivery.OrdCourierService"]').append('<option selected value="Self Pick Up">Self Pick up</option>');
+            }
+            else {
+                $.ajax({
+                    url: "../../SalesOrderCreate/GetCourierService",
+                    type: 'GET',
+                    data: {
+                        IdCourier: $(this).val(),
+                        Origin: @Model.outSalesOrder.MasHouseCode.MasKelurahan.KecId,
+                        Destination: @Model.outSalesOrder.OutSalesOrderConsignee.MasKelurahan.KecId,
+                        Weight: @Model.outSalesOrder.OutSalesOrderProducts.Sum(m => m.TotalWeight),
+                    },
+                    beforeSend: function () {
+                        $('select[name="outSalesOrder.OutsalesOrderDelivery.OrdCourierService"]').append('<option selected disabled>Select...</option>');
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        if (data.statusCode == 200) {
+                            data = JSON.parse(data.value.data);
+                            for (let i = 0; i < data.data.length; i++) {
+                                $('select[name="outSalesOrder.OutsalesOrderDelivery.OrdCourierService"]').append('<option value="' + data.data[i].Service + '">' + data.data[i].Service + '</option>');
+                            }
+
+                            $('select[name="outSalesOrder.OutsalesOrderDelivery.OrdCourierService"]').append('<option value="Cashless">Cashless</option>');
+
+                            $('select[name="outSalesOrder.OutsalesOrderDelivery.OrdCourierService"]').on('change', function () {
+                                
+                                $('input[name="outSalesOrder.OutsalesOrderDelivery.ShippingCost"]').val("0");
+                                
+                                var temp = "";
+                                if ($(this).val() == "Cashless") {
+                                    temp = ''+
+                                        '<div class="form-group required mb-3">' +
+                                        '<label class="control-label">Airway Bill</label>' +
+                                        '<input name="outSalesOrder.OutsalesOrderDelivery.AirwayBill" class="form-control" required/>' +
+                                        '<span class="text-danger field-validation-valid" data-valmsg-for="outSalesOrder.OutsalesOrderDelivery.AirwayBill" data-valmsg-replace="true"></span>' +
+                                        '</div>';
+                                }
+                                else {
+                                    var index = 0;
+                                    for (let i = 0; i < data.data.length; i++) {
+                                        if (data.data[i].Service == $(this).val()) {
+                                            break;
+                                        }
+                                        index++;
+                                    }
+                                    temp = ''+
+                                        '<div class="text-warning">' +
+                                        'Estimasi tiba ' + data.data[index].Etd + ' Hari' +
+                                        '</div><br />';
+
+                                    //$('input[name="OutsalesOrderDelivery.ShippingCost"]').val(data.data[index].TotalPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+                                }
+                                $('#tempat').html(temp);
+                            });
+                        }
+                    },
+                    error: function (response) {
+                        console.log(response.responseText);
+                    }
+                });
+            }
+        });
+
+        
+    </script>
+}

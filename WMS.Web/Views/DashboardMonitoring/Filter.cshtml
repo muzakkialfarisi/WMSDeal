@@ -1,0 +1,111 @@
+﻿<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+	<div class="offcanvas-header">
+		<h5 id="offcanvasRightLabel">Filter</h5>
+		<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+	</div>
+	<div class="offcanvas-body mx-4">
+		<form asp-action="Index" method="get">
+			<div class="mb-3 row">
+				<div class="form-check">
+					<input class="form-check-input" type="radio" name="FilterDate" id="exampleRadios1" value="thisday" checked>
+					<label class="form-check-label" for="exampleRadios1">
+						Hari ini
+					</label>
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<div class="form-check">
+					<input class="form-check-input" type="radio" name="FilterDate" id="exampleRadios12" value="yesterday">
+					<label class="form-check-label" for="exampleRadios12">
+						Kemarin
+					</label>
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<div class="form-check">
+					<input class="form-check-input" type="radio" name="FilterDate" id="exampleRadios2" value="last7days">
+					<label class="form-check-label" for="exampleRadios2">
+						7 hari terkhir
+					</label>
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<div class="form-check">
+					<input class="form-check-input" type="radio" name="FilterDate" id="exampleRadios3" value="thismonth" >
+					<label class="form-check-label" for="exampleRadios3">
+						Bulan Ini
+					</label>
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<div class="form-check">
+					<input class="form-check-input" type="radio" name="FilterDate" id="exampleRadios4" value="last3months">
+					<label class="form-check-label" for="exampleRadios4">
+						3 bulan terakhir
+					</label>
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<div class="form-check">
+					<input class="form-check-input" type="radio" name="FilterDate" id="exampleRadios5" value="datepicker">
+					<label class="form-check-label" for="exampleRadios5">
+						Pilih tanggal
+					</label>
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<label class="col-form-label col-sm-3 ">Dari</label>
+				<div class="col-sm-9">
+					<input name="FilterDateFrom" type="date" class="form-control" readonly/>
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<label class="col-form-label col-sm-3 ">Sampai</label>
+				<div class="col-sm-9">
+					<input name="FilterDateTo" type="date" class="form-control" readonly/>
+				</div>
+			</div>
+			@if (User.FindFirst("ProfileId").Value != SD.Role_Tenant)
+			{
+				<div class="mb-3 row">
+					<label class="col-form-label col-sm-3 ">Tenant</label>
+					<div class="col-sm-9">
+						<select class="form-control select2 tracking-filter" data-bs-toggle="select2" name="FilterTenantId" asp-items="ViewBag.TenantId">
+							<option selected disabled value="">Select...</option>
+						</select>
+					</div>
+				</div>
+			}
+			@if (User.FindFirst("ProfileId").Value != SD.Role_WarehouseAdmin)
+			{
+				<div class="mb-3 row">
+					<label class="col-form-label col-sm-3 ">Warehouse</label>
+					<div class="col-sm-9">
+						<select class="form-control select2 tracking-filter" data-bs-toggle="select2" name="FilterHouseCode" asp-items="ViewBag.HouseCode">
+							<option selected disabled value="">Select...</option>
+							<option value="*">All</option>
+						</select>
+					</div>
+				</div>
+			}
+			<div class="mb-3 row">
+				<div class="col text-end">
+					<button type="button" class="btn btn-dark btn-clearfilter" data-bs-dismiss="offcanvas" aria-label="Close">Clear All</button>
+					<button type="submit" class="btn btn-primary" data-bs-dismiss="offcanvas" aria-label="Close">Go!</button>
+				</div>
+			</div>
+		</form>
+
+		<form asp-action="RekapProductToExcel" method="post" id="RekapProductToExcel">
+			<input name="FilterDateFrom" hidden />
+			<input name="FilterDateTo" hidden />
+			<select name="FilterHouseCode" asp-items="ViewBag.HouseCode" hidden>
+				<option selected disabled value="">Select...</option>
+				<option value="*">All</option>
+			</select>
+			<select name="FilterTenantId" asp-items="ViewBag.TenantId" hidden>
+				<option selected disabled value="">Select...</option>
+			</select>
+		</form>
+	</div>
+</div>

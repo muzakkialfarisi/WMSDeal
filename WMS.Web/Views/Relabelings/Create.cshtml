@@ -1,0 +1,100 @@
+﻿
+@model RepackAndRelableViewModel
+
+@{
+    ViewData["Title"] = "Relabeling";
+    ViewData["MenuKey"] = "Pick and Pack";
+}
+
+<form asp-action="Create">
+    <div class="row">
+        <div class="col-12 col-sm-6">
+            <partial name="CreateRelabel" />
+        </div>
+        <div class="col-12 col-sm-6">
+            <partial name="ProductDetail" />
+        </div>
+    </div>
+
+    <div class="form-group text-end level2">
+        <a asp-action="Index" class="btn btn-dark">Back to List</a>
+        <button type="submit" class="btn btn-success">Save</button>
+    </div>
+</form>
+
+@section Scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(function(){
+            $('.span-notfound').hide();
+            $('.ProductDetail').hide();
+            $('.level2').hide();
+
+            $('.table').DataTable({
+
+            });
+
+        });
+    </script>
+
+    <script>
+        $('#btn-donumber').on('click', function () {
+            if($("#invRelabeling_DOProductId").val()){
+                $.ajax({
+                    url: '@Url.Action("GetDOProductByDONumber","Relabelings")',
+                    type: 'GET',
+                    data: {
+                        DONumber:$("#invRelabeling_DOProductId").val(),
+                    },
+                    success: function (data) {
+                        $('#invRelabeling_ProductId').empty(),
+                        $('#invRelabeling_ProductId').append('<option selected disabled>Select...</option>');
+                        if(data.length > 0){
+                            $('.span-notfound').hide();
+                            $(data).each(function (index, item) {
+                                $('#invRelabeling_ProductId').append('<option value="' + item.doProductId + '">' + item.masProductData.productName + '</option>');
+                            });
+                            $('.level2').show();
+                        }else{
+                            $('.span-notfound').show();
+                            $('#invRelabeling_ProductId').empty();
+                            $('#invRelabeling_ProductId').append('<option selected disabled>Select...</option>');
+                        }
+                    },
+                    error: function (response) {
+                        console.log(response.responseText);
+                    }
+                });
+            }
+        });
+
+        $('#invRelabeling_ProductId').on('change', function () {
+            $.ajax({
+                url: '@Url.Action("GetProductByDOProductId","Relabelings")',
+                type: 'GET',
+                data: {
+                    DOProductId:$("#invRelabeling_ProductId").val(),
+                },
+                success: function (data) {
+                    $('.ProductDetail').show();
+                    $('.incDeliveryOrderProduct_Picture').attr("src", "../../../img/product/"+data.incDeliveryOrderProduct.masProductData.beautyPicture);
+                    $('.incDeliveryOrderProduct_ProductName').html(data.incDeliveryOrderProduct.masProductData.sku + '<br>' + data.incDeliveryOrderProduct.masProductData.productName);
+                    $('.incDeliveryOrderProduct_DateCreated').html(data.incDeliveryOrderProduct.incDeliveryOrder.dateCreated);
+                    $('.incDeliveryOrderProduct_Quantity').html(data.incDeliveryOrderProduct.quantity);
+
+                    let count = 0;
+                    for(let i = 0; i < data.invRelabelings.length; i++){
+                        count = count + data.invRelabelings[i].quantity;
+                    }
+                    $('.sum_Quantity').html(count);
+                    $('#invRelabeling_Quantity').val(data.incDeliveryOrderProduct.quantity-count);
+                    $('#invRelabeling_Quantity').attr("max", data.incDeliveryOrderProduct.quantity-count);
+                },
+                error: function (response) {
+                    console.log(response.responseText);
+                }
+            });
+        });
+
+    </script>
+}

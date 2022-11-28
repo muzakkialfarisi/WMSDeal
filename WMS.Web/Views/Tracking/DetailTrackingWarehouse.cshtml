@@ -1,0 +1,74 @@
+﻿@model OutSalesOrder
+
+@{
+    string[] activator = new string[5];
+    if (Model != null)
+    {
+        if (Model.Status > 1)
+        {
+            activator[0] = "active";
+        }
+        if (Model.Status > 2)
+        {
+            activator[1] = "active";
+        }
+        if (Model.Status > 4)
+        {
+            activator[3] = "active";
+        }
+        if (Model.Status > 5)
+        {
+            activator[4] = "active";
+        }
+    }
+}
+<div class="card">
+    <div>
+        <div class="track-main">
+            <ul>
+                <li class="track-li">
+                    <img class="icon uil" src="~/css/Tracking/Icons/shopping-basket.svg">
+                    <div class="track-progress one @activator[0]">
+                        <p>1</p>
+                        <img class="uil" src="~/css/Tracking/Icons/check.svg">
+                    </div>
+                    <p class="text">Ordered</p>
+                </li>
+                <li class="track-li">
+                    <img class="icon uil" src="~/css/Tracking/Icons/truck-loading.svg">
+                    <div class="track-progress two @activator[1]">
+                        <p>2</p>
+                        <img class="uil" src="~/css/Tracking/Icons/check.svg">
+                    </div>
+                    <p class="text">Picked</p>
+                </li>
+                @*<li class="track-li">
+                <i class="icon uil uil-capture"></i>
+                <div class="track-progress three @activator[2]">
+                <p>3</p>
+                <i class="uil uil-check"></i>
+                </div>
+                <p class="text">Staged</p>
+                </li>*@
+                <li class="track-li">
+                    <img class="icon uil" src="~/css/Tracking/Icons/box.svg">
+                    <div class="track-progress four @activator[3]">
+                        <p>3</p>
+                        <img class="uil" src="~/css/Tracking/Icons/check.svg">
+                    </div>
+                    <p class="text">Packed</p>
+                </li>
+                <li class="track-li">
+                    <img class="icon uil" src="~/css/Tracking/Icons/share.svg">
+                    <div class="track-progress five @activator[4]">
+                        <p>4</p>
+                        <img class="uil" src="~/css/Tracking/Icons/check.svg">
+                    </div>
+                    <p class="text">Dispatch</p>
+                </li>
+            </ul>
+
+        </div>
+
+    </div>
+</div>

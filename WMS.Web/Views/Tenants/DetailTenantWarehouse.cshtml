@@ -1,0 +1,46 @@
+﻿@model MasDataTenant
+
+@if (User.FindFirst("ProfileId")?.Value == SD.Role_SuperAdmin)
+{
+    <div class="text-end mb-4">
+        <a class="btn btn-outline-primary btn-pill" data-bs-toggle="modal" data-bs-target="#modalcreatewarehouse">Add Warehouse</a>
+    </div>
+    <div><partial name="ModalCreateTenantWarehouse"></div> 
+}
+
+<div class="table-responsive">
+    <table class="table table-striped table-warehouse">
+        <thead>
+            <tr class="text-center">
+                @if (User.FindFirst("ProfileId")?.Value == SD.Role_SuperAdmin)
+                {
+                    <th>
+                        Action
+                    </th>
+                }
+                <th>
+                    Warehouse
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.MasDataTenantWarehouses)
+            {
+                <tr>
+                    @if (User.FindFirst("ProfileId")?.Value == SD.Role_SuperAdmin)
+                    {
+                        <td class="text-center">
+                            <button type="button" class="btn btn-outline-tertiary" data-bs-toggle="dropdown"><i class="fas fa-fw fa-ellipsis-h"></i></button>
+                            <ul class="dropdown-menu">
+                                <li><button class="dropdown-item text-danger" disabled>Delete</button></li>
+                            </ul>
+                        </td>
+                    }
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MasHouseCode.HouseName)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,23 @@
+﻿@model IncRequestPurchase
+
+@{
+    ViewData["Title"] = "Request Purchases Order Detail";
+    ViewData["MenuKey"] = "Purchase Order";
+}
+
+<partial name="DetailRequestPurchaseOrder" />
+
+<partial name="DetailRequestPurchaseOrderProduct" />
+
+<div class="form-group text-end">
+    <a asp-action="Index" class="btn btn-dark">Back to List</a>
+</div>
+
+@section Scripts{
+    <script>
+        $(function () {
+            $('#tbl-purchaseorderproductrequest').DataTable({
+            });
+        });
+    </script>
+}

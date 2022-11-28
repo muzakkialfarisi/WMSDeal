@@ -1,0 +1,62 @@
+﻿@model SalesOrderCreateViewModel
+
+<input asp-for="outSalesOrder.OrderId" hidden>
+<input asp-for="outSalesOrder.TenantId" hidden>
+
+<div class="card" id="card-order">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Delivery</strong></h5>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12 col-sm-6">
+                <div class="form-group required mb-3">
+                    <label class="control-label">Courier</label>
+                    <select asp-for="outSalesOrder.OutsalesOrderDelivery.OrdCourier" class="form-control select2" data-bs-toggle="select2" asp-items="ViewBag.OrdCourier" required>
+                        <option selected disabled>Select...</option>
+                    </select>
+                    <span asp-validation-for="outSalesOrder.OutsalesOrderDelivery.OrdCourier" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6">
+                <div class="form-group required mb-3">
+                    <label class="control-label">Service</label>
+                    <select asp-for="outSalesOrder.OutsalesOrderDelivery.OrdCourierService" class="form-control select2" data-bs-toggle="select2" required>
+                        <option selected disabled>Select...</option>
+                    </select>
+                    <span asp-validation-for="outSalesOrder.OutsalesOrderDelivery.OrdCourierService" class="text-danger"></span>
+                </div> 
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 col-sm-6">
+                <div class="form-group required mb-3">
+                    <label class="control-label">Shipping Cost</label>
+                    <input asp-for="outSalesOrder.OutsalesOrderDelivery.ShippingCost" class="form-control" value="0" readonly />
+                    <span asp-validation-for="outSalesOrder.OutsalesOrderDelivery.ShippingCost" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6">
+                <div class="form-group required mb-3">
+                    <label class="control-label">Tax</label>
+                    <input asp-for="outSalesOrder.OutsalesOrderDelivery.OrdTax" type="number" class="form-control" value="0" min="0" required/>
+                    <span asp-validation-for="outSalesOrder.OutsalesOrderDelivery.OrdTax" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center" id="tempat">
+        </div>
+    </div>
+</div>
+
+<div class="d-grid gap-2">
+    <button type="submit" class="btn btn-primary">Order</button>
+    <a asp-action="Upsert" asp-route-OrderId="@Model.outSalesOrder.OrderId" asp-route-TenantId="@Model.outSalesOrder.TenantId" class="btn btn-dark">Back to Manage</a>
+</div>

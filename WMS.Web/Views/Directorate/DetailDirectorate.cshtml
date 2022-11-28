@@ -1,0 +1,37 @@
+﻿@model MasDirectorate
+
+<div class="card">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Detail Directorate</strong></h5>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <table class="table table-sm table-borderless p-0 m-0">
+            <tbody>
+                <tr>
+                    <td>
+                        Code
+                    </td>
+                    <td>
+                        : @Model.DirCode
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Name
+                    </td>
+                    <td>
+                        : @Model.DirName
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="d-grid gap-2 mt-3">
+            <a asp-action="Index" class="btn btn-dark">Back to List</a>
+        </div>
+    </div>
+</div>

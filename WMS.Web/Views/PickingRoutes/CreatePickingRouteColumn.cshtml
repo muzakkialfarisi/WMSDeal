@@ -1,0 +1,68 @@
+﻿@model PickingRouteViewModel
+
+<div class="card">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center py-1">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Picking Route</strong></h5>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr class="text-center">
+                        <th>
+                            No
+                        </th>
+                        <th>
+                            Zone Row
+                        </th>
+                        <th>
+                            Column
+                        </th>
+                        <th>
+                            Action
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach(var item in Model.invPickingRouteColumns)
+                    {
+                        <tr>
+                            <td>
+                                @item.Order
+                            </td>
+                            <td>
+                                @item.InvStorageColumn.InvStorageRow.InvStorageZone.ZoneName <br>
+                                @item.InvStorageColumn.InvStorageRow.RowName
+                            </td>
+                            <td>
+                                @item.InvStorageColumn.ColumnName
+                            </td>
+                            <td>
+                                <div class="btn-group">
+                                    <div class="btn-group-vertical">
+                                        @if(item.Order > 1)
+                                        {
+                                            <button type="button" class="btn btn-sm btn-outline-dark updateButton" data-id="@item.RouteColumn" data-type="up"><i class="align-middle fas fa-fw fa-level-up-alt"></i></button>
+                                        }
+
+                                        @if(item.Order < Model.invPickingRouteColumns.Count())
+                                        {
+                                            <button type="button" class="btn btn-sm btn-outline-dark updateButton" data-id="@item.RouteColumn" data-type="down"><i class="align-middle fas fa-fw fa-level-down-alt"></i></button>
+                                        }
+                                    </div>
+                                    <button type="button" class="btn btn-sm btn-outline-dark delButton" data-id="@item.RouteColumn"><i class="align-middle fas fa-fw fa-trash"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>

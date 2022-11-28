@@ -1,0 +1,100 @@
+﻿@model SalesOrderCreateViewModel
+
+@{
+    var d_none = "";
+    if (Model.outSalesOrder != null)
+    {
+        if (Model.outSalesOrder.OrdSalesType == SD.SOType_Retrieval)
+        {
+            d_none = "d-none";
+        }
+    }
+}
+
+<div class="form-group mb-1">
+    <label class="control-label">ID Card</label>
+    <input asp-for="outSalesOrder.OutSalesOrderCustomer.KTP" class="form-control" />
+    <span asp-validation-for="outSalesOrder.OutSalesOrderCustomer.KTP" class="text-danger"></span>
+</div>
+<br />
+
+<div class="form-group required mb-3">
+    <label class="control-label">Name</label>
+    <input asp-for="outSalesOrder.OutSalesOrderCustomer.CustName" class="form-control">
+    <span asp-validation-for="outSalesOrder.OutSalesOrderCustomer.CustName" class="text-danger"></span>
+</div>
+<div class="form-group required  mb-3">
+    <label class="control-label">Phone</label>
+    <input asp-for="outSalesOrder.OutSalesOrderCustomer.CustPhone" class="form-control" />
+    <span asp-validation-for="outSalesOrder.OutSalesOrderCustomer.CustPhone" class="text-danger"></span>
+</div>
+<div class="@d_none">
+    <div class="form-group required mb-3">
+        <label class="control-label">Provinsi</label>
+        <select name="outSalesOrder.OutSalesOrderCustomer.CustPro" class="form-control select2" data-bs-toggle="select2" asp-items="ViewBag.ProIdCust" required>
+            <option selected disabled>Select...</option>
+        </select>
+        <span class="text-danger field-validation-valid" data-valmsg-for="outSalesOrder.OutSalesOrderCustomer.CustPro" data-valmsg-replace="true"></span>
+    </div>
+    <div class="form-group required mb-3">
+        <label class="control-label">Kabupaten</label>
+        <select asp-for="outSalesOrder.OutSalesOrderCustomer.CustCity" class="form-control select2" data-bs-toggle="select2" asp-items="ViewBag.CustCity" required>
+            <option selected disabled>Select...</option>
+        </select>
+        <span asp-validation-for="outSalesOrder.OutSalesOrderCustomer.CustCity" class="text-danger"></span>
+    </div>
+    <div class="form-group required mb-3">
+        <label class="control-label">Kecamatan</label>
+        <select name="outSalesOrder.OutSalesOrderCustomer.CustKec" class="form-control select2" data-bs-toggle="select2" asp-items="ViewBag.KecCust" required>
+            <option selected disabled>Select...</option>
+        </select>
+        <span class="text-danger field-validation-valid" data-valmsg-for="outSalesOrder.OutSalesOrderCustomer.CustKec" data-valmsg-replace="true"></span>
+    </div>
+    <div class="form-group required mb-3">
+        <label class="control-label">Kelurahan</label>
+        <select asp-for="outSalesOrder.OutSalesOrderCustomer.KelId" class="form-control select2" data-bs-toggle="select2" asp-items="ViewBag.KelCust" required>
+            <option selected disabled>Select...</option>
+        </select>
+        <span asp-validation-for="outSalesOrder.OutSalesOrderCustomer.KelId" class="text-danger"></span>
+    </div>
+
+    @{
+        var CustAddress = "";
+        var CustZipCode = "";
+        @if (Model.outSalesOrder != null)
+        {
+            @if (Model.outSalesOrder.OrdSalesType == SD.SOType_Retrieval)
+            {
+                @if (Model.outSalesOrder.OutSalesOrderCustomer == null)
+                {
+                    CustAddress = Model.outSalesOrder.MasHouseCode.Address;
+                    CustZipCode = Model.outSalesOrder.MasHouseCode.KodePos;
+                }
+                else
+                {
+                    CustAddress = Model.outSalesOrder.OutSalesOrderCustomer.CustAddress;
+                    CustZipCode = Model.outSalesOrder.OutSalesOrderCustomer.CustZipCode;
+                }
+            }
+            else
+            {
+                @if (Model.outSalesOrder.OutSalesOrderCustomer != null)
+                {
+                    CustAddress = Model.outSalesOrder.OutSalesOrderCustomer.CustAddress;
+                    CustZipCode = Model.outSalesOrder.OutSalesOrderCustomer.CustZipCode;
+                }
+            }
+        }
+    }
+
+    <div class="form-group required mb-3">
+        <label class="control-label">Address</label>
+        <textarea name="outSalesOrder.OutSalesOrderCustomer.CustAddress" class="form-control" rows="2" placeholder="Textarea" required>@CustAddress</textarea>
+        <span asp-validation-for="outSalesOrder.OutSalesOrderCustomer.CustAddress" class="text-danger"></span>
+    </div>
+    <div class="form-group required mb-3">
+        <label class="control-label">Kode Pos</label>
+        <input asp-for="outSalesOrder.OutSalesOrderCustomer.CustZipCode" value="@CustZipCode" class="form-control" />
+        <span asp-validation-for="outSalesOrder.OutSalesOrderCustomer.CustZipCode" class="text-danger"></span>
+    </div>
+</div>

@@ -1,0 +1,65 @@
+﻿@model MasDataTenant
+
+<div class="text-end mb-4">
+    <a class="btn btn-outline-primary btn-pill btn-insert-supplier" data-bs-toggle="modal" data-bs-target="#modalupsertsupplier">Add Supplier</a>
+</div>
+<partial name="ModalUpsertTenantSupplier" />
+
+<div class="table-responsive">
+    <table class="table table-striped table-supplier">
+        <thead>
+            <tr class="text-center">
+                <th>
+                    Action
+                </th>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Service <br />Type
+                </th>
+                <th>
+                    Contacts
+                </th>
+                <th>
+                    Status
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.MasSupplierDatas)
+            {
+                <tr>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-outline-tertiary" data-bs-toggle="dropdown"><i class="fas fa-fw fa-ellipsis-h"></i></button>
+                        <ul class="dropdown-menu">
+                            <li><button class="dropdown-item btn-update-supplier" data-id="@item.SupplierId" data-bs-toggle="modal" data-bs-target="#modalupsertsupplier">Edit</button></li>
+                        </ul>
+                    </td>
+                    <td>
+                        @item.Name
+                    </td>
+                    <td>
+                        @item.MasSupplierType.SupplierTypeName<br>
+                        @item.MasSupplierService.SupplierServiceName
+                    </td>
+                    <td>
+                        @item.Email <br>
+                        @item.OfficePhone<br>
+                        @item.HandPhone
+                    </td>
+                    <td class="text-center">
+                        @if (item.Flag == FlagEnum.Active)
+                        {
+                            <span class="badge bg-success"> @Html.DisplayFor(modelItem => item.Flag)</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger"> @Html.DisplayFor(modelItem => item.Flag)</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

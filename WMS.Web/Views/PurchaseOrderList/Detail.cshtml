@@ -1,0 +1,25 @@
+﻿@model DeliveryOrderViewModel
+
+@{
+    ViewData["Title"] = "Purchase Order Details";
+    ViewData["MenuKey"] = "Purchase Order";
+}
+
+<div class="row">
+    <div class="col-12 col-md-6 col-sm-6">
+        <partial name="DetailPurchaseOrder" />
+        <partial name="DetailPurchaseOrderProduct" />
+    </div>
+    <div class="col-12 col-md-6 col-sm-6">
+        <partial name="DetailDeliveryOrderList" />
+    </div>
+</div>
+
+<div class="form-group text-end">
+    <a asp-action="Index" class="btn btn-dark">Back to List</a>
+</div>
+
+
+@section Scripts{
+    <script src=~/lib/js/PurchaseOrderList/Detail.js> </script>
+}

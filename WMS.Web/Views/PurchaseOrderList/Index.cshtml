@@ -1,0 +1,115 @@
+﻿@model IEnumerable<IncPurchaseOrder>
+
+@{
+    ViewData["Title"] = "Purchase Order List";
+    ViewData["MenuKey"] = "Purchase Order";
+}
+
+<div class="card">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Purchases Orders</strong></h5>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <tr class="text-center">
+                    <th>
+                        Action
+                    </th>
+                    <th>
+                        PO Number
+                    </th>
+                    <th>
+                        Tenant
+                    </th>
+                    <th>
+                        Warehouse
+                    </th>
+                    <th>
+                        Division
+                    </th>
+                    <th>
+                        Supplier
+                    </th>
+                    <th>
+                        Product
+                    </th>
+                    <th>
+                        Quantity
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="text-center">
+                            <button type="button" class="btn btn-outline-tertiary" data-bs-toggle="dropdown"><i class="fas fa-fw fa-ellipsis-h"></i></button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" asp-action="Detail" asp-route-PONumber="@item.PONumber">Details</a></li>
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Print" asp-action="PurchaseOrderManifest" asp-route-PONumber="@item.PONumber" target="_blank">Print Manifes Purchase Order</a>
+                                </li>
+                            </ul>
+                        </td>
+                        <td class="text-center">
+                            @Html.DisplayFor(modelItem => item.PONumber)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.MasDataTenant.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.MasDataTenantWarehouse.MasHouseCode.HouseName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.masDataTenantDivision.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.MasSupplierData.Name)
+                        </td>
+                        <td class="text-center">
+                            @Html.DisplayFor(modelItem => item.IncPurchaseOrderProducts.Count)
+                        </td>
+                        <td>
+                            <ul class="list-group">
+                                <li class="d-flex justify-content-between align-items-center">
+                                    PO
+                                    <span class="badge bg-light text-dark rounded-pill">@item.IncPurchaseOrderProducts.Sum(m => m.Quantity)</span>
+                                </li>
+                                <li class="d-flex justify-content-between align-items-center">
+                                    DO
+                                    <span class="badge bg-light text-dark rounded-pill">@item.IncPurchaseOrderProducts.Sum(m => m.DOQuantity)</span>
+                                </li>
+                            </ul>
+                        </td>
+                        <td class="text-center">
+                            @if (item.Status == "Pending" && item.IncPurchaseOrderProducts.Sum(m => m.DOQuantity) > 0)
+                            {
+                                <span class="badge bg-warning"> @item.Status </span>
+                            }
+                            else if (item.Status == "Pending")
+                            {
+                                <span class="badge bg-danger"> @item.Status </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success"> @item.Status </span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts{
+    <script src=~/lib/js/PurchaseOrderList/Index.js> </script>
+}

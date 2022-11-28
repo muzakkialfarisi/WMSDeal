@@ -1,0 +1,33 @@
+﻿@model PickingRouteViewModel
+
+<div class="card">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center py-1">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Picking Route</strong></h5>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <input asp-for="invPickingRoute.HouseCode" class="form-control" value="@ViewBag.HouseCode" type="hidden"/>
+        <div class="row">
+            <div class="col-12 col-sm-6">
+                <div class="form-group required">
+                    <label class="control-label">Code</label>
+                    <div class="input-group">
+                        <span class="input-group-text" id="basic-addon1">@ViewBag.HouseCode-</span>
+                        <input asp-for="invPickingRoute.RouteCode" class="form-control"/>
+                    </div>
+                    <span asp-validation-for="invPickingRoute.RouteCode" class="text-danger"></span>
+                </div><br />
+            </div>
+            <div class="col-12 col-sm-6">
+                <div class="form-group required">
+                    <label class="control-label">Name</label>
+                    <input asp-for="invPickingRoute.Name" class="form-control" />
+                    <span asp-validation-for="invPickingRoute.Name" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

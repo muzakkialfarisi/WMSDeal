@@ -1,0 +1,194 @@
+﻿@model SecUser
+
+@{
+    ViewData["Title"] = "Profile";
+    ViewData["MenuKey"] = "Home";
+}
+
+<div class="row">
+	<div class="col-md-3 col-xl-2">
+
+		<div class="card">
+			<div class="card-header">
+				<h5 class="card-title mb-0">Profile Settings</h5>
+			</div>
+
+			<div class="list-group list-group-flush" role="tablist">
+				<a class="list-group-item list-group-item-action active" data-bs-toggle="list" href="#account" role="tab">
+					Account
+				</a>
+				<a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#warehouse" role="tab">
+					Warehouse
+				</a>
+				<a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#password" role="tab">
+					Password
+				</a>
+			</div>
+		</div>
+	</div>
+	
+	<div class="col-md-9 col-xl-10">
+		<div class="tab-content">
+			<div class="tab-pane fade show active" id="account" role="tabpanel">
+
+				<div class="card">
+					<div class="card-header">
+						<h5 class="card-title mb-0">Account</h5>
+					</div>
+					<div class="card-body">
+						<table class="table table-sm table-borderless p-0 m-0">
+                            <tbody>
+                                <tr>
+                                    <td class="text-nowrap">
+                                        Username
+                                    </td>
+                                    <td>
+                                        : @Model.UserName.ToLower()
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-nowrap">
+                                        Profile
+                                    </td>
+                                    <td>
+                                        : @Model.SecProfile.ProfileName
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-nowrap">
+                                        Default Warehouse
+                                    </td>
+                                    <td>
+                                        : @Model.HouseCode - @Model.MasHouseCode.HouseName
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Full Name
+                                    </td>
+                                    <td>
+                                        : @Model.FirstName @Model.LastName
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Jabatan
+                                    </td>
+                                    <td>
+                                        : @Model.MasJabatan.JobPosName
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Email
+                                    </td>
+                                    <td>
+                                        : @Model.Email
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Phone Number
+                                    </td>
+                                    <td>
+                                        : +62 @Model.PhoneNumber
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Expired Date
+                                    </td>
+                                    <td>
+                                        : <span class="text-danger">@String.Format("{0:dd/MM/yyyy}", Model.ExpireDate)</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+					</div>
+				</div>
+			</div>
+
+			
+			<div class="tab-pane fade" id="warehouse" role="tabpanel">
+				<div class="card">
+					<div class="card-body">
+
+                        <div class="table-responsive">
+                            <table class="table tbl-warehouse">
+                                <thead>
+                                    <tr class="text-center">
+                                        <th>
+                                            Warehouse
+                                        </th>
+                                        <th >
+                                            Status
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.SecUserWarehouses)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @item.HouseCode - @item.MasHouseCode.HouseName
+                                            </td>
+                                            <td class="text-center">
+                                                @if (item.Flag == FlagEnum.Active)
+                                                {
+                                                    <span class="badge bg-success"> @Html.DisplayFor(modelItem => item.Flag)</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-danger"> @Html.DisplayFor(modelItem => item.Flag)</span>
+                                                }
+                                            </td>
+
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+					</div>
+				</div>
+			</div>
+
+			<div class="tab-pane fade" id="password" role="tabpanel">
+				<div class="card">
+					<div class="card-body">
+						<h5 class="card-title">Change Password</h5>
+
+                        <form method="post">
+							<div class="mb-3 form-group required">
+								<label class="control-label">Current Password</label>
+                                <input type="password" class="form-control" name="OldPassword" value="" required>
+                                <span class="text-danger field-validation-valid" data-valmsg-for="OldPassword" data-valmsg-replace="true"></span>
+							</div>
+							<div class="mb-3 form-group required">
+								<label class="control-label">New Password</label>
+                                <input type="password" class="form-control" name="NewPassword" required>
+                                <small class="form-text text-muted">Use 6 or more characters with a mix of letters, numbers & symbols</small><br />
+                                <span class="text-danger field-validation-valid" data-valmsg-for="NewPassword" data-valmsg-replace="true"></span>
+							</div>
+							<div class="mb-3 form-group required">
+                                <label class="control-label">Confirm Password</label>
+                                <input type="password" class="form-control" name="ConfirmPassword" required>
+                                <span class="text-danger field-validation-valid" data-valmsg-for="ConfirmPassword" data-valmsg-replace="true"></span>
+							</div>
+							<button type="button" class="btn btn-primary" id="btn-ChangePassword">Save</button>
+						</form>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+</div>
+
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script type="text/javascript" src="~/lib/js/Account/Index.js"></script>
+}

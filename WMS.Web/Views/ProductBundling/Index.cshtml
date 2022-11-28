@@ -1,0 +1,100 @@
+﻿@model IEnumerable<MasProductBundling>
+
+@{
+    ViewData["Title"] = "Product Data";
+    ViewData["MenuKey"] = "Product";
+}
+
+<div class="card" style="min-height:700px">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Product Bundling</strong></h5>
+            </div>
+            <div>
+                <a class="btn btn-outline-primary btn-pill" asp-action="Upsert">Add Bundling</a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr class="text-center">
+                        <th>
+                            Action
+                        </th>
+                        <th>
+                            Name
+                        </th>
+                        <th>
+                            Tenant
+                        </th>
+                        <th>
+                            Product
+                        </th>
+                        <th>
+                            Quantity
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="text-center">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-outline-tertiary" data-bs-toggle="dropdown"><i class="fas fa-fw fa-ellipsis-h"></i></button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" asp-action="Upsert" asp-route-BundlingId="@item.BundlingId" asp-route-TenantId="@item.TenantId">Manage</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <form asp-action="DeleteBundling" method="post">
+                                                <input name="BundlingId" value="@item.BundlingId" hidden>
+                                                <input name="TenantId" value="@item.TenantId" hidden>
+                                                <button class="dropdown-item text-danger" type="submit">Delete</button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MasDataTenant.Name)
+                            </td>
+                            <td class="text-center">
+                                @Html.DisplayFor(modelItem => item.MasProductBundlingDatas.Count)
+                            </td>
+                            <td class="text-center">
+                                @item.MasProductBundlingDatas.Count
+                            </td>
+                            <td class="text-center">
+                                @if (item.Flag == FlagEnum.Active)
+                                {
+                                    <span class="badge bg-success"> @Html.DisplayFor(modelItem => item.Flag)</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger"> @Html.DisplayFor(modelItem => item.Flag)</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script>
+        $(function () {
+            $('.table').DataTable({
+            });
+        });
+    </script>
+}

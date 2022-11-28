@@ -1,0 +1,30 @@
+﻿@model IncDeliveryOrder
+
+@{
+    ViewData["Title"] = "Delivery Order Details";
+    ViewData["MenuKey"] = "Delivery Order";
+}
+
+<div class="row">
+    <div class="col-12 col-md-4 col-sm-4">
+        <partial name="DetailDO" />
+        <div class="d-grid gap-2 mt-3">
+            <a asp-action="Index" class="btn btn-dark">Back to List</a>
+        </div>
+    </div>
+    <div class="col-12 col-md-8 col-sm-8">
+        <partial name="DetailDOProduct">
+    </div>
+</div>
+
+
+
+@section Scripts{
+    <script>
+        $(function () {
+            $('#tbl-products').DataTable({
+                order: [[0, 'desc']],
+            });
+        });
+    </script>
+}

@@ -1,0 +1,112 @@
+﻿@model ProductMonitoringViewModel
+
+@{
+    ViewData["Title"] = "Detail Product History";
+    ViewData["MenuKey"] = "Dashboards";
+}
+
+<div class="row">
+    <div class="col-12 col-sm-4">
+        <partial name="DetailProduct" />
+    </div>
+
+    <div class="col-12 col-sm-8">
+        <div class="card">
+            <div class="card-header border-bottom">
+                Serial Number List
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped" id="tbl-serialnumber">
+                        <thead>
+                            <tr class="text-center">
+                                @if (User.FindFirst("ProfileId").Value == SD.Role_SuperAdmin)
+                                {
+                                    <th>
+                                        Action
+                                    </th>
+                                }
+                                <th>
+                                    Serial Number
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.masProductData.IncSerialNumbers)
+                            {
+                                <tr>
+                                    @if (User.FindFirst("ProfileId").Value == SD.Role_SuperAdmin)
+                                    {
+                                        <td class="text-center">
+                                            @if (item.Status == SD.FlagSerialNumber_IN)
+                                            {
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-sm btn-outline-tertiary" data-bs-toggle="dropdown"><i class="fas fa-fw fa-ellipsis-h"></i></button>
+                                                    <ul class="dropdown-menu">
+                                                        <li>
+                                                            <button class="dropdown-item text-warning btn-edit"
+                                                            data-serialid="@item.SerialId"
+                                                            data-productid="@item.ProductId"
+                                                            data-doproductid="@item.DOProductId"
+                                                            data-serialnumber="@item.SerialNumber"
+                                                            data-bs-toggle="modal" data-bs-target="#modaledit">Edit</button>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            }
+                                        </td>
+                                    }
+                                    <td>
+                                        @item.SerialNumber
+                                    </td>
+                                    <td class="text-center">
+                                        @if (item.Status == SD.FlagSerialNumber_Open)
+                                        {
+                                            <span class="badge bg-secondary">Created</span>
+                                        }
+                                        @if (item.Status == SD.FlagSerialNumber_IN)
+                                        {
+                                            <span class="badge bg-primary">IN</span>
+                                        }
+                                        @if (item.Status == SD.FlagSerialNumber_OUT)
+                                        {
+                                            <span class="badge bg-success">OUT</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (User.FindFirst("ProfileId").Value == SD.Role_SuperAdmin)
+{
+    <partial name="ModalEditSerialNumber" />
+}
+
+@section Scripts{
+    <script>
+        $(function () {
+            $('#tbl-serialnumber').DataTable({
+                order: [[1, 'asc']]
+            });
+
+            const myArray = window.location.pathname.split("/");
+            $('input[name="Id"]').val(myArray[3]);
+        });
+
+        $('.btn-edit').on('click', function () {
+            $('input[name="SerialId"]').val($(this).data('serialid'));
+            $('input[name="ProductId"]').val($(this).data('productid'));
+            $('input[name="DOProductId"]').val($(this).data('doproductid'));
+            $('input[name="SerialNumber"]').val($(this).data('serialnumber'));
+        });
+    </script>
+}

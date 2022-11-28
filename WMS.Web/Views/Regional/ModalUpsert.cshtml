@@ -1,0 +1,41 @@
+﻿<div class="modal fade" id="ModalUpsert" tabindex="-1" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Regional</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-action="Upsert" method="post">
+                <div class="modal-body m-3">
+
+                    <input name="RegionId" hidden />
+
+                    <div class="mb-3 form-group required">
+                        <label class="control-label">Code</label>
+                        <input name="RegionCode" class="form-control" maxlength="3" minlength="3" required>
+                        <span class="text-danger field-validation-valid" data-valmsg-for="RegionCode" data-valmsg-replace="true"></span>
+                    </div>
+
+                    <div class="mb-3 form-group required">
+                        <label class="control-label">Name</label>
+                        <input name="RegionName" class="form-control" required>
+                        <span class="text-danger field-validation-valid" data-valmsg-for="RegionName" data-valmsg-replace="true"></span>
+                    </div>
+
+                    <div class="mb-3 form-group required">
+                        <label class="control-label">Status</label>
+                        <select name="Flag" class="form-control select2" data-bs-toggle="select2" asp-items="Html.GetEnumSelectList<FlagEnum>()">
+                        </select>
+                        <span class="text-danger field-validation-valid" data-valmsg-for="Flag" data-valmsg-replace="true"></span>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                    <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>

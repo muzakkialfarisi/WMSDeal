@@ -1,0 +1,146 @@
+﻿@model IncDeliveryOrderProduct
+
+@{
+    ViewData["Title"] = "Arrival";
+    ViewData["MenuKey"] = "Receiving";
+}
+
+<div class="row">
+    <div class="col-12 col-sm-6">
+
+        <div class="card">
+            <div class="card-header border-bottom">
+                Input Serial Number
+            </div>
+            <div class="card-body text-center">
+                <form asp-action="UpsertSerialNumber" method="post">
+                    <input asp-for="DONumber" hidden />
+                    <input name="TenantId" value="@TempData["TenantId"]" hidden />
+                    <input asp-for="DOProductId" hidden />
+                    <div class="form-group my-3 required">
+                        <label lass="control-label">Input Serial Number</label>
+                        <div class="input-group">
+                            <input type="text" name="SerialNumber" class="form-control" required>
+                            <button type="submit" class="btn btn-outline-primary">Save</button>
+                        </div>
+                        <span class="text-danger field-validation-valid" data-valmsg-for="SerialNumber" data-valmsg-replace="true"></span>
+                    </div>
+                </form>
+
+                <br />
+
+            </div>
+        </div>
+        <div class="d-grid gap-2 mt-3">
+            <a asp-action="Upsert" asp-route-DONumber="@Model.DONumber" asp-route-TenantId="@TempData["TenantId"]" class="btn btn-dark">Back to Detail</a>
+        </div>
+    </div>
+
+    <div class="col-12 col-sm-6">
+        <div class="card">
+            <div class="card-header border-bottom">
+                Serial Number List
+            </div>
+            <div class="card-body">
+
+                <div class="mb-3">
+
+                    <ul class="list-group">
+                        <li class="d-flex justify-content-between align-items-center">
+                            Qty DO Product
+                            <span class="badge bg-success rounded-pill">@Model.Quantity</span>
+                        </li>
+                        <br>
+                        <li class="d-flex justify-content-between align-items-center">
+                            Qty AR Product
+                            @if (Model.IncSerialNumbers.Where(m => m.Status == SD.FlagSerialNumber_IN).Count() < 1)
+                            {
+                                <span class="badge bg-danger rounded-pill">@Model.IncSerialNumbers.Count</span>
+                            }
+                            else
+                            {
+                                if (Model.IncSerialNumbers.Where(m => m.Status == SD.FlagSerialNumber_IN).Count() != Model.Quantity)
+                                {
+                                    <span class="badge bg-warning rounded-pill">@Model.IncSerialNumbers.Where(m => m.Status == SD.FlagSerialNumber_IN).Count()</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-success rounded-pill">@Model.IncSerialNumbers.Where(m => m.Status == SD.FlagSerialNumber_IN).Count()</span>
+                                }
+                            }
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr class="text-center">
+                                <th>
+                                    Action
+                                </th>
+                                <th>
+                                    Serial Number
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.IncSerialNumbers)
+                            {
+                                <tr>
+                                    <td class="text-center">
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-sm btn-outline-tertiary" data-bs-toggle="dropdown"><i class="fas fa-fw fa-ellipsis-h"></i></button>
+                                            @if (User.FindFirst("ProfileId").Value == SD.Role_SuperAdmin.ToString())
+                                            { 
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <form asp-action="Delete" method="post">
+                                                            <input name="SerialId" value="@item.SerialId" hidden>
+                                                            <input name="DOProductId" value="@item.DOProductId" hidden>
+                                                            <button class="dropdown-item text-danger" type="submit">Delete</button>
+                                                        </form>
+                                                    </li>
+                                                </ul>
+                                            }
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @item.SerialNumber
+                                    </td>
+                                    <td class="text-center">
+                                        @if (item.Status == SD.FlagSerialNumber_Open)
+                                        {
+                                            <span class="badge bg-secondary">Created</span>
+                                        }
+                                        @if (item.Status == SD.FlagSerialNumber_IN)
+                                        {
+                                            <span class="badge bg-primary">IN</span>
+                                        }
+                                        @if (item.Status == SD.FlagSerialNumber_OUT)
+                                        {
+                                            <span class="badge bg-success">OUT</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(function () {
+            $('.table').DataTable({
+                order: [[1, 'desc']],
+            });
+        });
+    </script>
+}

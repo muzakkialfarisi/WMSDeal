@@ -1,0 +1,47 @@
+﻿<div class="modal fade" id="Print" tabindex="-1" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create New Platform</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-controller="Print" asp-action="HandoverManifest" method="post" target="_blank">
+                <div class="modal-body m-3">
+
+                    <div class="form-group required">
+                        <label class="control-label">Warehouse</label>
+                        <select name="HouseCode" class="form-control select2" data-bs-toggle="select2" asp-items="ViewBag.HouseCode" required>
+                            <option disabled selected value="">Select...</option>
+                        </select>
+                    </div><br />
+
+                    <div class="form-group required">
+                        <label class="control-label">Tenant</label>
+                        <select name="TenantId" class="form-control select2" data-bs-toggle="select2" asp-items="ViewBag.TenantId" required>
+                            <option disabled selected value="">Select...</option>
+                        </select>
+                    </div><br />
+
+                    <div class="form-group">
+                        <label class="control-label">Courier</label>
+                        <select name="OrdCourier" class="form-control select2" data-bs-toggle="select2" asp-items="ViewBag.OrdCourier">
+                            <option disabled selected value="">Select...</option>
+                        </select>
+                    </div><br />
+
+                    <div class="mb-3 form-group required">
+                        <label class="control-label">Date</label>
+                        <input name="Date" type="date" class="form-control" required />
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <div class="text-center">
+                        <button class="btn btn-primary btn-pill" type="submit">Print</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>

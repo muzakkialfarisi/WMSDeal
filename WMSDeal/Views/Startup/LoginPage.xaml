@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:constant="clr-namespace:WMSDeal.Constant"
+             x:Class="WMSDeal.Views.Startup.LoginPage"
+             xmlns:customControl="clr-namespace:WMSDeal.CustomControl"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{StaticResource Aqua4}"
+             Title="LoginPage">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="RecentChatAdornerStyle" TargetType="BoxView">
+                <Setter Property="Color" Value="White" />
+                <Setter Property="CornerRadius" Value="100, 100, 0, 0" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ScrollView BackgroundColor="White">
+        <StackLayout>
+            <StackLayout VerticalOptions="FillAndExpand" >
+                <Grid RowDefinitions="270,*">
+                    <StackLayout Grid.Row="0" Grid.Column="0" >
+                        <Image Source="{x:Static constant:Icon.Warehouse}" HeightRequest="250" Aspect="Fill"/>
+                        <BoxView HeightRequest="60" Margin="0,-40,0,0" Style="{StaticResource RecentChatAdornerStyle}"/>
+                        <Frame BorderColor="{StaticResource WMSOrange}" HeightRequest="80" WidthRequest="80" CornerRadius="50"
+                        Padding="0" Margin="0,-100" HorizontalOptions="Center">
+                            <Image Source="{x:Static constant:Icon.Deal}" Aspect="Fill" HeightRequest="14" WidthRequest="65" />
+                        </Frame>
+                    </StackLayout>
+
+                    <StackLayout WidthRequest="400" Spacing="40" Padding="40,0" Grid.Row="1" Grid.Column="1">
+                        <VerticalStackLayout Spacing="5">
+                            <!--<Label Text="HORAS" FontSize="25" FontAttributes="Bold" TextColor="DarkOrange"  HorizontalTextAlignment="Center"/>-->
+                            <Label Text="Login to your account"  TextColor="{StaticResource WMSBlue}" 
+                           FontAttributes="None" HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+
+                        <StackLayout Orientation="Horizontal">
+                            <Frame ZIndex="1" HasShadow="True" BorderColor="White" HeightRequest="56" WidthRequest="56" CornerRadius="28">
+                                <Image Source="{x:Static constant:Icon.User}" HeightRequest="25" WidthRequest="25" />
+                            </Frame>
+                            <Frame HeightRequest="45" Margin="-20,0,0,0" Padding="0" HasShadow="True" BorderColor="White"  HorizontalOptions="FillAndExpand">
+                                <Entry x:Name="txUserName" Text="{Binding Username}" Keyboard="Default"  Margin="20,0,0,0" 
+                                       VerticalOptions="Center" Placeholder="User Name" FontSize="16" TextColor="{StaticResource Black}"
+                                       >
+                                </Entry>
+                            </Frame>
+                        </StackLayout>
+
+                        <StackLayout Orientation="Horizontal">
+                            <Frame ZIndex="1" HasShadow="True" BorderColor="White" HeightRequest="56" WidthRequest="56" CornerRadius="28">
+                                <Image Source="{x:Static constant:Icon.Password}" HeightRequest="25" WidthRequest="25" />
+                            </Frame>
+                            <Frame HeightRequest="45" Margin="-20,0,0,0" Padding="0" HasShadow="True" BorderColor="White"  HorizontalOptions="FillAndExpand">
+                                <Grid RowDefinitions="*" ColumnDefinitions="*,Auto" HorizontalOptions="FillAndExpand">
+                                    <Entry x:Name="txPassword" Text="{Binding Password}" Margin="20,0,0,0" TextColor="{StaticResource Black}"
+                                       VerticalOptions="Center" Placeholder="Password" FontSize="16" IsPassword="{Binding isPassword}"
+                                       />
+                                    <ImageButton Grid.Column="1" Padding="5"
+                                                 HorizontalOptions="End" VerticalOptions="Center"
+                                                 Command="{Binding ShowPasswordCommand}"
+                                                 Source="{Binding ShowPassword}"
+                                                 HeightRequest="40" WidthRequest="40"
+                                                 Aspect="AspectFill" />
+                                </Grid>
+                            </Frame>
+                        </StackLayout>
+
+                        <!--<Button Text="SIGN IN" HorizontalOptions="Fill" CornerRadius="10" HeightRequest="45"  
+                    FontAttributes="Bold" FontSize="14" BackgroundColor="{StaticResource Green100}"
+                    Command="{Binding LoginCommand}" />-->
+
+                        <customControl:ButtonControl   x:Name="btnLogin"
+                        Text="{Binding LoginText}"
+                        IsInProgress="{Binding IsBusy}"
+                        Command="{Binding LoginCommand}"
+                        HorizontalOptions="Fill" />
+
+                        <StackLayout Orientation="Horizontal" Spacing="5" HorizontalOptions="Center">
+                            <Label Text="Don't have account?" TextColor="Gray" />
+                            <Label Text="Sign Up here" TextColor="{StaticResource WMSBlue}" />
+                        </StackLayout>
+
+                        <VerticalStackLayout HorizontalOptions="Center"  Spacing="5" >
+                            <Label Text="from" FontSize="15" TextColor="Black" HorizontalOptions="Center"/>
+                            <Image Source="{x:Static constant:Icon.NCS}" HeightRequest="30" Aspect="Fill"/>
+                        </VerticalStackLayout>
+                    </StackLayout>
+
+                </Grid>
+            </StackLayout>
+        </StackLayout>
+    </ScrollView>
+</ContentPage>

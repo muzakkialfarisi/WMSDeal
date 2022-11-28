@@ -1,0 +1,65 @@
+﻿@model OutSalesOrder
+
+@{
+    ViewData["Title"] = "Sales Order Details";
+    ViewData["MenuKey"] = "Sales Order";
+}
+
+<div class="row">
+    <div class="col-12 col-md-5 col-sm-5">
+        <partial name="DetailSalesOrder" />
+        <div class="d-grid gap-2">
+            <a asp-action="Index" class="btn btn-dark">Back to List</a>
+        </div>
+    </div>
+    <div class="col-12 col-md-7 col-sm-7">
+        <partial name="DetailSalesOrderProduct" />
+    </div>
+</div>
+<partial name="ModalSerialNumber" />
+
+@section Scripts{
+    <script>
+        $(function () {
+            $('#tbl-salesorderproducts').DataTable({
+            });
+        });
+
+        $('.btn-serialnumber').on('click', function () {
+            $.ajax({
+                url: "../../SalesOrderList/GetSerialNumberByOrdProductId",
+                type: 'GET',
+                data: {
+                    OrderId: $(this).data('orderid'),
+                    OrdProductId: $(this).data('ordproductid'),
+                },
+                beforeSend: function () {
+                    $("#tbl-serialnumber").DataTable().clear().draw();
+                },
+                success: function (data) {
+                    console.log(data);
+
+                    if (data.statusCode == 200) {
+                        $("#ProductName").html(data.value.masProductData.productName);
+                        $("#SKU").html(data.value.masProductData.sku);
+                        $("#SerialNumbersCount").html(data.value.incSerialNumbers.length);
+
+                        var dataTable = $("#tbl-serialnumber").dataTable().api();
+                        for (let i = 0; i < data.value.incSerialNumbers.length; i++) {
+                            tr = document.createElement("tr");
+                            tr.innerHTML = '' +
+                                '<tr>' +
+                                '<td>' + data.value.incSerialNumbers[i].serialNumber + '</td>' +
+                                '</tr>';
+                            dataTable.row.add(tr);
+                            dataTable.draw();
+                        }
+                    }
+                },
+                error: function (response) {
+                    console.log(response.responseText);
+                }
+            });
+        });
+    </script>
+}

@@ -1,0 +1,73 @@
+﻿@model PurchaseOrderViewModel
+
+<div class="card">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Details</strong></h5>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12 col-sm-6">
+                <table class="table table-sm table-borderless p-0 m-0">
+                    <tbody>
+                        <tr>
+                            <td class="text-nowrap">
+                                Req Number
+                            </td>
+                            <td>
+                                : @Model.IncRequestPurchase.RequestNumber
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Tenant
+                            </td>
+                            <td>
+                                : @Model.IncRequestPurchase.MasDataTenant.Name
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Division
+                            </td>
+                            <td>
+                                : @if (Model.IncRequestPurchase.TenantDivisionId.HasValue)
+                                {
+                                    @Model.IncRequestPurchase.masDataTenantDivision.Name
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Warehouse
+                            </td>
+                            <td>
+                                : @Model.IncRequestPurchase.MasDataTenantWarehouse.MasHouseCode.HouseName
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Created
+                            </td>
+                            <td>
+                                : @String.Format("{0:dd/MM/yyyy}", Model.IncRequestPurchase.DateRequested)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Note
+                            </td>
+                            <td>
+                                : @Model.IncRequestPurchase.SpecialInstruction
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>

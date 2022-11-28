@@ -1,0 +1,102 @@
+﻿@model OutSalesOrder
+
+<div class="card">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Details</strong></h5>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+
+        <div class="row">
+            <div class="col-12 col-sm-6">
+                <table class="table table-sm table-borderless p-0 m-0">
+                    <tbody>
+                        <tr>
+                            <th colspan="2" class="text-nowrap">
+                                Sales Order
+                            </th>
+                        </tr>
+                        <tr>
+                            <td class="text-nowrap">
+                                SO Number
+                            </td>
+                            <td>
+                                : @Model.OrderId
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Type
+                            </td>
+                            <td>
+                                : @Model.MasSalesType.StyName
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Created
+                            </td>
+                            <td>
+                                : @String.Format("{0:dd/MM/yyyy}", Model.DateOrdered)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Tenant
+                            </td>
+                            <td>
+                                : @Model.MasDataTenant.Name
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Warehouse
+                            </td>
+                            <td>
+                                : @Model.MasHouseCode.HouseName
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-12 col-sm-6">
+                <table class="table table-sm table-borderless p-0 m-0">
+                    <tbody>
+                        <tr>
+                            <th colspan="2" class="text-nowrap">
+                                Delivery
+                            </th>
+                        </tr>
+                        <tr>
+                            <td class="align-baseline">
+                                Courier
+                            </td>
+                            <td>
+                                : @Model.OutsalesOrderDelivery.MasSalesCourier.Name - @Model.OutsalesOrderDelivery.OrdCourierService
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="align-baseline">
+                                Grand Weight
+                            </td>
+                            <td>
+                                : @String.Format("{0:n0}", Model.OutSalesOrderProducts.Sum(m => m.TotalWeight)) Gram
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-nowrap align-baseline">
+                                Air Way Bill
+                            </td>
+                            <td>
+                                : @Model.OutsalesOrderDelivery.AirwayBill <br /><br />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

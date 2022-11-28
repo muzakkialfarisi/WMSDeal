@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WMSDeal.Views.Pickorder.ListCurrentPickPage"
+             Shell.TabBarIsVisible="True"
+             Shell.NavBarIsVisible="False"
+             xmlns:constant="clr-namespace:WMSDeal.Constant"
+             xmlns:viewModels="clr-namespace:WMSDeal.ViewModels.Pickorder"
+             x:DataType="viewModels:PickViewModel"
+             xmlns:model="clr-namespace:WMSDeal.Models.Outgoing"
+             BackgroundColor="{StaticResource Background3}"
+             Title="ListCurrentPickPage">
+    <StackLayout >
+
+        <!--filter-->
+        <StackLayout Margin="0,0,0,5" BackgroundColor="{StaticResource Blue500}" >
+            <Grid RowDefinitions="45" ColumnDefinitions="*,*,Auto,70" Margin="0,0,3,0">
+                <HorizontalStackLayout  Grid.Row="0" Grid.Column="0">
+                    <Frame Padding="0" Margin="15,0,0,0" HorizontalOptions="StartAndExpand" VerticalOptions="Center" 
+                           BorderColor="{StaticResource Green200}" BackgroundColor="{StaticResource Green200}">
+                        <Label Margin="8,0,8,2" Text="{Binding TotalPicked,StringFormat=' Picked: {0}'}" VerticalOptions="Center"
+                               TextColor="{StaticResource White}" FontAttributes="None"/>
+                    </Frame>
+                </HorizontalStackLayout>
+                <StackLayout Grid.Row="0" Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center" Padding="0" >
+                    <Frame Padding="0" Margin="0,0,20,0" HorizontalOptions="StartAndExpand" VerticalOptions="Center" 
+                           BorderColor="{StaticResource Red}" BackgroundColor="{StaticResource Red}">
+                        <Label x:Name="lblTotal"  Margin="8,0,8,2" Text="{Binding SalesOrderPicks.Count}" VerticalOptions="Center"
+                               TextColor="{StaticResource White}" FontAttributes="None" />
+                    </Frame>
+                </StackLayout>
+                <StackLayout Grid.Row="0" Grid.Column="2" HorizontalOptions="End" VerticalOptions="Center" Margin="0,0,10,0" >
+                    <Button x:Name="btnStagging" Text="Put on Stage" HeightRequest="30" Padding="8,2,8,2" IsVisible="{Binding IsStaging}"
+                               VerticalOptions="Center" HorizontalOptions="Center" 
+                               CornerRadius="5" Command="{Binding StagingCommand}"
+                               BackgroundColor="{StaticResource WMSBlue}"/>
+                </StackLayout>
+                <StackLayout Grid.Row="0" Grid.Column="3" HorizontalOptions="End" VerticalOptions="Center" Margin="0,0,10,0">
+                    <ImageButton x:Name="btnRefresh" Source="{x:Static constant:Icon.Refresh}" WidthRequest="45" HeightRequest="35" 
+                                 Padding="2" VerticalOptions="Center" HorizontalOptions="Center"
+                                 Aspect="AspectFit" CornerRadius="5" Command="{Binding RefreshCommand}"
+                                 BackgroundColor="{StaticResource WMSBlue}"/>
+                </StackLayout>
+            </Grid>
+        </StackLayout>
+
+        <ActivityIndicator IsRunning="True" IsVisible="{Binding IsBusy}" Color="{StaticResource DarkOrange}"/>
+        <RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
+            <CollectionView ItemsSource="{Binding SalesOrderPicks}"  x:Name="PickCollection"
+                                VerticalOptions="FillAndExpand" SelectionMode="Multiple"  >
+                <!--SelectionChangedCommand="{Binding SelectItemCommand}"-->
+                <!--SelectionChangedCommandParameter="{Binding SelectedItems,Source={x:Reference PickCollection}}"-->
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:SalesOrderPick" >
+                        <Frame CornerRadius="5" BackgroundColor="{StaticResource Background1}" 
+                                   BorderColor="{StaticResource Background1}" 
+                                   Padding="0" HasShadow="True" Margin="10,5">
+                            <StackLayout>
+                                <Grid RowDefinitions="Auto" ColumnDefinitions="*,0">
+                                    <StackLayout Grid.Row="0" Grid.Column="0" Padding="5">
+                                        <Grid RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="100,*">
+                                            <Frame  Grid.RowSpan="4" Grid.Column="0"
+                                                    CornerRadius="5" Padding="0" VerticalOptions="Center" HorizontalOptions="Start" HeightRequest="90" WidthRequest="90" >
+                                                <Image  Source="{Binding BeautyPicture ,StringFormat='{0}'}"
+                                                        Aspect="AspectFill"  HorizontalOptions="Start" VerticalOptions="Center" HeightRequest="90" WidthRequest="90" />
+                                                <Frame.GestureRecognizers>
+                                                    <TapGestureRecognizer NumberOfTapsRequired="2" Command="{Binding Source={x:RelativeSource AncestorType={x:Type viewModels:PickViewModel}},Path=SelectItemCommand}" CommandParameter="{Binding .}"/>
+                                                </Frame.GestureRecognizers>
+                                            </Frame>
+
+                                            <Label Grid.Row="0" Grid.Column="1" VerticalOptions="Center" Text="{Binding ProductName,StringFormat='{0}'}" TextColor="{StaticResource Black}" 
+                                                     FontAttributes="Bold"/>
+                                            <Grid Grid.Row="1" Grid.Column="1" RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*" HorizontalOptions="FillAndExpand">
+                                                <Label VerticalOptions="Center" Text="{Binding OrderId,StringFormat='SO No.: {0}'}" 
+                                                        TextColor="{StaticResource Black}"  FontAttributes="Bold" />
+                                                <Label Grid.Row="1" VerticalOptions="Center"  Text="{Binding TenantName,StringFormat='Tenant: {0}'}" 
+                                                            TextColor="{StaticResource Black}" FontAttributes="None"/>
+                                                <Label Grid.Row="2" VerticalOptions="Center"  Text="{Binding CneeName,StringFormat='Cnee: {0}'}" 
+                                                        TextColor="{StaticResource Black}" FontAttributes="None"/>
+                                            </Grid>
+
+                                            <StackLayout Grid.Row="3" Grid.Column="1" Padding="0">
+                                                <Grid RowDefinitions="Auto" ColumnDefinitions="*,60">
+                                                    <Label Grid.Row="0" Grid.Column="0" VerticalOptions="Center"
+                                                               TextColor="{StaticResource Black}" >
+                                                        <Label.Text>
+                                                            <MultiBinding StringFormat="{}Total : {0}  {1} ({2})">
+                                                                <Binding Path="QtyPick"/>
+                                                                <Binding Path="Unit"/>
+                                                                <Binding Path="StorageMethod"/>
+                                                            </MultiBinding>
+                                                        </Label.Text>
+                                                    </Label>
+                                                    <Label Grid.Row="0" Grid.Column="1" Text="{Binding PickedStatus}" HorizontalOptions="Start"  TextColor="{Binding StatusColor}"/>
+                                                </Grid>
+                                            </StackLayout>
+
+                                        </Grid>
+                                    </StackLayout>
+                                    <StackLayout Grid.Row="0" Grid.Column="1" >
+                                        <!--<Grid RowDefinitions="40,Auto" ColumnDefinitions="*" Padding="0">
+                                    <StackLayout  Grid.Row="1" Grid.Column="0">
+                                        <Image Source="{Static constant:Icon.PanahKanan}" 
+                                                   WidthRequest="20" HeightRequest="20" VerticalOptions="Center" HorizontalOptions="End"/>
+                                    </StackLayout>
+                                </Grid>-->
+                                    </StackLayout>
+
+                                </Grid>
+                                <Grid RowDefinitions="Auto" ColumnDefinitions="*" >
+                                    <StackLayout Grid.Row="0" Grid.Column="0" Padding="5" BackgroundColor="{Binding StatusColor}">
+                                        <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*">
+                                            <Label VerticalOptions="Center" HorizontalOptions="Center" Text="{Binding StorageCode,StringFormat='Storage Code: {0}'}" TextColor="{StaticResource White}" 
+                                                        TextTransform="Lowercase"/>
+                                            <Label Grid.Row="1" VerticalOptions="Center" HorizontalOptions="Center" Text="{Binding BinName,StringFormat='{0}'}" 
+                                                        FontSize="14" TextColor="{StaticResource White}"  FontAttributes="Bold" />
+                                        </Grid>
+                                    </StackLayout>
+                                </Grid>
+                            </StackLayout>
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer NumberOfTapsRequired="2" Command="{Binding Source={x:RelativeSource AncestorType={x:Type viewModels:PickViewModel}},Path=SelectItemCommand}" CommandParameter="{Binding .}"/>
+                            </Frame.GestureRecognizers>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+    </StackLayout>
+</ContentPage>

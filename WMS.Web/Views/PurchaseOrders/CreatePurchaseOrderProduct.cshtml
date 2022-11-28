@@ -1,0 +1,27 @@
+﻿@model PurchaseOrderViewModel
+
+<div class="card">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Purchase Order Products</strong></h5>
+            </div>
+        </div>
+    </div>
+    <div class="card-body"">
+        <div class="row text-primary py-2">
+            <div class="col-6">
+                <span id="total-item">0 </span> Item
+            </div>
+            <div class="col-6 text-end">
+                Total Rp. <span id="total-price"> 0</span>
+            </div>
+        </div>
+        <hr />
+        <div id="card-purchaseorderproducts">
+            
+            <div id="nextkolom" name="nextkolom"></div>
+            <button type="button" id="jumlahkolom" value="-1" style="display:none"></button>
+        </div>
+    </div>
+</div>

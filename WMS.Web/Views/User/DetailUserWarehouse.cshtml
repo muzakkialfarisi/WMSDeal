@@ -1,0 +1,56 @@
+﻿@model UserViewModel
+
+<div class="text-end mb-4">
+    <button type="button" class="btn btn-outline-primary btn-pill btn-create" data-bs-toggle="modal" data-bs-target="#CreateWarehouse">Add Warehouse</button>
+</div>
+
+<div class="table-responsive">
+    <table class="table tbl-boots">
+        <thead>
+            <tr class="text-center">
+                <th>
+                    Action
+                </th>
+                <th>
+                    Warehouse
+                </th>
+                <th >
+                    Status
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.SecUserWarehouses)
+            {
+                <tr>
+                    <td>
+                        <div class="input-group">
+                            <button type="button" class="btn btn-outline-tertiary" data-bs-toggle="dropdown"><i class="fas fa-fw fa-ellipsis-h"></i></button>
+                            <div class="dropdown-menu">
+                                <form asp-action="DeleteUserWarehouse" method="post">
+                                    <input name="Id" value="@item.Id" hidden>
+                                    <input name="UserId" value="@item.UserId" hidden>
+                                    <button class="dropdown-item" type="submit">&nbsp;&nbsp;Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        @item.HouseCode - @item.MasHouseCode.HouseName
+                    </td>
+                    <td class="text-center">
+                        @if (item.Flag == FlagEnum.Active)
+                        {
+                            <span class="badge bg-success"> @Html.DisplayFor(modelItem => item.Flag)</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger"> @Html.DisplayFor(modelItem => item.Flag)</span>
+                        }
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

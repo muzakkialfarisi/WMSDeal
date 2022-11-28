@@ -1,0 +1,39 @@
+﻿@model StorageViewModel
+
+<div class="modal fade" id="modalupsertcolumn" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Column</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-action="UpsertColumn" method="post">
+                <div class="modal-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <input asp-for="invStorageColumn.RowCode" value="@Model.invStorageRow.RowCode" hidden />
+
+                    <div class="mb-3 form-group required">
+                        <label class="control-label">Section Name</label>
+                        <input asp-for="invStorageColumn.ColumnCode" class="form-control" required  readonly/>
+                        <span asp-validation-for="invStorageColumn.ColumnCode" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3 form-group required">
+                        <label class="control-label">Status</label>
+                        <select asp-for="invStorageColumn.Flag" class="form-control select2" data-bs-toggle="select2" asp-items="Html.GetEnumSelectList<FlagEnum>()">
+                        </select>
+                        <span asp-validation-for="invStorageColumn.Flag" class="text-danger"></span>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group">
+                        <input type="submit" value="Save" class="btn btn-primary" />
+                        <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

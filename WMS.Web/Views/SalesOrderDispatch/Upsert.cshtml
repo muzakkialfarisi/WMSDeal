@@ -1,0 +1,182 @@
+﻿@model OutSalesDispatchtoCourier
+
+@{
+    ViewData["Title"] = "Hand Overs";
+    ViewData["MenuKey"] = "Dispatch";
+}
+
+<form asp-action="Upsert" method="post">
+    <div class="row">
+        <div class="col-12 col-sm-6">
+
+            <div class="card">
+                <div class="card-header border-bottom">
+                    <h5 class="card-title"><strong>Dispatch to Courier</strong></h5>
+                </div><br />
+                <div class="card-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="form-group mb-3 required">
+                        <label class="control-label">Courier</label>
+                        <select asp-for="OrdCourier" class="form-control" asp-items="ViewBag.OrdCourier" required>
+                            <option disabled selected>Select...</option>
+                        </select>
+                        <span asp-validation-for="OrdCourier" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mb-3 required">
+                        <label class="control-label">Courier Name</label>
+                        <input asp-for="CourierName" class="form-control" required/>
+                        <span asp-validation-for="CourierName" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3 required">
+                        <label lass="control-label">Order Number</label>
+                        <div class="input-group">
+                            <input type="text" asp-for="OrderId" class="form-control">
+                            <button type="submit" class="btn btn-outline-primary">Save</button>
+                        </div>
+                        <span asp-validation-for="OrderId" class="text-danger"></span>
+                        <span class="span-alert text-danger"></span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6">
+            <div class="card" style="font-size:13px">
+                <div class="card-header border-bottom">
+                    <div class="d-flex align-items-center py-1">
+                        <div class="flex-grow-1 ps-3">
+                            <h5 class="card-title"><strong>Sales Order</strong> <span class="span-orderid"></span></h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class = "col-sm-4">
+                            Tenant
+                        </dt>
+                        <dd class = "col-sm-8 dd-tenant">
+                            @if(Model != null)
+                            {
+                                @Model.OutSalesOrder.MasDataTenant.Name
+                            }
+                        </dd>
+                        <dt class = "col-sm-4">
+                            Warehouse
+                        </dt>
+                        <dd class = "col-sm-8 dd-warehouse">
+                            @if(Model != null)
+                            {
+                                @Model.OutSalesOrder.MasHouseCode.HouseName
+                            }
+                        </dd>
+                        <dt class = "col-sm-4">
+                            Type
+                        </dt>
+                        <dd class = "col-sm-8 dd-type">
+                            @if(Model != null)
+                            {
+                                @Model.OutSalesOrder.MasSalesType.StyName
+                            }
+                        </dd>
+                        <dt class = "col-sm-4">
+                            Platform
+                        </dt>
+                        <dd class = "col-sm-8 dd-platform">
+                            @if(Model != null)
+                            {
+                                @Model.OutSalesOrder.MasPlatform.Name
+                            }
+                        </dd>
+                    </dl>
+
+                    <div class="table-responsive" style="font-size:13px">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr class="text-center">
+                                    <th>
+                                        Picture
+                                    </th>
+                                    <th>
+                                        Product
+                                    </th>
+                                    <th>
+                                        Quantity
+                                    </th>
+                                    <th>
+                                        Weight
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if(Model != null)
+                                {
+                                    for (int i = 0; i < Model.OutSalesOrder.OutSalesOrderProducts.Count(); i++)
+                                    {
+                                        <tr>
+                                            <td class="text-center">
+                                                <img class="rounded-circle" height="50" width="50" src="~/img/product/@Model.OutSalesOrder.OutSalesOrderProducts[i].MasProductData.BeautyPicture">
+                                            </td>
+                                            <td>
+                                                @Model.OutSalesOrder.OutSalesOrderProducts[i].MasProductData.ProductName<br>
+                                                <strong class="text-primary">@Model.OutSalesOrder.OutSalesOrderProducts[i].MasProductData.SKU</strong>
+                                            </td>
+                                            <td class="text-center">
+                                                @Model.OutSalesOrder.OutSalesOrderProducts[i].Quantity
+                                            </td>
+                                            <td class="text-end">
+                                                @Model.OutSalesOrder.OutSalesOrderProducts[i].TotalWeight
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th class="text-center">
+                                        Total
+                                    </th>
+                                    <th class="text-center">
+                                        @if(Model != null)
+                                        {
+                                            @Model.OutSalesOrder.OutSalesOrderProducts.Count()
+                                        }
+                                    </th>
+                                    <th class="text-center">
+                                        @if(Model != null)
+                                        {
+                                            @Model.OutSalesOrder.OutSalesOrderProducts.Sum(m => m.Quantity)
+                                        }
+                                    </th>
+                                    <th class="text-end">
+                                        @if(Model != null)
+                                        {
+                                            @Model.OutSalesOrder.OutSalesOrderProducts.Sum(m => m.TotalWeight)
+                                        }
+                                    </th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group text-end level2">
+        <a asp-action="Index" class="btn btn-dark">Back to List</a>
+    </div>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $(function(){
+            $('.table').DataTable({
+            });
+        });
+    </script>
+}

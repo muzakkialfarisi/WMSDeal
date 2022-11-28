@@ -1,0 +1,117 @@
+﻿@model UserViewModel
+
+<div class="card">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Details</strong></h5>
+            </div>
+            <div>
+                <div class="input-group">
+                    <button type="button" class="btn btn-outline-tertiary" data-bs-toggle="dropdown"><i class="fas fa-fw fa-ellipsis-h"></i></button>
+                    <div class="dropdown-menu">
+                        <form id="extendFrom" method="post" asp-action="ExtendExpiration">
+                            <input type="hidden" id="UserId" name="id" />
+                            <button type="button" data-id="@Model.UserId" class="btn dropdown-item extendExpired"><i class="align-middle me-1 fas fa-fw fa-calendar-alt"></i>&nbsp;&nbsp;Extend Expiration</button>
+                            <button type="button" data-id="@Model.UserId" class="btn dropdown-item resetPassword"><i class="align-middle me-1 fas fa-fw fa-unlock-alt"></i>&nbsp;&nbsp;Reset Password</button>
+                            <div role="separator" class="dropdown-divider"></div>
+                            <button type="button" class="dropdown-item reActive" data-id="@Model.UserId"><i class="align-middle me-1 fas fa-fw fa-user-check"></i>&nbsp;&nbsp;Re-activate</button>
+                            <button type="button" class="dropdown-item deActive" data-id="@Model.UserId"><i class="align-middle me-1 fas fa-fw fa-user-lock"></i>&nbsp;&nbsp;De-activate</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <table class="table table-sm table-borderless p-0 m-0">
+            <tbody>
+                <tr>
+                    <td class="text-nowrap">
+                        Username
+                    </td>
+                    <th class="text-nowrap">
+                        : @Model.UserName
+                    </th>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">
+                        Profile
+                    </td>
+                    <td class="text-nowrap">
+                        : @Model.SecProfile.ProfileName
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">
+                        Default Warehouse
+                    </td>
+                    <td class="text-nowrap">
+                        : @Model.MasHouseCode.HouseName
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">
+                        Name
+                    </td>
+                    <td>
+                        : @Model.FirstName @Model.LastName
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Email
+                    </td>
+                    <td>
+                        : @Model.Email
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Phone Number
+                    </td>
+                    <td>
+                        : +62 @Model.PhoneNumber
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <hr />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">
+                        Expired Date
+                    </td>
+                    <td class="text-nowrap">
+                        : 
+                        @if (Model.ExpireDate > DateTime.Now)
+                        {
+                            @Html.DisplayFor(modelItem => Model.ExpireDate)
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger"> @Html.DisplayFor(modelItem => Model.ExpireDate)</span>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">
+                        Status
+                    </td>
+                    <td class="text-nowrap">
+                        :
+                        @if (Model.Flag == FlagEnum.Active)
+                        {
+                            <span class="badge bg-success"> @Html.DisplayFor(modelItem => Model.Flag)</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger"> @Html.DisplayFor(modelItem => Model.Flag)</span>
+                        }
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

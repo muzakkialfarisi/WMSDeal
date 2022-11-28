@@ -1,0 +1,44 @@
+﻿@model DeliveryOrderCreateViewModel
+
+
+<div class="table-responsive">
+    <table class="table table-striped" id="tbl-productbundling">
+        <thead>
+            <tr class="text-center">
+                <th>
+                    Bundling Name
+                </th>
+                <th>
+                    Product
+                </th>
+                <th>
+                    Qty
+                </th>
+                <th>
+                    Add
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.masProductBundlings)
+            {
+                <tr>
+                    <td>
+                        @item.Name
+                    </td>
+                    <td class="text-center">
+                        @item.MasProductBundlingDatas.Count()
+                    </td>
+                    <td class="text-center">
+                        @item.MasProductBundlingDatas.Sum(m => m.Quantity)
+                    </td>
+                    <td class="text-center">
+                        <button onclick="ProductBundlingClick('@Model.incDeliveryOrder.DONumber', '@item.BundlingId', '@Model.incDeliveryOrder.TenantId')" class="btn">
+                            <i class="fas fa-fw fa-angle-double-right"></i>
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,78 @@
+﻿@using WMS.Models.ViewModels
+@model IEnumerable<MenuViewModel>
+
+@foreach (var modul in Model)
+{
+    @switch (modul.MenuGroup)
+    {
+        @case "Module":
+            <li class="sidebar-header">
+                @modul.MenuName
+            </li>
+            @foreach (var menu in Model)
+            {
+                @switch (menu.MenuGroup)
+                {
+                    case "Parent":
+                        if (modul.MenuId == menu.ParentId)
+                        {
+                            var target = menu.MenuName;
+                            var iconClass = menu.IconClass;
+                            if (menu.Action != "-")
+                            {
+                                <li class="sidebar-item @(ViewData["MenuKey"] != null && ViewData["MenuKey"].ToString() == @menu.MenuKey ? "active" : null)">
+                                    <a class="sidebar-link" asp-controller=@menu.Controller asp-action=@menu.Action>
+                                        <i class="align-middle me-2 fas fa-fw @iconClass"></i> <span class="align-middle">@menu.MenuName</span>
+                                    </a>
+                                </li>
+                            }
+                            else if (menu.Action == "uc")
+                            {
+                                <li class="sidebar-item @(ViewData["MenuKey"] != null && ViewData["MenuKey"].ToString() == @menu.MenuKey ? "active" : null)">
+                                    <a class="sidebar-link" asp-controller="Error" asp-action="UnderConstruction">
+                                        <i class="align-middle me-2 fas fa-fw @iconClass"></i> <span class="align-middle">@menu.MenuName </span>
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="sidebar-item @(ViewData["MenuKey"] != null && ViewData["MenuKey"].ToString() == @menu.MenuKey ? "active" : null)">
+                                    <a data-bs-target=#@target data-bs-toggle="collapse" class="sidebar-link collapsed">
+                                        <i class="align-middle me-2 fas fa-fw @iconClass"></i> <span class="align-middle">@menu.MenuName</span>
+                                    </a>
+                                    <ul id=@target class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
+                                        @foreach (var child in Model)
+                                        {
+                                            @switch (child.MenuGroup)
+                                            {
+                                                case "Child":
+                                                    if (menu.MenuId == child.ParentId)
+                                                    {
+                                                        if (child.Action == "uc")
+                                                        {
+                                                            <li class="sidebar-item @(ViewData["MenuKey"] != null && ViewData["MenuKey"].ToString() == @child.MenuKey ? "active" : null)"><a class="sidebar-link" asp-controller="Error" asp-action="UnderConstruction">@child.MenuName<span class="sidebar-badge badge rounded-pill bg-warning">UC</span></a></li>
+                                                        }
+                                                        else if (child.Action == "AvailableOnMobile")
+                                                        {
+                                                            <li class="sidebar-item @(ViewData["MenuKey"] != null && ViewData["MenuKey"].ToString() == @child.MenuKey ? "active" : null)"><a class="sidebar-link" asp-controller="Error" asp-action="NotAllowed">@child.MenuName<span class="sidebar-badge badge rounded-pill bg-secondary">MO</span></a></li>
+                                                        }
+                                                        else
+                                                        {
+                                                            <li class="sidebar-item @(ViewData["MenuKey"] != null && ViewData["MenuKey"].ToString() == @child.MenuKey ? "active" : null)"><a class="sidebar-link" asp-controller=@child.Controller asp-action=@child.Action>@child.MenuName</a></li>
+                                                        }
+
+                                                    }
+                                                    break;
+                                            }
+                                        }
+                                    </ul>
+                                </li>
+                            }
+                        }
+                        break;
+                }
+            }
+            break;
+    }
+}
+

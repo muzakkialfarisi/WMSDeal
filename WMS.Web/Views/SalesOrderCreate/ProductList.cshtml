@@ -1,0 +1,51 @@
+﻿@model SalesOrderCreateViewModel
+
+<div class="table-responsive">
+    <table class="table table-striped" id="tbl-productlist">
+        <thead>
+            <tr class="text-center">
+                <th>
+                    Picture
+                </th>
+                <th>
+                    Product
+                </th>
+                <th>
+                    Stock
+                </th>
+                <th>
+                    UOM
+                </th>
+                <th>
+                    Add
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.masProductDatas)
+            {
+                <tr>
+                    <td class="text-center">
+                        <img src="~/img/product/@item.BeautyPicture" class="rounded-circle" height="50" width="50" asp-append-version="true" />
+                    </td>
+                    <td>
+                        @item.ProductName <br>
+                        <strong class="text-primary">@item.SKU</strong> <br>
+                        @item.ProductCondition
+                    </td>
+                    <td class="text-center">
+                        @item.InvProductStocks.Sum(m => m.Stock)
+                    </td>
+                    <td>
+                        @item.Unit
+                    </td>
+                    <td class="text-center">
+                        <button onclick="SOProductClick('@Model.outSalesOrder.OrderId', @item.ProductId, 'Quantity', event)" class="btn">
+                            <i class="fas fa-fw fa-angle-double-right"></i>
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

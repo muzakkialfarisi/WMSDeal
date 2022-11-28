@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WMSDeal.Views.Pickorder.PickOrderDetailPage"
+             xmlns:viewModels="clr-namespace:WMSDeal.ViewModels.Pickorder"
+             x:DataType="viewModels:PickOrderDetailViewModel"
+             xmlns:customControls="clr-namespace:WMSDeal.CustomControl"
+             xmlns:constant="clr-namespace:WMSDeal.Constant"
+             Title="Pick Order Detail">
+    <StackLayout>
+        <StackLayout.Background>
+            <LinearGradientBrush EndPoint="0,1">
+                <GradientStop Color="{StaticResource WMSBlue}"
+                          Offset="0.1" />
+                <GradientStop Color="{StaticResource White}"
+                          Offset="1.0" />
+            </LinearGradientBrush>
+        </StackLayout.Background>
+        <ScrollView VerticalOptions="FillAndExpand">
+            <VerticalStackLayout>
+                <Frame  Background="{StaticResource Blue100Accent}" Margin="10" Padding="0" BorderColor="{StaticResource Blue100Accent}" HasShadow="True">
+                    <StackLayout>
+                        <Label Text="{Binding SalesOrderPick.OrderId}" TextColor="{StaticResource Background1}"  HorizontalOptions="Center"  Margin="0,10,0,0"
+                                FontAttributes="Bold" TextTransform="Uppercase"/>
+                        <Label Text="{Binding SalesOrderPick.TenantName}" TextColor="{StaticResource Background1}"  HorizontalOptions="Center" Margin="0,5,0,10"
+                                FontAttributes="Bold" FontFamily="Calibri"/>
+                        <StackLayout Grid.Row="0" Grid.Column="0"  Background="{StaticResource Background1}" >
+                            <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="100,*" Padding="10">
+                                <Frame  Grid.RowSpan="5" Grid.Column="0" BorderColor="{StaticResource Aqua3}"
+                                            CornerRadius="5" Padding="0" VerticalOptions="Center" HorizontalOptions="Start" HeightRequest="90" WidthRequest="90" >
+                                    <Image  Source="{Binding SalesOrderPick.BeautyPicture ,StringFormat='{0}'}"
+                                                Aspect="AspectFill"  HorizontalOptions="Start" VerticalOptions="Center" HeightRequest="90" WidthRequest="90" />
+                                </Frame>
+
+                                <Label Grid.Row="0" Grid.Column="1" VerticalOptions="Center" Text="{Binding SalesOrderPick.ProductName,StringFormat='{0}'}" TextColor="{StaticResource Black}" 
+                                           FontAttributes="Bold" FontFamily="OpenSansRegular"/>
+                                <Label Grid.Row="1" Grid.Column="1" VerticalOptions="Center" Text="{Binding SalesOrderPick.SKU,StringFormat='SKU : {0}'}" 
+                                           TextColor="{StaticResource Black}"  FontAttributes="Bold"  />
+                                <Label Grid.Row="2" Grid.Column="1" VerticalOptions="Center"  Text="{Binding SalesOrderPick.CneeName,StringFormat='Cnee: {0}'}" 
+                                           TextColor="{StaticResource Black}" FontAttributes="None"/>
+                                <Label Grid.Row="3" Grid.Column="1" VerticalOptions="Center"  Text="{Binding SalesOrderPick.ProductCondition,StringFormat='Status: {0}'}" 
+                                           TextColor="{StaticResource Black}" FontAttributes="None"/>
+                                <StackLayout Grid.Row="4" Grid.Column="1" Padding="0">
+                                    <Grid RowDefinitions="Auto" ColumnDefinitions="*,60">
+                                        <Label Grid.Row="0" Grid.Column="0" VerticalOptions="Center"
+                                                    TextColor="{StaticResource Black}" >
+                                            <Label.Text>
+                                                <MultiBinding StringFormat="{}Total : {0}  {1}   ({2})">
+                                                    <Binding Path="SalesOrderPick.QtyPick"/>
+                                                    <Binding Path="SalesOrderPick.Unit"/>
+                                                    <Binding Path="SalesOrderPick.StorageMethod"/>
+                                                </MultiBinding>
+                                            </Label.Text>
+                                        </Label>
+                                    </Grid>
+                                </StackLayout>
+                            </Grid>
+                            <!--<ActivityIndicator IsRunning="True" IsVisible="{Binding IsBusy}" Color="{StaticResource DarkOrange}" HeightRequest="25" WidthRequest="25"/>-->
+                            <HorizontalStackLayout Margin="0,0,0,10" HorizontalOptions="Center">
+                                <Label Text="{Binding SalesOrderPick.BinName,StringFormat='{0}'}" FontAttributes="Bold" FontSize="20" />
+                            </HorizontalStackLayout>
+                        </StackLayout>
+                    </StackLayout>
+                </Frame>
+                <Frame Margin="10,0,10,0" Padding="10" Background="{StaticResource Blue300Accent}" BorderColor="{StaticResource Blue300Accent}" HasShadow="True">
+                    <StackLayout>
+                        <Label Text="Storage" FontSize="14"  Margin="0,0,0,5"/>
+                        <Frame HeightRequest="45" Margin="0" Padding="0" HasShadow="True" BorderColor="WhiteSmoke" 
+                                   HorizontalOptions="FillAndExpand">
+                            <Grid RowDefinitions="*" ColumnDefinitions="*,Auto" HorizontalOptions="FillAndExpand">
+                                <Entry  x:Name="etrStorageCode" Text="{Binding Storage }" Margin="10,0,0,0" VerticalOptions="Center" Placeholder="Scan Storage Code"
+                                        ClearButtonVisibility="WhileEditing" ReturnType="Next" IsReadOnly="True"/>
+                                <ImageButton Grid.Column="1" x:Name="btnScanSearch"  BackgroundColor="{StaticResource WMSBlue}" Padding="5"
+                                             HorizontalOptions="End" VerticalOptions="Center"
+                                             Command="{Binding ScanCommand}"
+                                             Source="{x:Static constant:Icon.Scan}"
+                                             HeightRequest="45" WidthRequest="50"
+                                             Aspect="AspectFill" CornerRadius="5" />
+                            </Grid>
+                        </Frame>
+                        <Grid IsVisible="false" RowDefinitions="Auto,Auto" ColumnDefinitions="Auto,Auto">
+                            <Label Text="Quality Check : "/>
+                            <CheckBox Grid.Column="1" IsChecked="False" x:Name="cbQuality"/>
+                        </Grid>
+
+                        <Grid RowDefinitions="Auto" ColumnDefinitions="Auto" Margin="10,10" IsVisible="{Binding IsVisible}" >
+                            <StackLayout >
+                                <Label Text="Storage Id" Margin="0,10,0,5"/>
+                                <Label Text="{Binding Storage}" MaxLines="2" FontAttributes="Bold" LineBreakMode="CharacterWrap" WidthRequest="300" HorizontalOptions="CenterAndExpand"/>
+                                <Grid RowDefinitions="40,25,25,25,25" ColumnDefinitions="Auto,*" Margin="0,10,0,5">
+                                    <Label Text="Storage Code " VerticalOptions="Center" />
+                                    <Label Grid.Column="1" Text="{Binding StorageName,StringFormat=': {0}'}" HorizontalOptions="Start" VerticalOptions="Center" FontAttributes="Bold"/>
+
+                                    <Label Grid.Row="1" Text="Warehouse" VerticalOptions="Center" />
+                                    <Label Grid.Row="1" Grid.Column="1" Text="{Binding HouseName,StringFormat=': {0}'}" HorizontalOptions="Start" VerticalOptions="Center" />
+
+                                    <Label Grid.Row="2" Text="Size" FontSize="14" VerticalOptions="Center" />
+                                    <Label Grid.Row="2" Grid.Column="1" Text="{Binding SizeName,StringFormat=': {0}'}" HorizontalOptions="Start" VerticalOptions="Center"/>
+
+                                    <Label Grid.Row="3" Text="Zone" FontSize="14" VerticalOptions="Center"/>
+                                    <Label Grid.Row="3" Grid.Column="1" Text="{Binding ZoneName,StringFormat=': {0}'}" HorizontalOptions="Start" VerticalOptions="Center"/>
+
+                                    <Label Grid.Row="4" Text="Row" FontSize="14" VerticalOptions="Center"/>
+                                    <Label Grid.Row="4" Grid.Column="1" Text="{Binding Row,StringFormat=': {0}'}" HorizontalOptions="Start" VerticalOptions="Center"/>
+                                </Grid>
+                            </StackLayout>
+                        </Grid>
+
+                    </StackLayout>
+                </Frame>
+            </VerticalStackLayout>
+        </ScrollView>
+        <StackLayout HeightRequest="60" VerticalOptions="End" BackgroundColor="{StaticResource  Background2}">
+            <customControls:ButtonControl Margin="10,7"  
+                                          Text="{Binding SaveText}"
+                                          IsInProgress="{Binding IsBusy}"    
+                                          Command="{Binding SimpanCommand}"
+                                          HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
+        </StackLayout>
+    </StackLayout>
+</ContentPage>

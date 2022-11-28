@@ -1,0 +1,32 @@
+﻿<div class="modal fade" id="modaledit" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Edit Serial Number</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-action="EditSerialNumber" method="post">
+                <div class="modal-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <input name="SerialId" hidden />
+                    <input name="ProductId" hidden />
+                    <input name="DOProductId" hidden />
+
+                    <div class="mb-3 form-group required">
+                        <label class="control-label">Serial Number</label>
+                        <input name="SerialNumber" class="form-control" required />
+                        <span class="text-danger field-validation-valid" data-valmsg-for="SerialNumber" data-valmsg-replace="true"></span>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group">
+                        <input type="submit" value="Update" class="btn btn-primary" />
+                        <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

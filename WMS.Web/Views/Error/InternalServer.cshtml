@@ -1,0 +1,19 @@
+﻿@model ErrorViewModel
+
+@{
+    ViewData["Title"] = "InternalServer Error";
+}
+
+<div class="text-center">
+	<h1 class="display-1 fw-bold">500</h1>
+	<p class="h1">Internal server error.</p>
+	<p class="h2 fw-normal mt-3 mb-4">
+		The server encountered something unexpected that didn't allow it to complete the request. <br /> 
+		@if (Model?.ShowRequestId ?? false)
+        {
+			<strong>Request ID:</strong> <code>@Model?.RequestId</code>
+        }
+	</p>
+
+	<a href="~/Dashboards/Index" class="btn btn-primary btn-lg">Return to Home</a>
+</div>

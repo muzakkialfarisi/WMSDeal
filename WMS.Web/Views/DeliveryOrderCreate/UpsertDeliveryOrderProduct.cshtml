@@ -1,0 +1,136 @@
+﻿@model DeliveryOrderCreateViewModel
+
+
+<div class="card">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Product List</strong></h5>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+
+        <div class="table-responsive">
+            <table class="table table-striped" id="tbl-deliveryorderproduct">
+                <thead>
+                    <tr class="text-center">
+                        <th>
+                            Act.
+                        </th>
+                        <th>
+                            Picture
+                        </th>
+                        <th>
+                            Product
+                        </th>
+                        <th>
+                            Exp. <br />
+                            Date
+                        </th>
+                        <th>
+                            Price
+                        </th>
+                        <th>
+                            Qty
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.incDeliveryOrder != null)
+                    {
+                        @foreach (var item in Model.incDeliveryOrder.IncDeliveryOrderProducts)
+                        {
+                            <tr id="deliveryorderproduct-@item.ProductId">
+                                <td class="text-center">
+
+                                    <button onclick="DOProductDelete('@Model.incDeliveryOrder.DONumber', @item.ProductId, 'DeleteProduct', event)" class="btn btn-outline-danger btn-sm"><i class="far fa-fw fa-trash-alt"></i></button>
+                                    <br>
+                                    @if (item.MasProductData.SerialNumber == "SN")
+                                    {
+                                        @if (item.IncSerialNumbers.Count == item.Quantity)
+                                        {
+                                            <a class="btn btn-outline-tertiary btn-sm mt-2" asp-controller="SerialNumber" asp-action="Upsert" asp-route-DONumber="@Model.incDeliveryOrder.DONumber" asp-route-DOProductCode="@item.DOProductCode">SN</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-outline-warning btn-sm mt-2" asp-controller="SerialNumber" asp-action="Upsert" asp-route-DONumber="@Model.incDeliveryOrder.DONumber" asp-route-DOProductCode="@item.DOProductCode">SN</a>
+                                        }
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <img class="rounded-circle" height="50" width="50" src="~/img/product/@item.MasProductData.BeautyPicture"><br>
+                                </td>
+                                <td>
+                                    @item.MasProductData.ProductName <br>
+                                    <strong class="text-primary">@item.MasProductData.SKU</strong><br>
+                                    @item.MasProductData.ProductCondition
+                                </td>
+                                <td class="text-end">
+                                    @if (item.MasProductData.StorageMethod == "FEFO")
+                                    {
+                                        <input onchange="DOProductChange('@Model.incDeliveryOrder.DONumber', @item.ProductId, 'DateOfExpired', event)" name="DateOfExpired" type="date" value="@item.DateOfExpired.ToString("yyyy-MM-dd")" size="4" style="text-align:center">
+                                    }
+                                </td>
+                                <td class="text-end">
+                                    <input onchange="DOProductChange('@Model.incDeliveryOrder.DONumber', @item.ProductId, 'UnitPrice', event)" name="UnitPrice" value="@item.UnitPrice" size="3" style="text-align:end">
+                                </td>
+                                <td class="text-end">
+                                    <input onchange="DOProductChange('@Model.incDeliveryOrder.DONumber', @item.ProductId, 'Quantity', event)" name="Quantity" value="@item.Quantity" size="3" style="text-align:center">
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+                <tfoot>
+                    <tr class="bg-light">
+                        <th class="text-center" colspan="2">
+                            Total
+                        </th>
+                        <th colspan="2">
+                            <span id="Count">
+                                @if (Model.incDeliveryOrder != null)
+                                {
+                                    @Model.incDeliveryOrder.IncDeliveryOrderProducts.Count
+                                }
+                                else
+                                {
+                                    <span>0</span>
+                                }
+                            </span>
+                            Products
+                        </th>
+                        <th class="text-end text-nowrap">
+                            Rp. 
+                            <span id="SubTotal">
+                                @if (Model.incDeliveryOrder != null)
+                                {
+
+                                    @Model.incDeliveryOrder.IncDeliveryOrderProducts.Sum(m => m.SubTotal)
+                                }
+                                else
+                                {
+                                    <span>0</span>
+                                }
+                            </span>
+                        </th>
+                        <th class="text-center">
+                            <span id="Quantity">
+                                @if (Model.incDeliveryOrder != null)
+                                {
+
+                                    @Model.incDeliveryOrder.IncDeliveryOrderProducts.Sum(m => m.Quantity)
+                                }
+                                else
+                                {
+                                    <span>0</span>
+                                }
+                            </span>
+                        </th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,143 @@
+﻿@model StorageViewModel
+
+@{
+    ViewData["Title"] = "Storage Row";
+    ViewData["MenuKey"] = "Storage";
+}
+
+<div class="card" style="min-height:700px">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>List of Storage Row</strong></h5>
+            </div>
+            <div class="text-end">
+                <a class="btn btn-outline-primary btn-pill btn-insertrow" data-bs-toggle="modal" data-bs-target="#modalupsertrow">Add Row</a>
+            </div>
+            <div><partial name="ModalUpsertRow"></div>
+        </div>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <tr class="text-center">
+                    <th>
+                        Action
+                    </th>
+                    <th>
+                        Code
+                    </th>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Zone
+                    </th>
+                    <th>
+                        Warehouse
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.invStorageRows)
+                {
+                    <tr>
+                        <td class="text-center">
+                            <button type="button" class="btn btn-outline-tertiary" data-bs-toggle="dropdown"><i class="fas fa-fw fa-ellipsis-h"></i></button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" asp-action="UpsertRow" asp-route-RowCode="@item.RowCode">Manage</a></li>
+                                <li><button class="dropdown-item btn-updaterow" data-id="@item.RowCode" data-bs-toggle="modal" data-bs-target="#modalupsertrow">Edit</button></li>
+                            </ul>
+                        </td>
+                        <td>
+                            @item.HouseCode - @item.ZoneCode - @item.RowCode.Substring(item.HouseCode.Length + item.ZoneCode.Length)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RowName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.InvStorageZone.ZoneName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.MasHouseCode.HouseName)
+                        </td>
+                            <td class="text-center">
+                            @if (item.Flag == FlagEnum.Active)
+                            {
+                                <span class="badge bg-success"> @Html.DisplayFor(modelItem => item.Flag)</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger"> @Html.DisplayFor(modelItem => item.Flag)</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(function(){
+            $('.table').DataTable({
+            });
+        });
+
+        $('.btn-insertrow').on('click', function () {
+            $('select[name="invStorageRow.HouseCode"]').val("").change();
+            $('select[name="invStorageRow.HouseCode"]').prop('readonly', false);
+            $('select[name="invStorageRow.ZoneCode"]').val("").change();
+            $('select[name="invStorageRow.ZoneCode"]').prop('readonly', false);
+            $('#lbl-row').html("");
+            $('input[name="invStorageRow.RowCode"]').prop('readonly', false);
+            $('input[name="invStorageRow.RowCode"]').val("");
+            $('input[name="invStorageRow.RowName"]').val("");
+        });
+
+        $('select[name="invStorageRow.HouseCode"], select[name="invStorageRow.ZoneCode"]').on('change', function () {
+            $('#lbl-row').html($('select[name="invStorageRow.HouseCode"]').val() + 
+            '-' + $('select[name="invStorageRow.ZoneCode"]').val()+'-');
+        });
+
+        $('.btn-updaterow').on('click', function () {
+            $.ajax({
+                type: 'GET',
+                url: '../../StorageRow/GetRowByRowCode',
+                data: {
+                    RowCode: $(this).data('id'),
+                },
+                dataType: 'json',
+                beforeSend: function () {
+                    $('select[name="invStorageRow.HouseCode"]').val("").change();
+                    $('select[name="invStorageRow.HouseCode"]').prop('readonly', true);
+                    $('select[name="invStorageRow.ZoneCode"]').val("").change();
+                    $('select[name="invStorageRow.ZoneCode"]').prop('readonly', true);
+                    $('#lbl-row').html("");
+                    $('input[name="invStorageRow.RowCode"]').prop('readonly', true);
+                    $('input[name="invStorageRow.RowCode"]').val("");
+                    $('input[name="invStorageRow.RowName"]').val("");
+                },
+                success: function (data) {
+                    if(data) {
+                        $('select[name="invStorageRow.HouseCode"]').val(data.houseCode).change();
+                        $('select[name="invStorageRow.ZoneCode"]').val(data.zoneCode).change();
+                        $('#lbl-row').html(data.houseCode+'-'+data.zoneCode+'-');
+                        $('input[name="invStorageRow.RowCode"]').val(data.rowCode.substring(data.houseCode.length + data.zoneCode.length));
+                        $('input[name="invStorageRow.RowName"]').val(data.rowName);
+                    }
+                },
+                error: function (response) {
+                    console.log(response.responseText);
+                }
+            });
+        });
+    </script>
+}

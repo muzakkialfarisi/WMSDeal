@@ -1,0 +1,82 @@
+﻿@model StorageViewModel
+
+<div class="card">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Details</strong></h5>
+            </div>
+            <div>
+                <div class="input-group">
+                    <button type="button" class="btn btn-outline-tertiary" data-bs-toggle="dropdown"><i class="fas fa-fw fa-ellipsis-h"></i></button>
+                    <div class="dropdown-menu">
+                        <button class="dropdown-item" data-id="@Model.invStorageLevel.LevelCode" data-bs-toggle="modal" data-bs-target="#modalupsertlevel">Edit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+
+        <table class="table table-sm table-borderless p-0 m-0">
+            <tbody>
+                <tr>
+                    <td class="text-nowrap">
+                        Level Code
+                    </td>
+                    <td>
+                        : @Model.invStorageLevel.LevelName
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">
+                        Status
+                    </td>
+                    <td>
+                        :
+                        @if (Model.invStorageLevel.Flag == @FlagEnum.Active)
+                        {
+                            <span class="badge bg-success"> @Html.DisplayFor(modelItem => Model.invStorageLevel.Flag)</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger"> @Html.DisplayFor(modelItem => Model.invStorageLevel.Flag)</span>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">
+                        Created By
+                    </td>
+                    <td>
+                        : @Model.invStorageLevel.CreatedBy
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Date Created
+                    </td>
+                    <td>
+                        : @Model.invStorageLevel.DateCreated
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">
+                        Modified By
+                    </td>
+                    <td>
+                        : @Model.invStorageLevel.ModifiedBy
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Date Created
+                    </td>
+                    <td>
+                        : @Model.invStorageLevel.DateModified
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

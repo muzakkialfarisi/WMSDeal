@@ -1,0 +1,106 @@
+﻿
+@model RepackAndRelableViewModel
+
+@{
+    ViewData["Title"] = "Repacking";
+    ViewData["MenuKey"] = "Pick and Pack";
+}
+
+<div class="card" style="min-height:700px">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center py-1">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Repackings</strong></h5>
+            </div>
+            <div>
+                <a type="button" class="btn btn-outline-primary btn-pill" asp-action="Create">Create New</a>
+            </div>
+        </div>
+    </div><br />
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr class="text-center">
+                        <th>
+                            Product
+                        </th>
+                        <th>
+                            Quantity
+                        </th>
+                        <th>
+                            Date
+                        </th>
+                        <th>
+                            User
+                        </th>
+                        <th>
+                            Action
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var item in Model.invRepackings) 
+                {
+                    <tr>
+                        <td>
+                            <strong>@item.MasProductData.SKU</strong> <br>
+                            @item.MasProductData.ProductName
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Quantity)
+                        </td>
+                        <td class="text-center">
+                            @Html.DisplayFor(modelItem => item.DateRepacked)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RepackedBy)
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-outline-tertiary" data-bs-toggle="dropdown"><i class="fas fa-fw fa-ellipsis-h"></i></button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                                </li>
+                                <li>
+                                    <button class="dropdown-item btn-delete" data-id="@item.Id">Delete</button>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<form id="form-delete" asp-action="Delete">
+    <input type="hidden" asp-for="invRepacking.Id"/>
+</form>
+
+@section Scripts{
+    <script>
+        $(function(){
+            $('.table').DataTable({
+            });
+        });
+    </script>
+
+    <script>
+        $('.btn-delete').click(function(e){
+            swal({
+                title:"Are you sure?",
+                text:"Are you sure you want to delete this record?",
+                icon:"warning",
+                buttons:true,
+                dangerMode:true
+            }).then((confirm) =>{
+                if(confirm){
+                    $('input[name="invRepacking.Id"]').val($(this).data("id"));
+                    $('#form-delete').submit();
+                }
+            });
+        });
+    </script>
+}

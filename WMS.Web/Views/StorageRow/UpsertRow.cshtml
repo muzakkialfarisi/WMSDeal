@@ -1,0 +1,168 @@
+﻿@model StorageViewModel
+
+@{
+    ViewData["Title"] = "Storage Row";
+    ViewData["MenuKey"] = "Storage";
+}
+
+<div class="row">
+    <div class="col-12 col-sm-5">
+
+        <div class="card tab bg-transparent p-0 m-0">
+            <div class="card-header p-0 m-0">
+                <ul class="nav nav-tabs bg-light" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#tab-1" data-bs-toggle="tab" role="tab" aria-selected="false">
+                            Section
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#tab-2" data-bs-toggle="tab" role="tab" aria-selected="false">
+                            Column
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body p-0 m-0">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab-1" role="tabpanel">
+                        <div class="table-responsive">
+                            <partial name="UpsertRowSection" />
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="tab-2" role="tabpanel">
+                        <div class="table-responsive">
+                            <partial name="UpsertRowColumn" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group text-end mt-3">
+            <a asp-action="Index" class="btn btn-dark">Back to List</a>
+        </div>
+    </div>
+    <div class="col-12 col-sm-7">
+        <partial name="UpsertRowLevel" />
+    </div>
+</div>
+
+<partial name="ModalUpsertSection" />
+<partial name="ModalUpsertColumn" />
+<partial name="ModalUpsertLevel" />
+<partial name="ModalUpsertBin" />
+
+@section Scripts{
+    <script>
+        $(function () {
+            $('.table').DataTable({
+            });
+        });
+
+        $('.btn-insertsection').on('click', function () {
+            $('input[name="invStorageSection.SectionCode"]').val("Auto Generated");
+        });
+
+        $('.btn-updatesection').on('click', function () {
+            $.ajax({
+                type: 'GET',
+                url: '../../StorageSection/GetSectionBySectionCode',
+                data: {
+                    SectionCode: $(this).data('id'),
+                },
+                dataType: 'json',
+                beforeSend: function () {
+                    $('input[name="invStorageSection.SectionCode"]').val("");
+                },
+                success: function (data) {
+                    if (data) {
+                        $('input[name="invStorageSection.SectionCode"]').val(data.sectionCode);
+                    }
+                },
+                error: function (response) {
+                    console.log(response.responseText);
+                }
+            });
+        });
+
+        $('.btn-insertcolumn').on('click', function () {
+            $('input[name="invStorageColumn.ColumnCode"]').val("Auto Generated");
+        });
+
+        $('.btn-updatecolumn').on('click', function () {
+            $.ajax({
+                type: 'GET',
+                url: '../../StorageColumn/GetColumnByColumnCode',
+                data: {
+                    ColumnCode: $(this).data('id'),
+                },
+                dataType: 'json',
+                beforeSend: function () {
+                    $('input[name="invStorageColumn.ColumnCode"]').val("");
+                },
+                success: function (data) {
+                    if (data) {
+                        $('input[name="invStorageColumn.ColumnCode"]').val(data.columnCode);
+                    }
+                },
+                error: function (response) {
+                    console.log(response.responseText);
+                }
+            });
+        });
+
+        $('.btn-insertlevel').on('click', function () {
+            $('select[name="invStorageLevel.SectionCode"]').val("").change();
+            $('select[name="invStorageLevel.ColumnCode"]').val("").change();
+            $('input[name="invStorageLevel.LevelCode"]').val("");
+            $('input[name="LevelCode"]').val("");
+            $('input[name="invStorageLevel.LevelName"]').val("");
+        });
+
+        $('select[name="invStorageLevel.SectionCode"], select[name="invStorageLevel.ColumnCode"]').on('change', function () {
+            if ($('select[name="invStorageLevel.SectionCode"]').val() && $('select[name="invStorageLevel.ColumnCode"]').val()) {
+                var section = $('select[name="invStorageLevel.SectionCode"]').val();
+                var column = $('select[name="invStorageLevel.ColumnCode"]').val();
+                column = column.substring($('input[name="RowCode"]').val().length);
+                $('input[name="invStorageLevel.LevelCode"]').val(section + column);
+                $('input[name="LevelCode"]').val(section + column);
+            }
+        });
+
+        $('.btn-updatelevel').on('click', function () {
+            $.ajax({
+                type: 'GET',
+                url: '../../StorageLevel/GetLevelByLevelCode',
+                data: {
+                    LevelCode: $(this).data('id'),
+                },
+                dataType: 'json',
+                beforeSend: function () {
+                    $('select[name="invStorageLevel.SectionCode"]').val("").change();
+                    $('select[name="invStorageLevel.ColumnCode"]').val("").change();
+                    $('input[name="invStorageLevel.LevelCode"]').val("");
+                    $('input[name="LevelCode"]').val("");
+                    $('input[name="invStorageLevel.LevelName"]').val("");
+                },
+                success: function (data) {
+                    if (data) {
+                        $('select[name="invStorageLevel.SectionCode"]').val(data.sectionCode).change();
+                        $('select[name="invStorageLevel.ColumnCode"]').val(data.columnCode).change();
+                        $('input[name="invStorageLevel.LevelCode"]').val(data.levelCode);
+                        $('input[name="LevelCode"]').val(data.levelCode);
+                        $('input[name="invStorageLevel.LevelName"]').val(data.levelName);
+                    }
+                },
+                error: function (response) {
+                    console.log(response.responseText);
+                }
+            });
+        });
+
+        $('.btn-insertbin').on('click', function () {
+            $('input[name="invStorageCode.InvStorageBin.LevelCode"]').val($(this).data('id'));
+        });
+
+    </script>
+}

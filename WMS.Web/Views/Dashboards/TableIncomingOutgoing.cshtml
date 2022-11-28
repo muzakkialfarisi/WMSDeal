@@ -1,0 +1,62 @@
+﻿@model DashboardViewModel
+
+<div class="card flex-fill p-3">
+	<div class="card-header">
+		<div class="card-actions float-end">
+			<a href="#" class="me-1">
+				<i class="align-middle" data-feather="refresh-cw"></i>
+			</a>
+			<div class="d-inline-block dropdown show">
+				<a href="#" data-bs-toggle="dropdown" data-bs-display="static">
+					<i class="align-middle" data-feather="more-vertical"></i>
+				</a>
+
+				<div class="dropdown-menu dropdown-menu-end">
+					<a class="dropdown-item" asp-action="Index" asp-route-Year="@DateTime.Now">@DateTime.Now.Year</a>
+					<a class="dropdown-item" asp-action="Index" asp-route-Year="@DateTime.Now.AddYears(-1)">@DateTime.Now.AddYears(-1).Year</a>
+					<a class="dropdown-item" asp-action="Index" asp-route-Year="@DateTime.Now.AddYears(-2)">@DateTime.Now.AddYears(-2).Year</a>
+				</div>
+			</div>
+		</div>
+		<h5 class="card-title mb-0">Incoming / Outgoing Warehouses</h5>
+	</div>
+	<div class="table-responsive">
+		<table id="datatables-dashboard-projects" class="table table-striped my-0">
+			<thead>
+				<tr class="text-center">
+					<th>Warehouse</th>
+					<th>Incoming</th>
+					<th>Inc. Items</th>
+					<th>Inventory</th>
+					<th>Outgoing</th>
+					<th>Out. Items</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model.Dashboard)
+				{
+					<tr class="text-end">
+						<td class="text-start">
+							@item.HouseName
+						</td>
+						<td>
+							@String.Format("{0:n0}", item.Incoming)
+						</td>
+						<td>
+							@String.Format("{0:n0}", item.IncomingQuantity)
+						</td>
+						<td>
+							@String.Format("{0:n0}", item.Inventory)
+						</td>
+						<td>
+							@String.Format("{0:n0}", item.Outgoing)
+						</td>
+						<td>
+							@String.Format("{0:n0}", item.OutgoingQuantity)
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>

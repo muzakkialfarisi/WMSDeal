@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WMSDeal.Views.MorePage"
+             xmlns:constant="clr-namespace:WMSDeal.Constant"
+             Shell.TabBarIsVisible="True"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{StaticResource Background1}"
+             Title="MorePage">
+    <StackLayout Padding="0" Margin="0,10,0,0" VerticalOptions="FillAndExpand"   >
+        <ScrollView Margin="10" >
+            <StackLayout Margin="0">
+                <StackLayout Margin="0,0,0,0">
+                    <Label Text="Menu Lainnya" Margin="0,0,0,10" FontAttributes="Bold" TextColor="{StaticResource DeepTeal}"/>
+                    <Grid Margin="0,10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <ImageButton Source="{x:Static constant:Icon.Handover}" Aspect="AspectFill"
+                                         Command="{Binding HandoverCommand}"  Grid.Row="0" Grid.Column="0"  
+                                         HeightRequest="55" WidthRequest="65" 
+                                         CornerRadius="5" Padding="7"/>
+                        <ImageButton Source="{x:Static constant:Icon.Stockopname}"  
+                                         Command="{Binding StockOpnameCommand}"
+                                         Grid.Row="0" Grid.Column="1"  
+                                         HeightRequest="55" WidthRequest="65" 
+                                         CornerRadius="5" Padding="5"  />
+                        <ImageButton Source="{x:Static constant:Icon.TransferStorage}" 
+                                     Command="{Binding TransferStorageCommand}"
+                                         Grid.Row="0" Grid.Column="2"  
+                                         HeightRequest="55" WidthRequest="65" 
+                                         CornerRadius="5" Padding="5"  />
+                        <ImageButton Source="{x:Static constant:Icon.Password}" 
+                                         Grid.Row="0" Grid.Column="3"  
+                                         HeightRequest="55" WidthRequest="65" 
+                                         CornerRadius="5" Padding="5"/>
+                        <Label Text="Handover" Grid.Row="1"  Grid.Column="0" 
+                                   TextColor="{StaticResource Blue200}"  FontSize="11" 
+                                   HorizontalOptions="Center" Margin="0" FontAttributes="Bold" />
+                        <Label Text="Stock Opname" Grid.Row="1"  Grid.Column="1" 
+                                   TextColor="{StaticResource Blue200}" FontSize="11" 
+                                   HorizontalOptions="Center" Margin="0" FontAttributes="Bold" />
+                        <Label Text="Transfer Storage" Grid.Row="1"  Grid.Column="2" 
+                                   TextColor="{StaticResource Blue200}" FontSize="11" 
+                                   HorizontalOptions="Center" Margin="0" FontAttributes="Bold" />
+                        <Label Text="TBA" Grid.Row="1"  Grid.Column="3" 
+                                   TextColor="{StaticResource Blue200}" FontSize="11" 
+                                   HorizontalOptions="Center" Margin="0" FontAttributes="Bold" />
+                    </Grid>
+
+                    <!--<FlexLayout  Direction="Row" AlignItems="Center" JustifyContent="SpaceEvenly"  Margin="-30,20,-30,0">
+                                <ImageButton Source="user.png"  HeightRequest="70" WidthRequest="90" BackgroundColor="{StaticResource Aqua3}" CornerRadius="5" Padding="10"/>
+                                <ImageButton Source="user.png"  HeightRequest="70" WidthRequest="90" BackgroundColor="{StaticResource Aqua3}" CornerRadius="5" Padding="10"/>
+                                <ImageButton Source="user.png"  HeightRequest="70" WidthRequest="90" BackgroundColor="{StaticResource Aqua3}" CornerRadius="5" Padding="10"/>
+                            </FlexLayout>
+                            <FlexLayout  Direction="Row" AlignItems="Center" JustifyContent="SpaceEvenly"  Margin="-20,5,-38,10" HeightRequest="30">
+                                <Label Text="Put Away   " HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" TextColor="{StaticResource Aqua}"/>
+                                <Label Text="Transfer Storage" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" TextColor="{StaticResource Aqua}"/>
+                                <Label Text="Stock Opname" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" TextColor="{StaticResource Aqua}"/>
+                            </FlexLayout>-->
+                </StackLayout>
+
+
+                <StackLayout Margin="0,10,0,10">
+                    <Label Text="Dashboard" Margin="0,0,0,10" FontAttributes="Bold" TextColor="{StaticResource DeepTeal}"/>
+                    <Grid Margin="0,10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <ImageButton Source="{x:Static constant:Icon.Stockopname}" Aspect="AspectFill"
+                                         Command="{Binding StockOpnameCommand}"  Grid.Row="0" Grid.Column="0"  
+                                         HeightRequest="55" WidthRequest="65" 
+                                         CornerRadius="5" Padding="7"/>
+                        <ImageButton Source="{x:Static constant:Icon.TransferStorage}"  
+                                         Command="{Binding TransferStorageCommand}"
+                                         Grid.Row="0" Grid.Column="1"  
+                                         HeightRequest="55" WidthRequest="65" 
+                                         CornerRadius="5" Padding="5"  />
+                        <ImageButton Source="{x:Static constant:Icon.Dashboard}" 
+                                     Command="{Binding DashboardCommand}"
+                                         Grid.Row="0" Grid.Column="2"  
+                                         HeightRequest="55" WidthRequest="65" 
+                                         CornerRadius="5" Padding="5"  />
+                        <ImageButton Source="{x:Static constant:Icon.Password}" 
+                                         Grid.Row="0" Grid.Column="3"  
+                                         HeightRequest="55" WidthRequest="65" 
+                                         Padding="5"/>
+                        <Label Text="Incoming" Grid.Row="1"  Grid.Column="0" 
+                                   TextColor="{StaticResource Blue200}"  FontSize="11" 
+                                   HorizontalOptions="Center" Margin="0" FontAttributes="Bold" />
+                        <Label Text="Inventory" Grid.Row="1"  Grid.Column="1" 
+                                   TextColor="{StaticResource Blue200}" FontSize="11" 
+                                   HorizontalOptions="Center" Margin="0" FontAttributes="Bold" />
+                        <Label Text="Outgoing" Grid.Row="1"  Grid.Column="2" 
+                                   TextColor="{StaticResource Blue200}" FontSize="11" 
+                                   HorizontalOptions="Center" Margin="0" FontAttributes="Bold" />
+                        <Label Text="TBA" Grid.Row="1"  Grid.Column="3" 
+                                   TextColor="{StaticResource Blue200}" FontSize="11" 
+                                   HorizontalOptions="Center" Margin="0" FontAttributes="Bold" />
+                    </Grid>
+
+                    <!--<FlexLayout  Direction="Row" AlignItems="Center" JustifyContent="SpaceEvenly"  Margin="-30,20,-30,0">
+                                <ImageButton Source="user.png"  HeightRequest="70" WidthRequest="90" BackgroundColor="{StaticResource Aqua3}" CornerRadius="5" Padding="10"/>
+                                <ImageButton Source="user.png"  HeightRequest="70" WidthRequest="90" BackgroundColor="{StaticResource Aqua3}" CornerRadius="5" Padding="10"/>
+                                <ImageButton Source="user.png"  HeightRequest="70" WidthRequest="90" BackgroundColor="{StaticResource Aqua3}" CornerRadius="5" Padding="10"/>
+                            </FlexLayout>
+                            <FlexLayout  Direction="Row" AlignItems="Center" JustifyContent="SpaceEvenly"  Margin="-20,5,-38,10" HeightRequest="30">
+                                <Label Text="Put Away   " HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" TextColor="{StaticResource Aqua}"/>
+                                <Label Text="Transfer Storage" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" TextColor="{StaticResource Aqua}"/>
+                                <Label Text="Stock Opname" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" TextColor="{StaticResource Aqua}"/>
+                            </FlexLayout>-->
+                </StackLayout>
+
+            </StackLayout>
+        </ScrollView>
+
+
+    </StackLayout>
+</ContentPage>

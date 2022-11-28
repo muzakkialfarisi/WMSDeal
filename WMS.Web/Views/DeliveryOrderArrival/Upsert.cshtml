@@ -1,0 +1,98 @@
+﻿@model IncDeliveryOrder
+
+@{
+    ViewData["Title"] = "Arrival Delivery Order";
+    ViewData["MenuKey"] = "Receiving";
+}
+
+<div class="row">
+    <div class="col-12 col-md-4 col-sm-4">
+        <partial name="UpsertDO" />
+
+        <div class="d-grid gap-2 mt-3">
+            <a asp-action="Index" class="btn btn-dark">Back to List</a>
+        </div>
+    </div>
+    <div class="col-12 col-md-8 col-sm-8">
+        <partial name="UpsertDOProduct">
+    </div>
+</div>
+
+<partial name="ModalUpsertDOProduct" />
+<partial name="ModalUpsertDOProductArrival" />
+@*<partial name="ModalDOProductNotArrived" />*@
+
+@section Scripts{
+    <script>
+        $(function () {
+            $('#tbl-products').DataTable({
+                order: [[4, 'desc']],
+            });
+        });
+
+        $('.btn-upsert-arrival').on('click', function(){
+
+            console.log($(this).data('doproductid'));
+            $.ajax({
+                url: '../../DeliveryOrderArrival/GetDeliveryOrderProductByDOProductId',
+                type: 'GET',
+                data: {
+                    DOProductId: $(this).data('doproductid'),
+                },
+                dataType: 'json',
+                beforeSend: function () {
+                    $('input[name="DOProductId"]').val('');
+                    $('input[name="Quantity"]').val('');
+                    $('input[name="Note"]').val('');
+                    $('.quantity').html(0);
+                    $('.remaining-quantity').html(0);
+                },
+                success: function (data) {
+                    console.log(data);
+                    $('input[name="DOProductId"]').val(data.doProductId);
+                    $('.quantity').html(data.quantity);
+                    $('.remaining-quantity').html(data.quantity);
+                    if (data.incDeliveryOrderArrivals != null) {
+                        $('.remaining-quantity').html(data.quantity - (data.incDeliveryOrderArrivals.quantity + data.incDeliveryOrderArrivals.qtyNotArrived));
+                    }
+                },
+                error: function (response) {
+                    console.log(response.responseText);
+                }
+            });
+        });
+
+        $('.btn-update-quantity').on('click', function () {
+            $('input[name="DONumber"]').val("@Model?.DONumber");
+            $('input[name="TenantId"]').val("@Model?.TenantId");
+            $('input[name="DOProductId"]').val($(this).data('doproductid'));
+        });
+
+
+        $('.btn-notarrived').on('click', function () {
+            console.log($(this).data('id'));
+            $.ajax({
+                url: '../../DeliveryOrderArrival/GetDeliveryOrderProductByDOProductId',
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    DOProductId: $(this).data('id'),
+                },
+                beforeSend: function () {
+                    $("#ProductName").html('');
+                    $('input[name="DOProductId"]').val("");
+                    $('input[name="QtyNotArrived"]').val(0);
+                    $('textarea[name="NoteNotArrived"]').html("");
+                },
+                success: function (data) {
+                    console.log(data);
+                    $('input[name="DOProductId"]').val(data.doProductId);
+                    $("#ProductName").html(data.masProductData.productName);
+                },
+                error: function (response) {
+                    console.log(response.responseText);
+                }
+            });
+        });
+    </script>
+}

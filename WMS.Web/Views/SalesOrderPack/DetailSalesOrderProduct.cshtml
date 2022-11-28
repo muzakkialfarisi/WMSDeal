@@ -1,0 +1,124 @@
+﻿@model OutSalesOrder
+
+<div class="card">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Sales Order Products</strong></h5>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+
+        <div class="table-responsive">
+            <table class="table table-striped" id="tbl-salesorderproducts">
+                <thead>
+                    <tr class="text-center">
+                        <th>
+                            Action
+                        </th>
+                        <th>
+                            Picture
+                        </th>
+                        <th>
+                            Product
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                        <th>
+                            Quantity
+                        </th>
+                        <th>
+                            Packaging
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.OutSalesOrderProducts.Count(); i++)
+                    {
+                        <tr>
+                            <td class="text-center">
+                                @if (Model.OutSalesOrderProducts[i].MasProductData.SerialNumber == "SN")
+                                {
+                                    @if (Model.OutSalesOrderProducts[i].IncSerialNumbers.Count == Model.OutSalesOrderProducts[i].Quantity)
+                                    {
+                                        <a class="btn btn-outline-tertiary btn-sm" asp-controller="SerialNumber" asp-action="UpsertSO" asp-route-OrderId="@Model.OrderId" asp-route-OrdProductId="@Model.OutSalesOrderProducts[i].OrdProductId">
+                                            SN
+                                        </a>
+                                    }
+                                    else
+                                    { 
+                                        <a class="btn btn-outline-warning btn-sm" asp-controller="SerialNumber" asp-action="UpsertSO" asp-route-OrderId="@Model.OrderId" asp-route-OrdProductId="@Model.OutSalesOrderProducts[i].OrdProductId">
+                                            SN
+                                        </a>
+                                    }
+                                }
+                            </td>
+                            <td class="text-center">
+                                <img class="rounded-circle" height="50" width="50" src="~/img/product/@Model.OutSalesOrderProducts[i].MasProductData.BeautyPicture">
+                            </td>
+                            <td>
+                                @Model.OutSalesOrderProducts[i].MasProductData.ProductName<br>
+                                <strong class="text-primary">@Model.OutSalesOrderProducts[i].MasProductData.SKU</strong><br>
+                            </td>
+                            <td>
+                                @Model.OutSalesOrderProducts[i].MasProductData.ProductCondition
+                            </td>
+                            <td class="text-end">
+                                <ul class="list-group">
+                                    <li class="d-flex justify-content-between align-items-center">
+                                        SO
+                                        <span class="badge bg-success rounded-pill">@Model.OutSalesOrderProducts[i].Quantity</span>
+                                    </li>
+                                    @if (Model.OutSalesOrderProducts[i].MasProductData.SerialNumber == "SN")
+                                    {
+                                        <li class="d-flex justify-content-between align-items-center">
+                                            SN
+                                            @if (Model.OutSalesOrderProducts[i].IncSerialNumbers.Count < 1)
+                                            {
+                                                <span class="badge bg-danger rounded-pill">@Model.OutSalesOrderProducts[i].IncSerialNumbers.Count</span>
+                                            }
+                                            else
+                                            {
+                                                if (Model.OutSalesOrderProducts[i].IncSerialNumbers.Count != Model.OutSalesOrderProducts[i].Quantity)
+                                                {
+                                                    <span class="badge bg-warning rounded-pill">@Model.OutSalesOrderProducts[i].IncSerialNumbers.Count</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-success rounded-pill">@Model.OutSalesOrderProducts[i].IncSerialNumbers.Count</span>
+                                                }
+                                            }
+                                    </li>
+                                    }
+                                </ul>
+                            </td>
+                            <td class="text-center">
+                                <input asp-for="@Model.OutSalesOrderProducts[i].OrdProductId" value="@Model.OutSalesOrderProducts[i].OrdProductId" hidden>
+                                <select asp-for="@Model.OutSalesOrderProducts[i].OutSalesOrderPack.PackTypeId" class="form-control" asp-items="ViewBag.PackTypeId">
+                                </select>
+                                <span asp-validation-for="@Model.OutSalesOrderProducts[i].OutSalesOrderPack.PackTypeId" class="text-danger"></span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th class="text-center" colspan="2">
+                            Total
+                        </th>
+                        <th colspan="2">
+                            @Model.OutSalesOrderProducts.Count Item
+                        </th>
+                        <th class="text-end">
+                            @Model.OutSalesOrderProducts.Sum(m => m.Quantity)
+                        </th>
+                        <th>
+                        </th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>

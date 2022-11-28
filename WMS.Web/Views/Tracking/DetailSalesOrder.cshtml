@@ -1,0 +1,163 @@
+﻿@model OutSalesOrder
+
+<div class="card">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Details</strong></h5>
+            </div>
+            <a class="btn btn-primary btn-md px-2" asp-controller="SalesOrders" asp-action="PrintSalesOrder" asp-route-OrderId="@Model.OrderId" target="_blank">
+                <i class="fas fa-fw fa-print"></i>
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <table class="table table-sm table-borderless p-0 m-0">
+            <tbody>
+                <tr>
+                    <th colspan="2" class="text-nowrap">
+                        Sales Order
+                    </th>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">
+                        SO Number
+                    </td>
+                    <td>
+                        : @Model.OrderId
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Type
+                    </td>
+                    <td>
+                        : @Model.MasSalesType.StyName
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Created
+                    </td>
+                    <td>
+                        : @String.Format("{0:dd/MM/yyyy}", Model.DateOrdered)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Tenant
+                    </td>
+                    <td>
+                        : @Model.MasDataTenant.Name
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Warehouse
+                    </td>
+                    <td>
+                        : @Model.MasHouseCode.HouseName
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Platform
+                    </td>
+                    <td>
+                        : @Model.MasPlatform.Name
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Store
+                    </td>
+                    <td>
+                        : @Model.StoreName
+                    </td>
+                </tr>
+                <tr>
+                    <th colspan="2">
+                        Customer
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        Name
+                    </td>
+                    <td>
+                        : @Model.OutSalesOrderCustomer.CustName
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">
+                        Phone Number
+                    </td>
+                    <td>
+                        : @Model.OutSalesOrderCustomer.CustPhone
+                    </td>
+                </tr>
+                <tr>
+                    <td class="align-baseline">
+                        Address
+                    </td>
+                    <td>
+                        :   @Model.OutSalesOrderCustomer.CustAddress, @Model.OutSalesOrderCustomer.MasKelurahan.KelName,
+                        @Model.OutSalesOrderCustomer.MasKelurahan.MasKecamatan.KecName,
+                        @Model.OutSalesOrderCustomer.MasKelurahan.MasKecamatan.MasKabupaten.KabName,
+                        @Model.OutSalesOrderCustomer.MasKelurahan.MasKecamatan.MasKabupaten.MasProvinsi.ProName,
+                        @Model.OutSalesOrderCustomer.CustZipCode.
+                    </td>
+                </tr>
+                <tr>
+                    <th colspan="2" class="text-nowrap">
+                        Consignee
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        Name
+                    </td>
+                    <td>
+                        : @Model.OutSalesOrderConsignee.CneeName
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">
+                        Phone Number
+                    </td>
+                    <td>
+                        : @Model.OutSalesOrderConsignee.CneePhone
+                    </td>
+                </tr>
+                <tr>
+                    <td class="align-baseline">
+                        Address
+                    </td>
+                    <td>
+                        : @Model.OutSalesOrderConsignee.CneeAddress, @Model.OutSalesOrderConsignee.MasKelurahan.KelName,
+                        @Model.OutSalesOrderConsignee.MasKelurahan.MasKecamatan.KecName,
+                        @Model.OutSalesOrderConsignee.MasKelurahan.MasKecamatan.MasKabupaten.KabName,
+                        @Model.OutSalesOrderConsignee.MasKelurahan.MasKecamatan.MasKabupaten.MasProvinsi.ProName,
+                        @Model.OutSalesOrderConsignee.OrdZipCode.
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Latitude
+                    </td>
+                    <td>
+                        : @Model.OutSalesOrderConsignee.CneeLatitude
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Longitude
+                    </td>
+                    <td>
+                        : @Model.OutSalesOrderConsignee.CneeLongitude
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

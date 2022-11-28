@@ -1,0 +1,123 @@
+﻿@model IEnumerable<OutSalesDispatchtoCourier>
+
+@{
+    ViewData["Title"] = "Hand Overs";
+    ViewData["MenuKey"] = "Dispatch";
+}
+
+<div class="card" style="min-height:700px">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center py-1">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Dispatchs</strong></h5>
+            </div>
+            <div>
+                <button type="button" class="btn btn-outline-primary btn-pill btn-print" data-bs-toggle="modal" data-bs-target="#Print">Print</button>
+                <a type="button" class="btn btn-outline-primary btn-pill" asp-action="Upsert">Create New</a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr class="text-center">
+                        <th>
+                            Action
+                        </th>
+                        <th>
+                            Sales Order
+                        </th>
+                        <th>
+                            Courier
+                        </th>
+                        <th>
+                            Name
+                        </th>
+                        <th>
+                            Date
+                        </th>
+                        <th>
+                            By
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-outline-tertiary" data-bs-toggle="dropdown"><i class="fas fa-fw fa-ellipsis-h"></i></button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" asp-action="Upsert" asp-route-OrderId="@item.OrderId">Detail</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.OutSalesOrder.OrderId)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MasSalesCourier.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CourierName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DatedHandOvered)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.HandoveredBy)
+                            </td>
+                            <td>
+                                @if (item.Flag == 1)
+                                {
+                                    <span class="badge bg-success">Success</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">Cancelled</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<partial name="Print" />
+
+<form id="form-delete" asp-action="Delete">
+    <input name="Id" type="hidden" />
+</form>
+
+@section Scripts{
+    <script>
+        $(function () {
+            $('.table').DataTable({
+            });
+        });
+    </script>
+
+    <script>
+        $('.btn-delete').click(function (e) {
+            swal({
+                title: "Are you sure?",
+                text: "Are you sure you want to delete this record?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true
+            }).then((confirm) => {
+                if (confirm) {
+                    $('input[name="Id"]').val($(this).data("id"));
+                    $('#form-delete').submit();
+                }
+            });
+        });
+    </script>
+}

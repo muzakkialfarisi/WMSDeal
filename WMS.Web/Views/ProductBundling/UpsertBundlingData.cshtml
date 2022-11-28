@@ -1,0 +1,95 @@
+﻿@model ProductBundlingCreateViewModel
+
+<div class="card">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Product List</strong></h5>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+
+        <div class="table-responsive">
+            <table class="table table-striped" id="tbl-bundlingdata">
+                <thead>
+                    <tr class="text-center">
+                        <th>
+                            Action
+                        </th>
+                        <th>
+                            Picture
+                        </th>
+                        <th>
+                            Product
+                        </th>
+                        <th>
+                            Qty
+                        </th>
+                        <th>
+                            UOM
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.masProductBundling.MasProductBundlingDatas)
+                    {
+                        <tr id="deliveryorderproduct-@item.ProductId">
+                            <td class="text-center">
+                                <button onclick="UpsertProduct('@Model.masProductBundling.BundlingId', @item.ProductId, 'DeleteProduct', event)" class="btn btn-outline-danger btn-sm"><i class="far fa-fw fa-trash-alt"></i></button>
+                            </td>
+                            <td class="text-center">
+                                <img class="rounded-circle" height="50" width="50" src="~/img/product/@item.MasProductData.BeautyPicture"><br>
+                            </td>
+                            <td>
+                                @item.MasProductData.ProductName <br>
+                                <strong class="text-primary">@item.MasProductData.SKU</strong><br>
+                                @item.MasProductData.ProductCondition
+                            </td>
+                            <td class="text-enter">
+                                <input onchange="UpsertProduct('@Model.masProductBundling.BundlingId', @item.ProductId, 'UpdateQuantity', event)" name="Quantity" value="@item.Quantity" size="3" style="text-align:center">
+                            </td>
+                            <td>
+                                @item.MasProductData.Unit
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr class="bg-light">
+                        <th class="text-center" colspan="2">
+                            Total
+                        </th>
+                        <th>
+                            <span id="Count">
+                                @if (Model.masProductBundling != null)
+                                {
+                                    @Model.masProductBundling.MasProductBundlingDatas.Count
+                                }
+                                else
+                                {
+                                    <span>0</span>
+                                }
+                            </span>
+                            Products
+                        </th>
+                        <th class="text-center" colspan="2">
+                            <span id="Quantity">
+                                @if (Model.masProductBundling != null)
+                                {
+
+                                    @Model.masProductBundling.MasProductBundlingDatas.Sum(m => m.Quantity)
+                                }
+                                else
+                                {
+                                    <span>0</span>
+                                }
+                            </span>
+                        </th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+    </div>
+</div>

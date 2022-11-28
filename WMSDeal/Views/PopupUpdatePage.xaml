@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<popup:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:popup="clr-namespace:CommunityToolkit.Maui.Views;assembly=CommunityToolkit.Maui"
+             x:Class="WMSDeal.Views.PopupUpdatePage"
+             xmlns:icon="clr-namespace:WMSDeal.Constant"
+             CanBeDismissedByTappingOutsideOfPopup="False"
+             HorizontalOptions="Center"
+             VerticalOptions="Center"
+             >
+    <StackLayout WidthRequest="300">
+        <VerticalStackLayout Spacing="10" Padding="0,10" BackgroundColor="{StaticResource Background1}" >
+            <Frame VerticalOptions="Start" HorizontalOptions="Center" HeightRequest="30" WidthRequest="130" Padding="0">
+                <Image Source="{Static icon:Icon.Logo}" Aspect="AspectFill" />
+            </Frame>
+            <Label Text="WMS DEAL UPGRADE" HorizontalOptions="Center" FontSize="16" FontAttributes="Bold" FontFamily="OpenSansSemibold" />
+            <Label Text="Your apps needs to be upgrade..!! " HorizontalOptions="Center" FontSize="15" FontAttributes="Bold,Italic" 
+               TextColor="{StaticResource Red}" FontFamily="Calibri"/>
+            <Label Text="Whats New?" FontAttributes="Bold" TextColor="{StaticResource Green300}" Margin="10,10,10,0"/>
+            <CollectionView >
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Label Text="Update list delivery"/>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            <Label Text="How to Update?" FontAttributes="Bold" TextColor="{StaticResource Green300}" Margin="10,20,10,0"/>
+            <StackLayout Margin="10">
+                <Label Text="1. Click on the button or download Apk file from link"/>
+                <Label x:Name="linkUpdateText" FontSize="15" FontAttributes="Bold,Italic" TextColor="{StaticResource Blue300}"
+                       LineBreakMode="CharacterWrap" />
+                <Label Text="2. Install the Apk file."/>
+                <Label Text="3. Open the application for new Upgrade."/>
+            </StackLayout>
+        </VerticalStackLayout>
+        <Button Text="Update Now" Clicked="Button_Clicked" HorizontalOptions="FillAndExpand" CornerRadius="0" Margin="0"/>
+    </StackLayout>
+</popup:Popup>

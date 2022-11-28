@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WMSDeal.Views.Putaway.ListPutawayPage"
+             Shell.TabBarIsVisible="True"
+             Shell.NavBarIsVisible="False"
+             xmlns:constant="clr-namespace:WMSDeal.Constant"
+             xmlns:viewModels="clr-namespace:WMSDeal.ViewModels.Putaway"
+             x:DataType="viewModels:PutawayViewModel"
+             xmlns:model="clr-namespace:WMSDeal.Models.Incoming"
+             BackgroundColor="{StaticResource Background3}"
+             Title="ListPutawayPage">
+    <StackLayout >
+        <!--searchbar-->
+        <!--<StackLayout Margin="0,0,0,1" BackgroundColor="{StaticResource Blue500}">
+            <Grid RowDefinitions="45" ColumnDefinitions="*,70">
+                <StackLayout Grid.Row="0" Grid.Column="0">
+                    <SearchBar  Placeholder="Search..." FontSize="12" TextColor="{StaticResource Black}" />
+                </StackLayout>
+                <StackLayout Grid.Row="0" Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center" Margin="0,0,10,0">
+                    <ImageButton x:Name="btnScanSearch"  BackgroundColor="{StaticResource WMSBlue}" Padding="5"
+                             HorizontalOptions="Start"  VerticalOptions="Center"
+                                         Command="{Binding ScanCommand}" 
+                                         Source="{x:Static constant:Icon.Scan}"   
+                                         HeightRequest="42" WidthRequest="50" 
+                                         Aspect="AspectFill" CornerRadius="5" />
+                </StackLayout>
+            </Grid>
+        </StackLayout>-->
+
+        <!--filter-->
+        <StackLayout Margin="0,0,0,5" BackgroundColor="{StaticResource Blue500}" >
+            <Grid RowDefinitions="45" ColumnDefinitions="*,100,70" Margin="0,0,3,0">
+                <!--<HorizontalStackLayout  Grid.Row="0" Grid.Column="0">
+                    <DatePicker Format="dd-MM-yyyy" Margin="25,0,0,0" HorizontalOptions="Start" VerticalOptions="Center"
+                                FontSize="12" TextColor="Black" WidthRequest="120" >
+                    </DatePicker>
+                    <Image Source="{x:Static constant:Icon.PanahBawah}"  WidthRequest="25" HeightRequest="25" Aspect="AspectFit" Margin="-25,0" />
+                </HorizontalStackLayout>-->
+                <StackLayout Grid.Row="0" Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center" Padding="0" >
+                    <Frame Padding="0" Margin="0,0,20,0" HorizontalOptions="StartAndExpand" VerticalOptions="Center" 
+                           BorderColor="{StaticResource Red}" BackgroundColor="{StaticResource Red}">
+                        <Label x:Name="lblTotal"  Margin="8,0,8,2" Text="{Binding DeliveryOrders.Count}" VerticalOptions="Center"
+                               TextColor="{StaticResource White}" />
+                    </Frame>
+                </StackLayout>
+                <StackLayout Grid.Row="0" Grid.Column="2" HorizontalOptions="End" VerticalOptions="Center" Margin="0,0,10,0">
+                    <ImageButton x:Name="btnRefresh" Source="{x:Static constant:Icon.Refresh}" WidthRequest="45" HeightRequest="35" 
+                                 Padding="2" VerticalOptions="Center" HorizontalOptions="Center"
+                                 Aspect="AspectFit" CornerRadius="5" Command="{Binding RefreshCommand}"
+                                 BackgroundColor="{StaticResource WMSBlue}"/>
+                </StackLayout>
+            </Grid>
+        </StackLayout>
+
+        <ActivityIndicator IsRunning="True" IsVisible="{Binding IsBusy}" Color="{StaticResource DarkOrange}"/>
+        <RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
+            <CollectionView ItemsSource="{Binding DeliveryOrders}" VerticalOptions="FillAndExpand" SelectionMode="Multiple" EmptyView="No items to display">
+                <CollectionView.ItemTemplate  >
+                    <DataTemplate x:DataType="model:DeliveryOrder">
+                        <Frame CornerRadius="5" BackgroundColor="{StaticResource Background1}" 
+                                           BorderColor="{StaticResource Background1}" 
+                                           Padding="10" HasShadow="True" Margin="5">
+                            <Grid RowDefinitions="Auto" ColumnDefinitions="*,60">
+                                <StackLayout Grid.Row="0" Grid.Column="0">
+                                    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="Auto,*">
+                                        <Label Grid.Row="0" Grid.Column="0" VerticalOptions="Center" Text="DO Number" TextColor="{StaticResource Aqua2}" FontSize="11"  />
+                                        <Label  Grid.Row="1" Grid.Column="0 " VerticalOptions="Center" Text="Tenant" TextColor="{StaticResource Aqua2}" FontSize="11"  />
+                                        <Label  Grid.Row="2" Grid.Column="0 " VerticalOptions="Start" Text="Address" TextColor="{StaticResource Aqua2}" FontSize="11"   />
+                                        <Label  Grid.Row="3" Grid.Column="0" VerticalOptions="Center"  Text="Delivery Date" TextColor="{StaticResource Aqua2}" FontSize="11"   />
+                                        <Label  Grid.Row="4" Grid.Column="0" VerticalOptions="Center"  Text="Total" TextColor="{StaticResource Aqua2}" FontSize="11"  />
+
+
+                                        <Label Grid.Row="0" Grid.Column="1" VerticalOptions="Center" Text="{Binding DoNumber,StringFormat=': {0}'}" TextColor="{StaticResource Black}" 
+                                                   FontAttributes="Bold" Margin="5,0"/>
+                                        <Label  Grid.Row="1" Grid.Column="1" VerticalOptions="Center"  Text="{Binding Name,StringFormat=': {0}'}"  
+                                                    TextColor="{StaticResource Black}" Margin="5,0"/>
+                                        <Label  Grid.Row="2" Grid.Column="1" VerticalOptions="Center" 
+                                                    TextColor="{StaticResource Black}" Margin="5,0">
+                                            <Label.Text>
+                                                <MultiBinding  StringFormat="{}: {0} {1}">
+                                                    <Binding Path="Address"/>
+                                                    <Binding Path="ProName"/>
+                                                </MultiBinding>
+                                            </Label.Text>
+                                        </Label>
+                                        <Label  Grid.Row="3" Grid.Column="1" VerticalOptions="Center" Text="{Binding DateDelivered,StringFormat=': {0:dd/MM/yyyy HH:mm}'}" 
+                                                    TextColor="{StaticResource Black}" Margin="5,0" />
+                                        <Label  Grid.Row="4" Grid.Column="1" VerticalOptions="Center" Text="{Binding Count,StringFormat=': {0}'}" 
+                                                    TextColor="{StaticResource Black}" Margin="5,0" />
+                                    </Grid>
+                                </StackLayout>
+                                <StackLayout Grid.Row="0" Grid.Column="1" >
+                                    <Grid RowDefinitions="40,Auto" ColumnDefinitions="*" Padding="0">
+                                        <Frame  Grid.Row="0" Grid.Column="0" BorderColor="{StaticResource Background1}" HeightRequest="40" WidthRequest="55"
+                                                   CornerRadius="5" Padding="0" HorizontalOptions="End">
+                                            <Image  Source="{Binding ProfileImageUrl,StringFormat='{0}'}"
+                                                        Aspect="AspectFill" HeightRequest="40" WidthRequest="55" HorizontalOptions="End" VerticalOptions="Start" />
+                                            <Frame.GestureRecognizers>
+                                                <TapGestureRecognizer NumberOfTapsRequired="2" Command="{Binding Source={x:RelativeSource AncestorType={x:Type viewModels:PutawayViewModel}},Path=SelectItemCommand}" CommandParameter="{Binding .}"/>
+                                            </Frame.GestureRecognizers>
+                                        </Frame>
+                                        <!--<StackLayout  Grid.Row="1" Grid.Column="0">
+                                            <Image Source="{Static constant:Icon.PanahKanan}" 
+                                                   WidthRequest="20" HeightRequest="20" VerticalOptions="Center" HorizontalOptions="End"/>
+                                        </StackLayout>-->
+                                    </Grid>
+                                </StackLayout>
+                                
+                            </Grid>
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer NumberOfTapsRequired="2" Command="{Binding Source={x:RelativeSource AncestorType={x:Type viewModels:PutawayViewModel}},Path=SelectItemCommand}" CommandParameter="{Binding .}"/>
+                            </Frame.GestureRecognizers>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+    </StackLayout>
+</ContentPage>

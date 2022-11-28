@@ -1,0 +1,72 @@
+﻿@model StorageViewModel
+
+@{
+    ViewData["Title"] = "Storage Bin";
+    ViewData["MenuKey"] = "Storage";
+}
+
+<div class="row">
+    <div class="col-12 col-sm-4">
+        <partial name="DetailLevel" />
+
+        <div class="form-group text-end mt-3">
+            <a asp-controller="StorageRow" asp-action="UpsertRow" asp-route-RowCode="@Model.invStorageLevel.InvStorageColumn.RowCode"
+            asp-route-LevelCode="@Model.invStorageLevel.LevelCode" class="btn btn-dark">Back to List</a>
+        </div>
+    </div>
+    <div class="col-12 col-sm-8">
+        <partial name="DetailLevelBin" />
+    </div>
+</div>
+
+<partial name="ModalUpsertBin" />
+<partial name="ModalUpsertLevel" />
+
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+@*    <script type="text/javascript" src="~/lib/js/StorageBin/Index.js"></script>
+*@
+    <script>
+        $(function () {
+            $('.tbl-bin').DataTable({
+            });
+        });
+
+        $('.btn-insertbin').on('click', function () {
+            $('input[name="BinCode"]').val("");
+            $('input[name="invStorageCode.BinCode"]').val("Auto Generated");
+            $('select[name="invStorageCode.StorageCategoryId"]').val("").change();
+            $('select[name="invStorageCode.SizeCode"]').val("").change();
+        });
+
+        $('.btn-updatebin').on('click', function () {
+            $.ajax({
+                type: 'GET',
+                url: '../../StorageBin/GetBinByBinCode',
+                data: {
+                    BinCode: $(this).data('id'),
+                },
+                dataType: 'json',
+                beforeSend: function () {
+                    $('input[name="BinCode"]').val("");
+                    $('input[name="invStorageCode.BinCode"]').val("");
+                    $('select[name="invStorageCode.StorageCategoryId"]').val("").change();
+                    $('select[name="invStorageCode.SizeCode"]').val("").change();
+                },
+                success: function (data) {
+                    if (data) {
+                        $('input[name="BinCode"]').val(data.binCode);
+                        $('input[name="invStorageCode.BinCode"]').val(data.binCode);
+                        $('select[name="invStorageCode.StorageCategoryId"]').val(data.invStorageCode.storageCategoryId).change();
+                        $('select[name="invStorageCode.SizeCode"]').val(data.invStorageCode.sizeCode).change();
+                    }
+                },
+                error: function (response) {
+                    console.log(response.responseText);
+                }
+            });
+        });
+    </script>
+}

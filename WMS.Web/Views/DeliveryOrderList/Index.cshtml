@@ -1,0 +1,254 @@
+﻿@model IEnumerable<IncDeliveryOrder>
+
+@{
+    ViewData["Title"] = "Delivery Orders";
+    ViewData["MenuKey"] = "Delivery Order";
+}
+
+<div class="card" style="min-height:700px">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Delivery Orders</strong></h5>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="input-group">
+                        <button class="btn btn-outline-primary" data-bs-toggle="dropdown">Export</button>
+                        <div class="dropdown-menu">
+                            <button class="dropdown-item btn-export" data-id="Excel" target="_blank">Excel</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <button class="btn btn-group btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                        <i class="fas fa-fw fa-filter mt-1 me-2"></i>
+                        Filter
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr class="text-center">
+                        <th>
+                            Action
+                        </th>
+                        <th>
+                            DO Number
+                        </th>
+                        <th>
+                            PO Number
+                        </th>
+                        <th>
+                            Tenant
+                        </th>
+                        <th>
+                            Warehouse
+                        </th>
+                        <th>
+                            Supplier
+                        </th>
+                        <th>
+                            Product
+                        </th>
+                        <th>
+                            Qty
+                        </th>
+                        <th>
+                            Date
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <button type="button" class="btn btn-outline-tertiary" data-bs-toggle="dropdown"><i class="fas fa-fw fa-ellipsis-h"></i></button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item" asp-action="Detail" asp-route-DONumber="@item.DONumber" asp-route-TenantId="@item.TenantId">Details</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Print" asp-action="DeliveryOrderManifest" asp-route-DONumber="@item.DONumber" target="_blank">Print Manifes Delivery Order</a>
+                                    </li>
+                                    @if (User.FindFirst("ProfileId")?.Value == SD.Role_Tenant || User.FindFirst("ProfileId")?.Value == SD.Role_SuperAdmin)
+                                    {
+                                        @if (item.Status == SD.FlagDO_DO)
+                                        {
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li>
+                                                <form asp-action="DeleteDeliveryOrder" method="post">
+                                                    <input name="DONumber" value="@item.DONumber" hidden>
+                                                    <input name="TenantId" value="@item.TenantId" hidden>
+                                                    <button class="dropdown-item text-danger" type="submit">Cancel</button>
+                                                </form>
+                                            </li>
+                                        }
+                                    }
+                                </ul>
+                            </td>
+                            <td class="text-center">
+                                @Html.DisplayFor(modelItem => item.DOSupplier)
+                            </td>
+                            <td class="text-center">
+                                @Html.DisplayFor(modelItem => item.PONumber)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MasDataTenant.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MasHouseCode.HouseName)
+                            </td>
+                            <td>
+                                @if (item.MasSupplierData != null)
+                                {
+                                    @Html.DisplayFor(modelItem => item.MasSupplierData.Name)
+                                }
+                            </td>
+                            <td class="text-center">
+                                @Html.DisplayFor(modelItem => item.IncDeliveryOrderProducts.Count)
+                            </td>
+                            <td class="text-center">
+                                @item.IncDeliveryOrderProducts.Sum(m => m.Quantity)
+                            </td>
+                            <td>
+                                @String.Format("{0:dd/MM/yyyy}", item.DateDelivered)
+                            </td>
+                            <td class="text-center">
+                                @if (item.Status == "Open")
+                                {
+                                    <span>@item.Status</span>
+                                }
+                                @if (item.Status == SD.FlagDO_DO)
+                                {
+                                    <span class="badge bg-secondary">@item.Status</span>
+                                }
+                                @if (item.Status == SD.FlagDO_AR)
+                                {
+                                    <span class="badge bg-info">@item.Status</span>
+                                }
+                                @if (item.Status == SD.FlagDO_PUT)
+                                {
+                                    <span class="badge bg-primary">@item.Status</span>
+                                }
+                                @if (item.Status == SD.FlagDO_CNC)
+                                {
+                                    <span class="badge bg-dark">@item.Status</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<partial name="Filter" />
+
+@section Scripts{
+    <script>
+
+        var date = new Date();
+
+        var day2 = ("0" + date.getDate()).slice(-2);
+        var month2 = ("0" + (date.getMonth() + 1)).slice(-2);
+        var lastDay = date.getFullYear() + "-" + (month2) + "-" + (day2);
+
+        $(function () {
+            $('.table').DataTable({
+                order: [[9, 'asc'], [1, 'asc']]
+            });
+
+            var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+
+            var day1 = ("0" + firstDay.getDate()).slice(-2);
+            var month1 = ("0" + (firstDay.getMonth() + 1)).slice(-2);
+            firstDay = firstDay.getFullYear() + "-" + (month1) + "-" + (day1);
+
+
+            $('input[name="FilterDateFrom"]').val(firstDay);
+            $('input[name="FilterDateTo"]').val(lastDay);
+        });
+
+        const past7Days = [...Array(7).keys()].map(index => {
+            const date = new Date();
+            date.setDate(date.getDate() - (index + 1));
+
+            return date;
+        });
+
+
+        $('input[name="FilterDate"]').click(function () {
+            if ($(this).val() == "datepicker"){
+                $('input[name="FilterDateFrom"]').prop('readonly', false);
+                $('input[name="FilterDateTo"]').prop('readonly', false);
+
+                $('input[name="FilterDateFrom"]').val(lastDay);
+                $('input[name="FilterDateTo"]').val(lastDay);
+            }
+            else{
+                $('input[name="FilterDateFrom"]').prop('readonly', true);
+                $('input[name="FilterDateTo"]').prop('readonly', true);
+                if ($(this).val() == "last7days") {
+                    var date = new Date();
+                    var firstDay = date.setDate(date.getDate() - 7);
+                    firstDay = new Date(firstDay);
+
+                    var day1 = ("0" + firstDay.getDate()).slice(-2);
+                    var month1 = ("0" + (firstDay.getMonth() + 1)).slice(-2);
+                    firstDay = firstDay.getFullYear() + "-" + (month1) + "-" + (day1);
+                }
+                if ($(this).val() == "thismonth") {
+                    var date = new Date();
+                    var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+
+                    var day1 = ("0" + firstDay.getDate()).slice(-2);
+                    var month1 = ("0" + (firstDay.getMonth() + 1)).slice(-2);
+                    firstDay = firstDay.getFullYear() + "-" + (month1) + "-" + (day1);
+                }
+                if ($(this).val() == "last3months") {
+                    var date = new Date();
+                    var firstDay = date.setMonth(date.getMonth() - 3);
+                    firstDay = new Date(firstDay);
+
+                    var day1 = ("0" + firstDay.getDate()).slice(-2);
+                    var month1 = ("0" + (firstDay.getMonth() + 1)).slice(-2);
+                    firstDay = firstDay.getFullYear() + "-" + (month1) + "-" + (day1);
+                }
+
+                $('input[name="FilterDateFrom"]').val(firstDay);
+                $('input[name="FilterDateTo"]').val(lastDay);
+
+                if ($(this).val() == "thisday") {
+                    $('input[name="FilterDateFrom"]').val(lastDay);
+                    $('input[name="FilterDateTo"]').val(lastDay);
+                }
+            }
+        });
+
+        $('.btn-export').on('click', function () {
+            const params = new URLSearchParams(window.location.search)
+            $('input[name="FilterDateFrom"]').val(params.get('FilterDateFrom'));
+            $('input[name="FilterDateTo"]').val(params.get('FilterDateTo'));
+            $('input[name="FilterHouseCode"]').val(params.get('FilterHouseCode'));
+            $('input[name="FilterTenantId"]').val(params.get('FilterTenantId'));
+
+            if ($(this).data('id') == "Excel") {
+                $('#DelveryOrdersToExcel').submit();
+            }
+        });
+
+        $('.btn-clearfilter').on('click', function(){
+            window.location.href = window.location.pathname;
+        })
+    </script>
+}

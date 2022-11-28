@@ -1,0 +1,34 @@
+﻿@model MasDataTenant
+
+<div class="modal fade" id="modalcreatewarehouse" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Warehouse</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-action="UpsertTenantWarehouse" method="post">
+                <div class="modal-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <input name="Id" hidden />
+                    <input asp-for="TenantId" hidden />
+
+                    <div class="form-group mb-3 required">
+                        <label class="control-label">Warehouse</label>
+                        <select name="HouseCode" class="form-control select2" data-bs-toggle="select2" asp-items="ViewBag.HouseCode" required>
+                            <option selected disabled>Select...</option>
+                        </select>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group">
+                        <input type="submit" value="Save" class="btn btn-primary" />
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

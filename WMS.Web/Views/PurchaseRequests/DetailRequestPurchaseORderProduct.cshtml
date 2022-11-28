@@ -1,0 +1,138 @@
+﻿@model IncRequestPurchase
+
+<div class="card">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Products</strong></h5>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+    
+        <div class="table-responsive">
+            <table class="table table-striped" id="tbl-purchaseorderproductrequest">
+                <thead>
+                    <tr class="text-center">
+                        <th>
+                            Picture
+                        </th>
+                        <th>
+                            Product
+                        </th>
+                        <th>
+                            Quantity
+                        </th>
+                        <th>
+                            Price
+                        </th>
+                        <th>
+                            Arrival
+                        </th>
+                        <th>
+                            Supplier
+                        </th>
+                        <th>
+                            Note
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.IncRequestPurchaseProducts.Count(); i++)
+                    {
+                        <tr>
+                            <td class="text-center">
+                                <img class="rounded-circle" height="50" width="50" src="~/img/product/@Model.IncRequestPurchaseProducts[i].MasProductData.BeautyPicture">
+                            </td>
+                            <td>
+                                @Model.IncRequestPurchaseProducts[i].MasProductData.ProductName<br>
+                                <strong class="text-primary">@Model.IncRequestPurchaseProducts[i].MasProductData.SKU</strong>
+                            </td>
+                            <td class="text-center">
+                                <ul class="list-group">
+                                    <li class="d-flex justify-content-between align-items-center">
+                                        Req
+                                        <span class="badge bg-light text-dark rounded-pill">@Model.IncRequestPurchaseProducts[i].Quantity</span>
+                                    </li>
+                                    <br>
+                                    <li class="d-flex justify-content-between align-items-center fw-bold">
+                                        Pro
+                                        <span class="badge bg-light text-dark rounded-pill">@Model.IncRequestPurchaseProducts[i].ApprovedQuantity</span>
+                                    </li>
+                                </ul>
+                            </td>
+                            <td class="text-end">
+                                <ul class="list-group">
+                                    <li class="d-flex justify-content-between align-items-center">
+                                        Bid
+                                        <span >@String.Format("{0:n0}", Model.IncRequestPurchaseProducts[i].BidPrice)</span>
+                                    </li>
+                                    <li class="d-flex justify-content-between align-items-center">
+                                        Nego
+                                        <span >@String.Format("{0:n0}", Model.IncRequestPurchaseProducts[i].NegotiatedPrice)</span>
+                                    </li>
+                                    <li class="d-flex justify-content-between align-items-center fw-bold">
+                                        Final
+                                        <span class="text-success">@String.Format("{0:n0}", Model.IncRequestPurchaseProducts[i].FinalPrice)</span>
+                                    </li>
+                                </ul>
+                            </td>
+                            <td class="text-center">
+                                @String.Format("{0:dd/MM/yyyy}", Model.IncRequestPurchaseProducts[i].ExpArrivalDate)
+                            </td>
+                            <td class="text-center">
+                                @Model.IncRequestPurchaseProducts[i].Supplier
+                            </td>
+                            <td>
+                                @{
+                                    string memo = Model.IncRequestPurchaseProducts[i].Memo;
+                                    if (string.IsNullOrEmpty(Model.IncRequestPurchaseProducts[i].Memo))
+                                    {
+                                        memo = "-";
+                                    }
+                                    
+                                }
+                                @memo
+                                <br>
+                                <span class="text-success fw-bold">@Model.IncRequestPurchaseProducts[i].ApprovedMemo</span>
+                            </td>
+                            <td class="text-center">
+                                @if(Model.IncRequestPurchaseProducts[i].Status == "Request")
+                                {
+                                    <span>@Model.IncRequestPurchaseProducts[i].Status</span>
+                                }
+                                @if(Model.IncRequestPurchaseProducts[i].Status == "Applied")
+                                {
+                                    <span class="badge bg-secondary">@Model.IncRequestPurchaseProducts[i].Status</span>
+                                }
+                                @if(Model.IncRequestPurchaseProducts[i].Status == "Reviewed")
+                                {
+                                    <span class="badge bg-info">@Model.IncRequestPurchaseProducts[i].Status</span>
+                                }
+                                @if(Model.IncRequestPurchaseProducts[i].Status == "Approved")
+                                {
+                                    <span class="badge bg-primary">@Model.IncRequestPurchaseProducts[i].Status</span>
+                                }
+                                @if(Model.IncRequestPurchaseProducts[i].Status == "Issued")
+                                {
+                                    <span class="badge bg-success">@Model.IncRequestPurchaseProducts[i].Status</span>
+                                }
+                                @if(Model.IncRequestPurchaseProducts[i].Status == "Rejected")
+                                {
+                                    <span class="badge bg-danger">@Model.IncRequestPurchaseProducts[i].Status</span>
+                                }
+                                @if(Model.IncRequestPurchaseProducts[i].Status == "Cancelled")
+                                {
+                                    <span class="badge bg-dark">@Model.IncRequestPurchaseProducts[i].Status</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,63 @@
+﻿@if(TempData["success"] != null){
+	<script type="text/javascript">
+		toastr.success('@TempData["success"]','', {
+					positionClass: 'toast-top-right',
+					closeButton: false,
+					progressBar: true,
+					newestOnTop: true,
+					rtl: $("body").attr("dir") === "rtl" || $("html").attr("dir") === "rtl",
+					timeOut: 3000
+				});
+	</script>
+}
+@if(TempData["error"] != null){
+	<script type="text/javascript">
+		toastr.error('@TempData["error"]!','', {
+					positionClass: 'toast-top-right',
+					closeButton: false,
+					progressBar: false,
+					newestOnTop: true,
+					rtl: $("body").attr("dir") === "rtl" || $("html").attr("dir") === "rtl",
+					timeOut: 3000
+				});
+	</script>
+}
+ 
+@if(TempData["info"] != null){
+	<script type="text/javascript">
+		toastr.info('@TempData["info"]!','', {
+					positionClass: 'toast-top-right',
+					closeButton: false,
+					progressBar: false,
+					newestOnTop: true,
+					rtl: $("body").attr("dir") === "rtl" || $("html").attr("dir") === "rtl",
+					timeOut: 3000
+				});
+	</script>
+}
+
+@if(TempData["warning"] != null){
+	<script type="text/javascript">
+		toastr.warning('@TempData["warning"]!','', {
+					positionClass: 'toast-top-right',
+					closeButton: false,
+					progressBar: false,
+					newestOnTop: true,
+					rtl: $("body").attr("dir") === "rtl" || $("html").attr("dir") === "rtl",
+					timeOut: 3000
+				});
+	</script>
+}
+
+
+<script>
+	$(function(){
+			$(".select2").each(function() {
+			$(this)
+				.wrap("<div class=\"position-relative\"></div>")
+				.select2({
+					dropdownParent: $(this).parent()
+				});
+			})
+	});
+</script>

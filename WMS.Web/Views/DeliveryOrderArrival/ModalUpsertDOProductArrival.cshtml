@@ -1,0 +1,58 @@
+﻿<div class="modal fade" id="ModalUpsertDeliveryOrderProductArrival" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+            <form asp-action="Upsert" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Arrival Product</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <input name="DOProductId" hidden />
+                    <div class="row">
+                        <div class="col-7">
+                            <table class="table table-sm table-borderless p-0 m-0">
+                                <tbody>
+
+                                    <tr>
+                                        <td>
+                                            Total Qty
+                                        </td>
+                                        <td>
+                                            : <span class="quantity"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Remaining Qty
+                                        </th>
+                                        <th>
+                                            : <span class="remaining-quantity"></span>
+                                        </th>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                    <div class="my-3 form-group required">
+                        <label class="control-label">Quantity</label>
+                        <input name="Quantity" class="form-control" required>
+                        <span class="text-danger field-validation-valid" data-valmsg-for="Quantity" data-valmsg-replace="true"></span>
+                    </div>
+
+                    <div class="mb-3 form-group">
+                        <label class="control-label">Note</label>
+                        <textarea name="Note" class="form-control"></textarea>
+                        <span class="text-danger field-validation-valid" data-valmsg-for="Note" data-valmsg-replace="true"></span>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                    <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,35 @@
+﻿
+@model RepackAndRelableViewModel
+
+
+<div class="card mb-3 ProductDetail" style="max-width: 540px;">
+    <div class="row g-0">
+        <div class="card-body">
+            <div class="text-center">
+                <img src="~/img/product/default-product.jpg" class="m-3 rounded incDeliveryOrderProduct_Picture" height="100">
+            </div>
+            <h5 class="card-title incDeliveryOrderProduct_ProductName"></h5>
+
+            <dl class="row" style="font-size:13px">
+                <dt class = "col-sm-4">
+                    Order Date
+                </dt>
+                <dd class = "col-sm-8">
+                    : <span class="incDeliveryOrderProduct_DateCreated"></span>
+                </dd>
+                <dt class = "col-sm-4">
+                    Order Qty
+                </dt>
+                <dd class = "col-sm-8">
+                    : <span class="incDeliveryOrderProduct_Quantity"></span>
+                </dd>
+                <dt class = "col-sm-4">
+                    Repack Qty
+                </dt>
+                <dd class = "col-sm-8">
+                    : <span class="sum_Quantity"></span>
+                </dd>
+            </dl>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,144 @@
+﻿@model OutSalesOrder
+
+@{
+    ViewData["Title"] = "Create Pack";
+    ViewData["MenuKey"] = "Pick and Pack";
+}
+
+<form asp-action="Create" method="post">
+    <input asp-for="OrderId" type="hidden" />
+
+    <partial name="DetailSalesOrder" />
+    
+    <partial name="DetailSalesOrderProduct" />
+
+    <div class="form-group text-end">
+        <input type="submit" value="Create" class="btn btn-primary" />
+        <a asp-action="Index" class="btn btn-dark">Back to List</a>
+    </div>
+</form>
+
+@section Scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+
+            var GetMasPackingTypes = 'Initial';
+            $.ajax({
+                url: '../../SalesOrderList/GetMasPackingTypes',
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data);
+                    var temp = '';
+                    for (let i = 0; i < data.length; i++) {
+                        temp = '<option value="' + data[i].packTypeId + '">' + data[i].packTypeName + '</option>';
+                        GetMasPackingTypes = GetMasPackingTypes.concat(temp);
+                    }
+                },
+                error: function () {
+                }
+            });
+
+            var index = 0;
+            $('.btn-add').on('click', function () {
+                console.log($(this).data("id"));
+                if ($("#OrdProductId" + $(this).data("id")).val() == null) {
+                    $.ajax({
+                        url: '../../SalesOrderList/GetSalesOrderProductByOrdProductId',
+                        type: 'GET',
+                        dataType: 'json',
+                        data: {
+                            OrdProductId: $(this).data("id"),
+                        },
+                        success: function (data) {
+                            console.log(data);
+                            var row = '' +
+                                '<div class="rec-element mb-3">' +
+                                '<div class="row mb-3">' +
+                                '<div class="col-12 col-sm-3 text-center">' +
+                                '<img src="../../../img/product/' + data.masProductData.beautyPicture + '" class="rounded-circle" height="60" width="60" asp-append-version="true"/>' +
+                                '</div>' +
+                                '<div class="col-11 col-sm-8">' +
+                                '<div class="mb-2">' +
+                                '<strong>' + data.masProductData.productName + '</strong> <br>' +
+                                '<input type="hidden" class="form-control OrdProductId" id="OrdProductId' + data.ordProductId + '" name="OutSalesOrderProducts[' + index + '].OutSalesOrderPack.OrdProductId" value="' + data.ordProductId + '">' +
+                                '</div>' +
+                                '<div class="row">' +
+                                '<div class="col-4 text-primary">' +
+                                'SKU' +
+                                '</div>' +
+                                '<div class="col-8">' +
+                                data.masProductData.sku +
+                                '</div>' +
+                                '</div> ' +
+                                '</div>' +
+                                '<div class="col-1 col-sm-1">' +
+                                '<a class="del-element btn link-primary"><i class="align-middle me-2 fas fa-fw fa-trash"></i></a>' +
+                                '</div>' +
+                                '</div>' +
+                                '<div class="row">' +
+                                '<div class="col-12 col-sm-6">' +
+                                '<div class="mb-3 form-group required">' +
+                                '<label class="control-label">Quantity</label>' +
+                                '<input type="number" class="form-control Quantity" name="OutSalesOrderProducts[' + index + '].Quantity" value="' + data.quantity + '" required readonly onkeyup="update_price()">' +
+                                '<span class="text-danger field-validation-valid spanQuantity" data-valmsg-for="OutSalesOrderProducts[' + index + '].Quantity" data-valmsg-replace="true"></span>' +
+                                '</div>' +
+                                '</div>' +
+                                '<div class="col-12 col-sm-6">' +
+                                '<div class="mb-3 form-group required">' +
+                                '<label class="control-label">Packaging Type</label>' +
+                                '<select class="form-control PackTypeId" name="OutSalesOrderProducts[' + index + '].OutSalesOrderPack.PackTypeId" required>' +
+                                '<option selected disabled value="">Select...</option>' +
+                                GetMasPackingTypes +
+                                '</select>' +
+                                '<span class="text-danger field-validation-valid spanPackTypeId" data-valmsg-for="OutSalesOrderProducts[' + index + '].OutSalesOrderPack.PackTypeId" data-valmsg-replace="true"></span>' +
+                                '</div>' +
+                                '</div>' +
+                                '</div>' +
+                                '<hr>' +
+                                '</div>';
+                            $(row).insertBefore("#nextkolom");
+                            $('#jumlahkolom').val(index + 1);
+                            index++;
+
+                            $('#total-item').html(index);
+                            total_price = 0;
+                            $("#card-salesorderpack .rec-element").each(function () {
+                                total_price = parseInt(total_price) + parseInt($(this).find('.Quantity').val());
+                            })
+                            $('#total-price').html(total_price.toLocaleString("en"));
+                        },
+                        error: function () {
+                        }
+                    });
+                }
+            });
+
+            $(document).on('click', '.del-element', function (e) {
+                e.preventDefault()
+                index--;
+                $('#total-item').html(index);
+                $(this).parents('.rec-element').remove();
+                $('#jumlahkolom').val(index - 1);
+                resetValues();
+            });
+
+            function resetValues() {
+                counter = 0;
+                total_price = 0;
+                $("#card-salesorderpack .rec-element").each(function () {
+                    $(this).find('.OrdProductId').attr("name", "OutSalesOrderProducts[" + counter + "].OrdProductId");
+                    $(this).find('.Quantity').attr("name", "OutSalesOrderProducts[" + counter + "].Quantity");
+                    $(this).find('.spanQuantity').attr("name", "OutSalesOrderProducts[" + counter + "].Quantity");
+                    $(this).find('.PackTypeId').attr("name", "OutSalesOrderProducts[" + counter + "].OutSalesOrderPack.PackTypeId");
+                    $(this).find('.spanPackTypeId').attr("name", "OutSalesOrderProducts[" + counter + "].OutSalesOrderPack.PackTypeId");
+                    total_price = parseInt(total_price) + parseInt($(this).find('.Quantity').val());
+                    counter++; //increment count
+                });
+                $('#total-price').html(total_price.toLocaleString("en"));
+            }
+        });
+    </script>
+}

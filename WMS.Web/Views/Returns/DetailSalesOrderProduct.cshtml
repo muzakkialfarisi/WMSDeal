@@ -1,0 +1,65 @@
+﻿@model ReturnedViewModel
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped" id="tbl-salesorderproducts">
+                <thead>
+                    <tr class="text-center">
+                        <th>
+                            Picture
+                        </th>
+                        <th>
+                            Product
+                        </th>
+                        <th>
+                            Qty
+                        </th>
+                        <th>
+                            Add
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.outSalesOrder.OutSalesOrderProducts.Count(); i++)
+                    {
+                        <tr>
+                            <td class="text-center">
+                                <img class="rounded-circle" height="50" width="50" src="~/img/product/@Model.outSalesOrder.OutSalesOrderProducts[i].MasProductData.BeautyPicture">
+                            </td>
+                            <td>
+                                @Model.outSalesOrder.OutSalesOrderProducts[i].MasProductData.ProductName<br>
+                                <strong class="text-primary">@Model.outSalesOrder.OutSalesOrderProducts[i].MasProductData.SKU</strong>
+                            </td>
+                            <td class="text-center">
+                                @Model.outSalesOrder.OutSalesOrderProducts[i].Quantity
+                            </td>
+                            <td class="text-center">
+                                @if(Model.outSalesOrder.OutSalesOrderProducts[i].Flag > 1)
+                                {
+                                    <i class="fas fa-fw fa-angle-double-right btn link-primary btn-add"
+                                    data-id="@Model.outSalesOrder.OutSalesOrderProducts[i].OrdProductId"></i>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>
+                            Total
+                        </th>
+                        <th class="text-center">
+                            @Model.outSalesOrder.OutSalesOrderProducts.Count Item
+                        </th>
+                        <th class="text-center">
+                            @Model.outSalesOrder.OutSalesOrderProducts.Sum(m => m.Quantity)
+                        </th>
+                        <th>
+                        </th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>

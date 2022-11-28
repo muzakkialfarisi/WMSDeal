@@ -1,0 +1,94 @@
+﻿@model DeliveryOrderViewModel
+
+<div class="card">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <h5 class="card-title"><strong>Purchase Order Products</strong></h5>
+        </div>
+    </div>
+    <div class="card-body">
+
+        <div class="table-responsive">
+            <table class="table table-striped" id="table-purchaseorderproduct">
+                <thead>
+                    <tr class="text-center">
+                        <th>
+                            Picture
+                        </th>
+                        <th>
+                            Product
+                        </th>
+                        <th>
+                            Quantity
+                        </th>
+                        <th>
+                            Price
+                        </th>
+                        <th>
+                            Total
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for(int i = 0; i < Model.incPurchaseOrder.IncPurchaseOrderProducts.Count; i++)
+                    {
+                        <tr>
+                            <td class="text-center">
+                                <img class="rounded-circle" height="50" width="50" src="~/img/product/@Model.incPurchaseOrder.IncPurchaseOrderProducts[i].MasProductData.BeautyPicture">
+                            </td>
+                            <td>
+                                @Model.incPurchaseOrder.IncPurchaseOrderProducts[i].MasProductData.ProductName<br>
+                                <strong class="text-primary">@Model.incPurchaseOrder.IncPurchaseOrderProducts[i].MasProductData.SKU</strong>
+                            </td>
+                            <td class="text-center">
+                                <ul class="list-group">
+                                    <li class="d-flex justify-content-between align-items-center">
+                                        PO
+                                        <span class="badge bg-danger rounded-pill">@Model.incPurchaseOrder.IncPurchaseOrderProducts[i].Quantity</span>
+                                    </li>
+                                    <br>
+                                    <li class="d-flex justify-content-between align-items-center">
+                                        DO
+                                        <span class="badge bg-success rounded-pill">@Model.incPurchaseOrder.IncPurchaseOrderProducts[i].DOQuantity</span>
+                                    </li>
+                                </ul>
+                            </td>
+                            <td class="text-end">
+                                @String.Format("{0:n0}", Model.incPurchaseOrder.IncPurchaseOrderProducts[i].UnitPrice)
+                            </td>
+                            <td class="text-end">
+                                @String.Format("{0:n0}", Model.incPurchaseOrder.IncPurchaseOrderProducts[i].SubTotal)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="2" class="text-center">
+                            @Model.incPurchaseOrder.IncPurchaseOrderProducts.Count Items
+                        </th>
+                        <th>
+                            <ul class="list-group">
+                                <li class="d-flex justify-content-between align-items-center">
+                                    PO
+                                    <span class="badge bg-danger rounded-pill">@Model.incPurchaseOrder.IncPurchaseOrderProducts.Sum(m => m.Quantity)</span>
+                                </li>
+                                <li class="d-flex justify-content-between align-items-center">
+                                    DO
+                                    <span class="badge bg-success rounded-pill">@Model.incPurchaseOrder.IncPurchaseOrderProducts.Sum(m => m.DOQuantity)</span>
+                                </li>
+                            </ul>
+                        </th>
+                        <th>
+
+                        </th>
+                        <th class="text-center">
+                            @String.Format("{0:n0}", Model.incPurchaseOrder.IncPurchaseOrderProducts.Sum(m => m.SubTotal))
+                        </th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>       
+        
+    </div>
+</div>

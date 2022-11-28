@@ -1,0 +1,156 @@
+﻿@model ReturnedViewModel
+
+<div class="row">
+    <div class="col-12 col-sm-6">
+        <table class="table table-sm table-borderless p-0 m-0">
+            <tbody>
+                <tr>
+                    <th colspan="2" class="text-nowrap">
+                        Sales Order
+                    </th>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">
+                        SO Number
+                    </td>
+                    <td>
+                        : @Model.outSalesOrder.OrderId
+                        <input asp-for="outSalesOrder.OrderId" hidden />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Type
+                    </td>
+                    <td>
+                        : @Model.outSalesOrder.MasSalesType.StyName
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Created
+                    </td>
+                    <td>
+                        : @String.Format("{0:dd/MM/yyyy}", Model.outSalesOrder.DateOrdered)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Tenant
+                    </td>
+                    <td>
+                        : @Model.outSalesOrder.MasDataTenant.Name
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Warehouse
+                    </td>
+                    <td>
+                        : @Model.outSalesOrder.MasHouseCode.HouseName
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Platform
+                    </td>
+                    <td>
+                        : @Model.outSalesOrder.MasPlatform.Name
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Store
+                    </td>
+                    <td>
+                        : @Model.outSalesOrder.StoreName
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-12 col-sm-6">
+        <table class="table table-sm table-borderless p-0 m-0">
+            <tbody>
+                <tr>
+                    <th colspan="2" class="text-nowrap">
+                        Consignee
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        Name
+                    </td>
+                    <td>
+                        : @Model.outSalesOrder.OutSalesOrderConsignee.CneeName
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">
+                        Phone Number
+                    </td>
+                    <td>
+                        : @Model.outSalesOrder.OutSalesOrderConsignee.CneePhone
+                    </td>
+                </tr>
+                <tr>
+                    <td class="align-baseline">
+                        Address
+                    </td>
+                    <td>
+                        : @Model.outSalesOrder.OutSalesOrderConsignee.CneeAddress, @Model.outSalesOrder.OutSalesOrderConsignee.MasKelurahan.KelName,
+                        @Model.outSalesOrder.OutSalesOrderConsignee.MasKelurahan.MasKecamatan.KecName,
+                        @Model.outSalesOrder.OutSalesOrderConsignee.MasKelurahan.MasKecamatan.MasKabupaten.KabName,
+                        @Model.outSalesOrder.OutSalesOrderConsignee.MasKelurahan.MasKecamatan.MasKabupaten.MasProvinsi.ProName,
+                        @Model.outSalesOrder.OutSalesOrderConsignee.OrdZipCode.
+                    </td>
+                </tr>
+                @*<tr>
+                <td>
+                Latitude
+                </td>
+                <td>
+                : @Model.outSalesOrder.OutSalesOrderConsignee.CneeLatitude
+                </td>
+                </tr>
+                <tr>
+                <td>
+                Longitude
+                </td>
+                <td>
+                : @Model.outSalesOrder.OutSalesOrderConsignee.CneeLongitude
+                </td>
+                </tr>*@
+                <tr>
+                    <th colspan="2" class="text-nowrap">
+                        Delivery
+                    </th>
+                </tr>
+                <tr>
+                    <td class="align-baseline">
+                        Courier
+                    </td>
+                    <td>
+                        : @Model.outSalesOrder.OutsalesOrderDelivery.MasSalesCourier.Name - @Model.outSalesOrder.OutsalesOrderDelivery.OrdCourierService
+                    </td>
+                </tr>
+                <tr>
+                    <td class="align-baseline">
+                        Grand Weight
+                    </td>
+                    <td>
+                        : @String.Format("{0:n0}", Model.outSalesOrder.OutSalesOrderProducts.Sum(m => m.TotalWeight)) Gram
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap align-baseline">
+                        Air Way Bill
+                    </td>
+                    <td>
+                        : @Model.outSalesOrder.OutsalesOrderDelivery.AirwayBill <br /><br />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

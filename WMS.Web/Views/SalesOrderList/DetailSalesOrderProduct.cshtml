@@ -1,0 +1,83 @@
+﻿@model OutSalesOrder
+
+<div class="card">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Products</strong></h5>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped" id="tbl-salesorderproducts">
+                <thead>
+                    <tr class="text-center">
+                        <th>
+                            Action
+                        </th>
+                        <th>
+                            Picture
+                        </th>
+                        <th>
+                            Product
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                        <th>
+                            Qty
+                        </th>
+                        <th>
+                            UOM
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.OutSalesOrderProducts)
+                    {
+                        <tr>
+                            <td class="text-center">
+                                @if (item.IncSerialNumbers.Count > 0)
+                                {
+                                    <button type="button" class="btn btn-outline-tertiary btn-serialnumber" data-bs-toggle="modal" data-bs-target="#SerialNumber" data-orderid="@item.OrderId" data-ordproductid="@item.OrdProductId">SN</button>
+                                }
+                            </td>
+                            <td class="text-center">
+                                <img class="rounded-circle" height="50" width="50" src="~/img/product/@item.MasProductData.BeautyPicture">
+                            </td>
+                            <td>
+                                @item.MasProductData.ProductName<br>
+                                <strong class="text-primary">@item.MasProductData.SKU</strong>
+                            </td>
+                            <td>
+                                @item.MasProductData.ProductCondition
+                            </td>
+                            <td class="text-end">
+                                @item.Quantity
+                            </td>
+                            <td>
+                                @item.MasProductData.Unit
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th class="text-center" colspan="2">
+                            Total
+                        </th>
+                        <th colspan="2">
+                            @Model.OutSalesOrderProducts.Count Item
+                        </th>
+                        <th class="text-end">
+                            @Model.OutSalesOrderProducts.Sum(m => m.Quantity)
+                        </th>
+                        <th class="text-center">
+                        </th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>

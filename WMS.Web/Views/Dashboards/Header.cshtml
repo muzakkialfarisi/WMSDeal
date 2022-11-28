@@ -1,0 +1,8 @@
+﻿@model DashboardViewModel
+
+<div class="header">
+	<h1 class="header-title">
+		Welcome back, @User.FindFirst("FirstName")?.Value @User.FindFirst("LastName")?.Value!
+	</h1>
+	<p class="header-subtitle">You manage @Model.Dashboard.Count() warehouses.</p>
+</div>

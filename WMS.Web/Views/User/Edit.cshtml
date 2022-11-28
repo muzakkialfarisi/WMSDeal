@@ -1,0 +1,123 @@
+﻿@model UserViewModel
+
+@{
+    ViewData["Title"] = "Users";
+    ViewData["MenuKey"] = "Security";
+}
+
+<div class="card" style="min-height:700px">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center py-1">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Edit UserName: @Model.UserName</strong></h5>
+            </div>
+        </div>
+    </div><br />
+    <div class="card-body">
+        <div class="mb-2 col-xl-8 col-lg-10 ">
+            <form enctype="multipart/form-data" asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="UserId" />
+                <div class="row">
+                    <div class="mb-3 col-md-6">
+                        <label asp-for="FirstName" class="control-label"></label>
+                        <input asp-for="FirstName" class="form-control" />
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3 col-md-6">
+                        <label asp-for="LastName" class="control-label"></label>
+                        <input asp-for="LastName" class="form-control" />
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="mb-3 col-md-6">
+                        <label asp-for="Email" class="control-label"></label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3 col-md-6">
+                        <label asp-for="PhoneNumber" class="control-label"></label>
+                        <div class="input-group">
+                            <span class="input-group-text">+62</span>
+                            <input asp-for="PhoneNumber" class="form-control" />
+                        </div>
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="mb-3 col-md-6">
+                        <div class="row">
+                            <div class="mb-3 col-md-12">
+                                <label asp-for="ProfileId" class="control-label"></label>
+                                <select asp-for="ProfileId" id="profileid" class="form-control" asp-items="ViewBag.ProfileId">
+                                    <option disabled selected>Select...</option>
+                                </select>
+                                <span asp-validation-for="ProfileId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="mb-3 col-md-12">
+                                <label asp-for="JobPosId" class="control-label"></label>
+                                <select asp-for="JobPosId" class="form-control" asp-items="ViewBag.JobPosId">
+                                    <option disabled selected>Select...</option>
+                                </select>
+                                <span asp-validation-for="JobPosId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="mb-3 col-md-12">
+                                <label asp-for="HouseCode" class="control-label"></label>
+                                <select asp-for="HouseCode" class="form-control" asp-items="ViewBag.HouseCode">
+                                    <option disabled selected>Select...</option>
+                                </select>
+                                <span asp-validation-for="HouseCode" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="mb-3 col-md-12">
+                                <label asp-for="Flag" class="control-label"></label>
+                                <select asp-for="Flag" class="form-control" asp-items="Html.GetEnumSelectList<FlagEnum>()">
+                                </select>
+                                <span asp-validation-for="Flag" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3 col-md-6">
+                        <div class="row">
+                            <div class="form-group">
+                                <label asp-for="ProfileImage" class="control-label"></label>
+                                <div class="custom-file">
+                                    <input asp-for="ProfileImage" type="file" class="form-control custom-file-input" id="IdFormPhotoProfile"
+                                            accept=".jpg,.jpeg" onchange="document.getElementById('idFormProfilePre').src = window.URL.createObjectURL(this.files[0])" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <img id="idFormProfilePre" src="~/img/avatars/@ViewData["PicProfile"]" alt="logo Image" width="150" height="150"
+                                    style="border:1px;margin-top:20px" />
+                        </div>
+                    </div>
+                </div>
+                @* <div class="row">
+                    <div class="mb-3 col-md-12">
+                    <label asp-for="UserName" class="control-label"></label>
+                    <input asp-for="UserName" readonly="readonly" class="form-control" autocomplete="off" />
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                    </div>
+                    </div>*@<br />
+                <div class="form-group">
+                    <input type="submit" value="Save Changes" class="btn btn-primary" /> &nbsp;
+                    <a asp-action="Index" class="btn btn-dark">Back to List</a>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+     @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+      }
+}

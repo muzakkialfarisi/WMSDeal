@@ -1,0 +1,77 @@
+﻿@model SecProfile
+
+@{
+    ViewData["Title"] = "Profiles";
+    ViewData["MenuKey"] = "Security";
+}
+
+<div class="card" style="min-height:700px">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center py-1">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Manage of profile : @Model.ProfileId [ @Model.ProfileName ] </strong></h5>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="card-body">
+        <div style="max-height:800px;overflow-y:scroll">
+            <div id="jstree">
+            </div><br />
+        </div><br />
+        @using (Html.BeginForm("Manage", "Profile", FormMethod.Post))
+        {
+            <input type="hidden" name="selectedItems" id="selectedItems" />
+            <div class="form-group col-md-12 ">
+                <input type="submit" value="Save changes" class="btn btn-primary" /> &nbsp;
+                <a asp-action="Index" class="btn btn-dark">Back to List</a>
+            </div>
+        }
+    </div>
+</div>
+
+@section scripts{
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('#jstree').on('changed.jstree', function (e, data) {
+                var i, j;
+                var postedItems = [];
+                for (i = 0, j = data.selected.length; i < j; i++) {
+                    var id = data.selected[i];
+
+                    postedItems.push({
+                        text: data.instance.get_node(data.selected[i]).text,
+                        id: id,
+                        parent: data.node.parents[0],
+                        profileid: @Model.ProfileId
+                    });
+                }
+
+                $('#selectedItems').val(JSON.stringify(postedItems));
+            }).jstree({
+                "core": {
+                    "themes": {
+                        "variant": "large"
+                    },
+                    "data": @Html.Raw(ViewBag.Json)
+                                                        },
+                "plugins": ["wholerow", "checkbox"],
+
+
+            }).jstree("set_theme", "apple")
+                .bind("loaded.jstree", function (event, data) {
+                    $(this).jstree("open_all")
+
+                });
+
+            $('#jstree').on('loaded.jstree', function () {
+                $("#jstree").jstree("select_node", @Html.Raw(ViewBag.profile));
+            });
+
+        });
+    </script>
+}

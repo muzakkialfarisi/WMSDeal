@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:constant="clr-namespace:WMSDeal.Constant"
+             xmlns:viewmodel="clr-namespace:WMSDeal.ViewModels"
+             x:DataType="viewmodel:HomeViewModel"
+             Shell.TabBarIsVisible="True"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{StaticResource Background1}"
+             x:Class="WMSDeal.Views.HomePage"
+             Title="HomePage">
+    <ScrollView>
+        <StackLayout>
+            <StackLayout >
+                <StackLayout>
+                    <Image Source="{x:Static constant:Icon.Warehouse2}" HeightRequest="220" Aspect="AspectFill"/>
+                    <ImageButton x:Name="btnSignOut" Command="{Binding SignOutCommand}" Source="{x:Static constant:Icon.Signout}" HeightRequest="50" WidthRequest="50" 
+                                 HorizontalOptions="End" Margin="15,-210" BackgroundColor="{StaticResource Blue200}" CornerRadius="20" Padding="5"/>
+                    <Frame BorderColor="{StaticResource Blue500}" BackgroundColor="{StaticResource Blue500}" HeightRequest="70"  CornerRadius="30"
+                               Padding="0" Margin="25,335" HorizontalOptions="Fill" VerticalOptions="Center" HasShadow="True">
+                        <StackLayout Orientation="Horizontal" HorizontalOptions="Start" VerticalOptions="Center" Margin="15,0,5,0" >
+                            <Frame ZIndex="1" BorderColor="{StaticResource Aqua4}" HeightRequest="55" WidthRequest="55" BackgroundColor="{StaticResource Aqua4}" CornerRadius="10" Margin="10,0,5,0">
+                                <ImageButton Source="{Binding ProfileImage}" HeightRequest="55" WidthRequest="55" 
+                                             BackgroundColor="Transparent" Aspect="AspectFill"  Command="{Binding ProfileCommand}"/>
+                            </Frame>
+                            <StackLayout Padding="0" Margin="10,0">
+                                <Label x:Name="lblHomeFullName" Margin="0,5" TextTransform="Uppercase" TextColor="{StaticResource Grey1}"  FontAttributes="Bold"/>
+                                <Frame Padding="2" Margin="0,5,0,2" HorizontalOptions="StartAndExpand" VerticalOptions="Center" 
+                                           BorderColor="{StaticResource Gray400}" BackgroundColor="{StaticResource Gray400}">
+                                    <Label x:Name="lblHomeJobPosName" Margin="8,0,8,0" Text="Programer" TextTransform="Uppercase" 
+                                               TextColor="{StaticResource White}"  FontSize="10"/>
+                                </Frame>
+                                <!--<Label x:Name="lblHomeWilayah" Margin="0" TextTransform="Uppercase" TextColor="{StaticResource Blue300}" />-->
+                            </StackLayout>
+                        </StackLayout>
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ProfileCommand}"/>
+                        </Frame.GestureRecognizers>
+                    </Frame>
+                </StackLayout>
+
+                <StackLayout Margin="0,-315,0,0"  HorizontalOptions="FillAndExpand" >
+                    <Label x:Name="lblHomeWilayah" Text="bandung" Margin="50,5" TextTransform="Uppercase" HorizontalOptions="Start" 
+                               TextColor="{StaticResource Blue200}" FontAttributes="Bold" FontSize="16" />
+
+                    <StackLayout Margin="0,10">
+                        <StackLayout>
+                            <Frame HorizontalOptions="FillAndExpand"  Margin="20,5" Padding="20,7"
+                                           BackgroundColor="{StaticResource Background2}" BorderColor="{StaticResource Background2}" HasShadow="True">
+                                <StackLayout>
+                                    <Grid ColumnDefinitions="*,30">
+                                        <Label Text="In Last 30 days" Margin="10,0" FontSize="14" FontAttributes="Bold" TextColor="{StaticResource Grey1}" FontFamily="OpenSansSemibold"/>
+                                        <ImageButton Grid.Column="1" Source="{Static constant:Icon.RefreshBlack}" HeightRequest="25" WidthRequest="25" Padding="0"
+                                                             Command="{Binding RefreshCommand}"/>
+                                    </Grid>
+                                    <Grid ColumnDefinitions="*,5,*" Margin="0,10">
+                                        <StackLayout>
+                                            <Label Text="Incoming" FontAttributes="Bold" TextColor="{StaticResource Blue300}" FontSize="16" 
+                                                   Margin="0,0,20,10" HorizontalOptions="Start"/>
+                                            <Label Text="Delivery Order" Margin="0" TextColor="{StaticResource Grey2}"/>
+                                            <Label Text="{Binding  TotalIncoming}" FontSize="15" Margin="10,5" HorizontalOptions="Start"  TextColor="{StaticResource Grey1}"/>
+                                            <Label Text="Arrival" Margin="0,10,0,0" TextColor="{StaticResource Grey2}"/>
+                                            <Label Text="{Binding DoneIncoming}" FontSize="15" Margin="10,5" HorizontalOptions="Start" TextColor="{StaticResource Grey1}"/>
+                                        </StackLayout>
+                                        <StackLayout Grid.Column="1" HorizontalOptions="Center">
+                                            <Line X1="0" Y1="0" X2="0" Y2="135" Stroke="{StaticResource Gray300}"/>
+                                        </StackLayout>
+                                        <StackLayout Grid.Column="2" HorizontalOptions="End">
+                                            <Label Text="Outgoing" FontAttributes="Bold" TextColor="{StaticResource Blue300}" FontSize="16" 
+                                                   Margin="0,0,0,10" HorizontalOptions="Start"/>
+                                            <Label Text="Sales Order" Margin="0" TextColor="{StaticResource Grey2}" HorizontalOptions="End"/>
+                                            <Label Text="{Binding  TotalOutgoing}" FontSize="15" Margin="10,5" HorizontalOptions="End"  TextColor="{StaticResource Grey1}"/>
+                                            <Label Text="Picked" Margin="0,10,0,0" TextColor="{StaticResource Grey2}" HorizontalOptions="End"/>
+                                            <Label Text="{Binding DoneOutgoing}" FontSize="15" Margin="10,5" HorizontalOptions="End" TextColor="{StaticResource Grey1}"/>
+                                        </StackLayout>
+                                    </Grid>
+                                    <Grid ColumnDefinitions="*,Auto,*" Margin="5,0" HorizontalOptions="FillAndExpand">
+                                        <Frame Padding="0" HorizontalOptions="Start" VerticalOptions="Center" 
+                                                       BorderColor="{StaticResource Red}" BackgroundColor="{StaticResource Red}">
+                                            <Label Margin="8,0,8,2" Text="{Binding OutstandIncoming}" VerticalOptions="Center"
+                                                           TextColor="{StaticResource White}" />
+                                        </Frame>
+                                        <Label Grid.Column="1" Text="Outstanding" Margin="0,10,0,5" FontSize="15" TextColor="{StaticResource DarkOrange}"/>
+                                        <Frame Grid.Column="2" Padding="0" HorizontalOptions="End" VerticalOptions="Center" 
+                                                       BorderColor="{StaticResource Red}" BackgroundColor="{StaticResource Red}">
+                                            <Label Margin="8,0,8,2" Text="{Binding OutstandOutgoing}" VerticalOptions="Center"
+                                                           TextColor="{StaticResource White}" />
+                                        </Frame>
+                                    </Grid>
+                                </StackLayout>
+                            </Frame>
+
+                        </StackLayout>
+                    </StackLayout>
+                </StackLayout>
+                <!--<StackLayout HeightRequest="20" VerticalOptions="End">
+                    <HorizontalStackLayout HorizontalOptions="End" Margin="0,3,20,0">
+                        <Label Text="{Binding AppVersi, StringFormat='Version : {0}'}"
+                       TextColor="{StaticResource Gray600}" 
+                       FontAttributes="Bold" FontSize="11" 
+                       VerticalOptions="Center"  />
+                    </HorizontalStackLayout>
+                </StackLayout>-->
+                <ActivityIndicator Margin="0,-160" IsRunning="True" IsVisible="{Binding IsBusy}" Color="{StaticResource DarkOrange}"/>
+            </StackLayout>
+
+        </StackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,63 @@
+﻿@model StorageViewModel
+
+<div class="modal fade" id="modalupsertrow" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Row</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-action="UpsertRow" method="post">
+                <div class="modal-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="mb-3 form-group required">
+                        <label class="control-label">Warehouse</label>
+                        <select asp-for="invStorageRow.HouseCode" class="form-control select2" data-bs-toggle="select2" asp-items="ViewBag.HouseCode" required>
+                            <option selected disabled value="">Select...</option>
+                        </select>
+                        <span asp-validation-for="invStorageRow.HouseCode" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3 form-group required">
+                        <label class="control-label">Zone</label>
+                        <select id="selectZone" asp-for="invStorageRow.ZoneCode" class="form-control select2" data-bs-toggle="select2" asp-items="ViewBag.ZoneCode">
+                            <option selected disabled value="">Select...</option>
+                        </select>
+                        <span asp-validation-for="invStorageRow.ZoneCode" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3 form-group required">
+                        <label class="control-label">Row Code</label>
+                        <div class="input-group">
+                            <label class="input-group-text" id="lbl-row"></label>
+                            <input asp-for="invStorageRow.RowCode" maxlength=3 class="form-control" />
+                        </div>
+                        <small class="form-text text-muted">Max 3 Digits</small>
+                        <span asp-validation-for="invStorageRow.RowCode" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3 form-group required">
+                        <label class="control-label">Row Name</label>
+                        <input asp-for="invStorageRow.RowName" class="form-control" />
+                        <span asp-validation-for="invStorageRow.RowName" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3 form-group required">
+                        <label class="control-label">Status</label>
+                        <select asp-for="invStorageRow.Flag" class="form-control select2" data-bs-toggle="select2" asp-items="Html.GetEnumSelectList<FlagEnum>()">
+                        </select>
+                        <span asp-validation-for="invStorageRow.Flag" class="text-danger"></span>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group">
+                        <input type="submit" value="Save" class="btn btn-primary" />
+                        <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

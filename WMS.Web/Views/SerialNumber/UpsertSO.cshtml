@@ -1,0 +1,145 @@
+﻿@model OutSalesOrderProduct
+
+@{
+    ViewData["Title"] = "Delivery Order";
+    ViewData["MenuKey"] = "Delivery Order";
+}
+
+<div class="row">
+    <div class="col-12 col-sm-6">
+
+        <div class="card">
+            <div class="card-header border-bottom">
+                Create Serial Number
+            </div>
+            <div class="card-body">
+                <form asp-action="UpsertSO" method="post">
+                    <input asp-for="OrderId" hidden />
+                    <input asp-for="OrdProductId" hidden />
+
+                    <div class="form-group mb-3 required">
+                        <label lass="control-label">Serial Number</label>
+                        <div class="input-group">
+                            <input type="text" name="SerialNumber" class="form-control" required>
+                            <button type="submit" class="btn btn-outline-primary">Save</button>
+                        </div>
+                        <span class="text-danger field-validation-valid" data-valmsg-for="SerialNumber" data-valmsg-replace="true"></span>
+                    </div>
+                </form>
+
+                <br />
+                <br />
+
+                <div class="d-grid gap-2">
+                    <a asp-controller="SalesOrderPack" asp-action="Create" asp-route-OrderId="@Model.OrderId" class="btn btn-dark">Back to Pack</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-12 col-sm-6">
+        <div class="card">
+            <div class="card-header border-bottom">
+                Serial Number List
+            </div>
+            <div class="card-body">
+
+                <div class="mb-3">
+
+                    <ul class="list-group">
+                        <li class="d-flex justify-content-between align-items-center">
+                            Qty SO Product
+                            <span class="badge bg-success rounded-pill">@Model.Quantity</span>
+                        </li>
+                        <br>
+                        <li class="d-flex justify-content-between align-items-center">
+                            Qty SN Product
+                            @if (Model.IncSerialNumbers.Count < 1)
+                            {
+                                <span class="badge bg-danger rounded-pill">@Model.IncSerialNumbers.Count</span>
+                            }
+                            else
+                            {
+                                if (Model.IncSerialNumbers.Count != Model.Quantity)
+                                {
+                                    <span class="badge bg-warning rounded-pill">@Model.IncSerialNumbers.Count</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-success rounded-pill">@Model.IncSerialNumbers.Count</span>
+                                }
+                            }
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr class="text-center">
+                                <th>
+                                    Action
+                                </th>
+                                <th>
+                                    Serial Number
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.IncSerialNumbers)
+                            {
+                                <tr>
+                                    <td class="text-center">
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-sm btn-outline-tertiary" data-bs-toggle="dropdown"><i class="fas fa-fw fa-ellipsis-h"></i></button>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <form asp-action="Delete" method="post">
+                                                        <input name="SerialId" value="@item.SerialId" hidden>
+                                                        <input name="OrdProductId" value="@item.OrdProductId" hidden>
+                                                        <button class="dropdown-item text-danger" type="submit">Delete</button>
+                                                    </form>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @item.SerialNumber
+                                    </td>
+                                    <td class="text-center">
+                                        @if (item.Status == SD.FlagSerialNumber_Open)
+                                        {
+                                            <span class="badge bg-secondary">Created</span>
+                                        }
+                                        @if (item.Status == SD.FlagSerialNumber_IN)
+                                        {
+                                            <span class="badge bg-primary">IN</span>
+                                        }
+                                        @if (item.Status == SD.FlagSerialNumber_OUT)
+                                        {
+                                            <span class="badge bg-success">OUT</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(function () {
+            $('.table').DataTable({
+                order: [[1, 'desc']],
+            });
+        });
+    </script>
+    }

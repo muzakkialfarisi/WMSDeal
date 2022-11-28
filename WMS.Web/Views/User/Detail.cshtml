@@ -1,0 +1,163 @@
+﻿@model UserViewModel
+
+@{
+    ViewData["Title"] = "Users";
+    ViewData["MenuKey"] = "Security";
+}
+
+<div class="row">
+    <div class="col-12 col-sm-5">
+        <partial name="DetailUser" />
+
+        <div class="d-grid gap-2 mt-3">
+            <a asp-action="Index" class="btn btn-dark">Back to List</a>
+        </div>
+    </div>
+
+    @if (Model.ProfileId.ToString() == SD.Role_Tenant || Model.ProfileId.ToString() == SD.Role_SuperAdmin)
+    {
+        <div class="col-12 col-sm-7">
+            <div class="card tab bg-transparent p-0 m-0">
+                @{
+                    var active = "active";
+                    <div class="card-header p-0 m-0">
+                        <ul class="nav nav-tabs bg-light" role="tablist">
+                            @if (Model.SecUserTenant != null)
+                            {
+                                active = "";
+                                <li class="nav-item">
+                                    <a class="nav-link active" href="#tab-1" data-bs-toggle="tab" role="tab" aria-selected="false">
+                                        Warehouse
+                                    </a>
+                                </li>
+                            }
+                            <li class="nav-item">
+                                <a class="nav-link @active" href="#tab-2" data-bs-toggle="tab" role="tab" aria-selected="false">
+                                    Tenant
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body p-0 m-0">
+                    <div class="tab-content">
+                        @if (Model.SecUserTenant != null)
+                        {
+                        <div class="tab-pane active" id="tab-1" role="tabpanel">
+                            <div class="table-responsive">
+                                <partial name="DetailUserWarehouse" />
+                                <partial name="CreateUserWarehouse" />
+                            </div>
+                        </div>
+                        }
+                        <div class="tab-pane @active" id="tab-2" role="tabpanel">
+                            <div class="table-responsive">
+                                <partial name="DetailUserTenant" />
+                                <partial name="CreateUserTenant" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                }
+            </div>
+        </div>
+    }
+
+</div>
+
+
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script type="text/javascript">
+        $(function () {
+            $('.tbl-boots').DataTable({
+            });
+
+            $('.extendExpired').click(function (e) {
+                swal({
+                    title: "Are you sure?",
+                    text: "Are you sure you want to extend expiration this user?",
+                    type: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, Extend it !"
+                }).then((confirm) => {
+                    if (confirm) {
+                        var btn = $(this);
+                        var id = "1" + btn.data("id");
+                        $('#UserId').val(id);
+                        $('#extendFrom').submit();
+                    }
+                });
+            });
+
+            $('.resetPassword').click(function (e) {
+                swal({
+                    title: "Are you sure?",
+                    text: "Are you sure you want to reset password this user?",
+                    type: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, Reset it !"
+                }).then((confirm) => {
+                    if (confirm) {
+                        var btn = $(this);
+                        var id = "2" + btn.data("id");
+                        $('#UserId').val(id);
+                        $('#extendFrom').submit();
+                    }
+                });
+            });
+
+            $('.reActive').click(function (e) {
+                swal({
+                    title: "Are you sure?",
+                    text: "Are you sure you want to re-activate this user?",
+                    type: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, Activate it !"
+                }).then((confirm) => {
+                    if (confirm) {
+                        var btn = $(this);
+                        var id = "3" + btn.data("id");
+                        $('#UserId').val(id);
+                        $('#extendFrom').submit();
+                    }
+                });
+            });
+
+            $('.deActive').click(function (e) {
+                swal({
+                    title: "Are you sure?",
+                    text: "Are you sure you want to de-activate this user?",
+                    type: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, Turn in off !"
+                }).then((confirm) => {
+                    if (confirm) {
+                        var btn = $(this);
+                        var id = "4" + btn.data("id");
+                        $('#UserId').val(id);
+                        $('#extendFrom').submit();
+                    }
+                });
+            });
+        });
+    </script>
+}

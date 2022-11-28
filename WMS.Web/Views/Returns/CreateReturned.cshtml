@@ -1,0 +1,34 @@
+﻿@model ReturnedViewModel
+
+<div class="row">
+    <div class="col-12 col-sm-4">
+        <div class="mb-3 form-group required">
+            <label class="control-label">Returned Name</label>
+            <input asp-for="invReturn.ReturnName" class="form-control">
+            <span asp-validation-for="invReturn.ReturnName" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="col-12 col-sm-4">
+        <div class="mb-3 form-group required">
+            <label class="control-label">Received By</label>
+            <input asp-for="invReturn.ReceivedBy" class="form-control">
+            <span asp-validation-for="invReturn.ReceivedBy" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="col-12 col-sm-4">
+        <div class="mb-3 form-group required">
+            <label class="control-label">Date Received</label>
+            <div class="input-group date" id="datetimepicker-datedelivered" data-target-input="nearest">
+                <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker-datedelivered" asp-for="invReturn.DateReceived"/>
+                <div class="input-group-text" data-target="#datetimepicker-datedelivered" data-toggle="datetimepicker"><i class="fa fa-calendar"></i></div>
+            </div>
+            <span asp-validation-for="invReturn.DateReceived" class="text-danger"></span>
+        </div>
+    </div>
+</div>
+
+<div class="mb-3 form-group required">
+    <label class="control-label">Description</label>
+    <textarea asp-for="invReturn.Description" class="form-control" rows="2" required></textarea>
+    <span asp-validation-for="invReturn.Description" class="text-danger"></span>
+</div>

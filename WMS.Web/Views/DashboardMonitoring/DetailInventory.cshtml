@@ -1,0 +1,27 @@
+﻿@model ProductMonitoringViewModel
+
+@{
+    ViewData["Title"] = "Detail Product Inventory";
+    ViewData["MenuKey"] = "Dashboards";
+}
+
+<div class="row">
+    <div class="col-12 col-sm-4">
+        <partial name="DetailProduct" />
+    </div>
+    <div class="col-12 col-sm-8">
+        <partial name="DetailProductIncoming" />
+    </div>
+</div>
+<partial name="ModalSerialNumber" />
+@section Scripts{
+    <script>
+        $(function () {
+            $('#tbl-sku').DataTable({
+            });
+            $('#tbl-iku').DataTable({
+            });
+        });
+
+    </script>
+}

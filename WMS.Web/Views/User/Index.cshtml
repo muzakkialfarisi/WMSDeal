@@ -1,0 +1,122 @@
+﻿@model IEnumerable<UserViewModel>
+
+@{
+    ViewData["Title"] = "Users";
+    ViewData["MenuKey"] = "Security";
+}
+
+<div class="card" style="min-height:700px">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>User List</strong></h5>
+            </div>
+            <div>
+                <a class="btn btn-outline-primary btn-pill" asp-action="Create">Add User</a>
+                &nbsp;&nbsp;
+            </div>
+        </div>
+    </div><br />
+    <div class="card-body">
+
+        <div class="table-responsive">
+            <table class="table table-striped" width="100%">
+                <thead>
+                    <tr>
+                        <th>
+                            Action
+                        </th>
+                        <th>
+                            Photo
+                        </th>
+                        <th>
+                            Username
+                        </th>
+                        <th>
+                            Name
+                        </th>
+                        <th>
+                            Profile
+                        </th>
+                        <th>
+                            Expired
+                        </th>
+                        <th class="text-center">
+                            Status
+                        </th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <button type="button" class="btn btn-outline-tertiary" data-bs-toggle="dropdown"><i class="fas fa-fw fa-ellipsis-h"></i></button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" asp-action="Detail" asp-route-UserId="@item.UserId"><i class="align-middle me-1 fas fa-fw fa-pencil-alt"></i>&nbsp;&nbsp;Manage</a>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                @if (item.ProfileImageUrl == null || item.ProfileImageUrl == "")
+                                {
+                                    <img src="~/img/avatars/noimage.png" alt="" class="avatar rounded-circle">
+                                }
+                                else
+                                {
+                                    <img src="~/img/avatars/@Html.DisplayFor(modelItem => item.ProfileImageUrl)" alt="" class="avatar rounded-circle">
+                                }
+
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.UserName)
+                            </td>
+                            <td>
+                                @item.FirstName @item.LastName
+                            </td>
+                            <td>
+                                @item.SecProfile.ProfileName
+                            </td>
+                            <td>
+                                @if (item.ExpireDate > DateTime.Now)
+                                {
+                                    @Html.DisplayFor(modelItem => item.ExpireDate)
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger"> @Html.DisplayFor(modelItem => item.ExpireDate)</span>
+                                }
+                            </td>
+                            <td class="text-center">
+                                @if (item.Flag == FlagEnum.Active)
+                                {
+                                    <span class="badge bg-success"> @Html.DisplayFor(modelItem => item.Flag)</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger"> @Html.DisplayFor(modelItem => item.Flag)</span>
+                                }
+                            </td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+
+
+@section Scripts{
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script type="text/javascript">
+        $(function () {
+            $('.table').DataTable({
+            });
+        });
+    </script>
+}

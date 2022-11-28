@@ -1,0 +1,174 @@
+﻿@model IEnumerable<MasDataTenant>
+
+@{
+    ViewData["Title"] = "Tenant";
+    ViewData["MenuKey"] = "Tenant";
+}
+
+<div class="card" style="min-height:700px">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center py-1">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Tenant List</strong></h5>
+            </div>
+            @if (User.FindFirst("ProfileId")?.Value == SD.Role_SuperAdmin)
+            { 
+            <div>
+                <a class="btn btn-outline-primary btn-pill" data-bs-toggle="modal" data-bs-target="#modalTenant">Add Tenant</a>
+                <partial name="Create" model="@Model" />
+            </div>
+            }
+        </div>
+    </div><br />
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr  class="text-center">
+                        <th>
+                            Action
+                        </th>
+                        <th>
+                            Picture
+                        </th>
+                        <th>
+                            Name
+                        </th>
+                        <th>
+                            Email Address
+                        </th>
+                        <th>
+                            Phone Number
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <button type="button" class="btn btn-outline-tertiary" data-bs-toggle="dropdown"><i class="fas fa-fw fa-ellipsis-h"></i></button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" asp-action="Detail" asp-route-TenantId="@item.TenantId">Details</a></li>
+                                </ul>
+                            </td>
+                            <td>
+                                <img src="~/img/tenant/@item.ProfileImageUrl" alt="" class="avatar rounded-circle">
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.EmailAddress)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.OfficePhone) <br>
+                                @Html.DisplayFor(modelItem => item.PhoneNumber)
+                            </td>
+                            <td class="text-center">
+                                @if (item.Flag == FlagEnum.Active)
+                                {
+                                    <span class="badge bg-success"> @Html.DisplayFor(modelItem => item.Flag)</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger"> @Html.DisplayFor(modelItem => item.Flag)</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts{
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+
+    <script>
+        $(function () {
+            $('.table').DataTable({
+                fixedHeader: true
+            });
+        });
+
+
+        $('select[name="ProId"]').on('change', function () {
+            $.ajax({
+                url: '../../Kelurahans/GetKabupatensByProId',
+                type: 'GET',
+                data: {
+                    ProId: $(this).val(),
+                },
+                beforeSend: function () {
+                    $('select[name="KabId"]').empty();
+                    $('select[name="KabId"]').append('<option selected disabled value="">Select...</option>');
+                    $('select[name="KecId"]').empty();
+                    $('select[name="KecId"]').append('<option selected disabled value="">Select...</option>');
+                    $('select[name="KelId"]').empty();
+                    $('select[name="KelId"]').append('<option selected disabled value="">Select...</option>');
+                },
+                success: function (data) {
+                    for (let i = 0; i < data.length; i++) {
+                        $('select[name="KabId"]').append('<option value="' + data[i].kabId + '">' + data[i].kabName + '</option>');
+                    }
+                },
+                error: function (response) {
+                    console.log(response.responseText);
+                }
+            });
+        });
+
+        $('select[name="KabId"]').on('change', function () {
+            $.ajax({
+                url: '../../Kelurahans/GetKecamatansByKabId',
+                type: 'GET',
+                data: {
+                    KabId: $(this).val(),
+                },
+                beforeSend: function () {
+                    $('select[name="KecId"]').empty();
+                    $('select[name="KecId"]').append('<option selected disabled value="">Select...</option>');
+                    $('select[name="KelId"]').empty();
+                    $('select[name="KelId"]').append('<option selected disabled value="">Select...</option>');
+                },
+                success: function (data) {
+                    for (let i = 0; i < data.length; i++) {
+                        $('select[name="KecId"]').append('<option value="' + data[i].kecId + '">' + data[i].kecName + '</option>');
+                    }
+                },
+                error: function (response) {
+                    console.log(response.responseText);
+                }
+            });
+        });
+
+        $('select[name="KecId"]').on('change', function () {
+            $.ajax({
+                url: '../../Kelurahans/GetKelurahansByKecId',
+                type: 'GET',
+                data: {
+                    KecId: $(this).val(),
+                },
+                beforeSend: function () {
+                    $('select[name="KelId"]').empty();
+                    $('select[name="KelId"]').append('<option selected disabled value="">Select...</option>');
+                },
+                success: function (data) {
+                    for (let i = 0; i < data.length; i++) {
+                        $('select[name="KelId"]').append('<option value="' + data[i].kelId + '">' + data[i].kelName + '</option>');
+                    }
+                },
+                error: function (response) {
+                    console.log(response.responseText);
+                }
+            });
+        });
+    </script>
+
+}

@@ -1,0 +1,99 @@
+﻿@model IEnumerable<OutSalesOrder>
+
+@{
+    ViewData["Title"] = "Orders";
+    ViewData["MenuKey"] = "Sales Order";
+}
+
+<div class="card" style="min-height:700px">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center py-1">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Sales Order Cart</strong></h5>
+            </div>
+            <div>
+                <a class="btn btn-outline-primary btn-pill" asp-action="Upsert">Add Sales Order</a>
+            </div>
+        </div>
+    </div><br />
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr class="text-center">
+                        <th>
+                            Action
+                        </th>
+                        <th>
+                            Sales Order
+                        </th>
+                        <th>
+                            Type
+                        </th>
+                        <th>
+                            Tenant
+                        </th>
+                        <th>
+                            Warehouse
+                        </th>
+                        <th>
+                            Product
+                        </th>
+                        <th>
+                            Quantity
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="text-center">
+                                <button type="button" class="btn btn-outline-tertiary" data-bs-toggle="dropdown"><i class="fas fa-fw fa-ellipsis-h"></i></button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" asp-action="Upsert" asp-route-OrderId="@item.OrderId" asp-route-TenantId="@item.TenantId">Manage</a></li>
+                                    <form asp-action="DeleteSalesOrder" method="post">
+                                        <input name="OrderId" value="@item.OrderId" hidden>
+                                        <input name="TenantId" value="@item.TenantId" hidden>
+                                        <li><button class="dropdown-item text-danger" type="submit">Delete</button></li>
+                                    </form>
+                                </ul>
+                            </td>
+                            <td>
+                                @item.OrderId
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MasSalesType.StyName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MasDataTenant.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MasHouseCode.HouseName)
+                            </td>
+                            <td class="text-center">
+                                @item.OutSalesOrderProducts.Count
+                            </td>
+                            <td class="text-center">
+                                @item.OutSalesOrderProducts.Sum(m => m.Quantity)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script type="text/javascript">
+        $(function () {
+            $('.table').DataTable({
+            });
+        });
+    </script>
+}

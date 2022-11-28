@@ -1,0 +1,56 @@
+﻿@model ProductMonitoringViewModel
+
+
+<div class="card">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Products</strong></h5>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+
+        <table class="table table-striped" id="tbl-sku">
+            <thead>
+                <tr class="text-center">
+                    <th>
+                        Storage
+                    </th>
+                    <th>
+                        Inc. Qty
+                    </th>
+                    <th>
+                        Inc. Stock
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var product in Model.masProductData.IncDeliveryOrderProducts)
+                {
+                    @if (product.IncDeliveryOrderArrivals != null)
+                    {
+                        @if (product.IncDeliveryOrderArrivals.InvProductPutaways.Any())
+                        {
+                            @foreach (var putaway in product.IncDeliveryOrderArrivals.InvProductPutaways)
+                            {
+                                <tr>
+                                    <td>
+                                        @putaway.InvStorageCode.InvStorageBin.BinName
+                                    </td>
+                                    <td class="text-end">
+                                        @putaway.Quantity
+                                    </td>
+                                    <td class="text-end">
+                                        @putaway.QtyStock
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+        
+    </div>
+</div>

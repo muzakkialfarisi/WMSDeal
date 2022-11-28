@@ -1,0 +1,205 @@
+﻿@model MasDataTenant
+
+@{
+    ViewData["Title"] = "Tenant";
+    ViewData["MenuKey"] = "Tenant";
+}
+
+<div class="row">
+    <div class="col-12 col-sm-4">
+        <partial name="DetailTenant" />
+
+        <div class="d-grid gap-2 mt-3">
+            <a asp-action="Index" class="btn btn-dark">Back to List</a>
+        </div>
+    </div>
+    <div class="col-12 col-sm-8">
+        <div class="card tab bg-transparent p-0 m-0">
+            <div class="card-header p-0 m-0">
+                <ul class="nav nav-tabs bg-light" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#tab-1" data-bs-toggle="tab" role="tab" aria-selected="false">
+                            Warehouse
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#tab-2" data-bs-toggle="tab" role="tab" aria-selected="false">
+                            Supplier
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#tab-3" data-bs-toggle="tab" role="tab" aria-selected="false">
+                            Store
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#tab-4" data-bs-toggle="tab" role="tab" aria-selected="false">
+                            Division
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body p-0 m-0">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab-1" role="tabpanel">
+                        <div class="table-responsive">
+                            <partial name="DetailTenantWarehouse" />
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="tab-2" role="tabpanel">
+                        <div class="table-responsive">
+                            <partial name="DetailTenantSupplier" />
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="tab-3" role="tabpanel">
+                        <div class="table-responsive">
+                            <partial name="DetailTenantStore" />
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="tab-4" role="tabpanel">
+                        <div class="table-responsive">
+                            <partial name="DetailTenantDivision" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script type="text/javascript">
+        $(function () {
+            $('.table-division').DataTable({
+            });
+            $('.table-store').DataTable({
+            });
+            $('.table-supplier').DataTable({
+            });
+            $('.table-warehouse').DataTable({
+            });
+        });
+
+        $('.btn-insert-supplier').on('click', function(){
+            $('input[name="SupplierId"]').val('');
+            $('input[name="Name"]').val('');
+            $('input[name="Email"]').val('');
+            $('input[name="HandPhone"]').val('');
+            $('input[name="OfficePhone"]').val('');
+
+            $('select[name="SupplierTypeId"]').val('').change();
+            $('select[name="SupplierServiceId"]').val('').change();
+            $('select[name="IndustryId"]').val('').change();
+        });
+
+        $('.btn-update-supplier').on('click', function () {
+            $.ajax({
+                url: '../../Supplier/GetSupplierBySupplierId',
+                type: 'GET',
+                data: {
+                    SupplierId: $(this).data('id'),
+                },
+                dataType: 'json',
+                beforeSend: function () {
+                    $('input[name="SupplierId"]').val('');
+                    $('input[name="Name"]').val('');
+                    $('input[name="Email"]').val('');
+                    $('input[name="HandPhone"]').val('');
+                    $('input[name="OfficePhone"]').val('');
+
+                    $('select[name="SupplierTypeId"]').val('').change();
+                    $('select[name="SupplierServiceId"]').val('').change();
+                    $('select[name="IndustryId"]').val('').change();
+                },
+                success: function (data) {
+                    if(data) {
+                        console.log(data.flag)
+                        $('input[name="SupplierId"]').val(data.supplierId);
+                        $('input[name="Name"]').val(data.name);
+                        $('input[name="Email"]').val(data.email);
+                        $('input[name="HandPhone"]').val(data.handPhone);
+                        $('input[name="OfficePhone"]').val(data.officePhone);
+
+                        $('select[name="SupplierTypeId"]').val(data.supplierTypeId).change();
+                        $('select[name="SupplierServiceId"]').val(data.supplierServiceId).change();
+                        $('select[name="IndustryId"]').val(data.industryId).change();
+                    }
+                },
+                error: function (response) {
+                    console.log(response.responseText);
+                }
+            });
+        });
+        
+
+        $('.btn-insert-store').on('click', function () {
+            $('input[name="StoreId"]').val('');
+            $('input[name="Name"]').val('');
+            $('input[name="PhoneNumber"]').val('');
+
+            $('select[name="PlatformId"]').val('').change();
+        });
+
+        $('.btn-update-store').on('click', function () {
+            $.ajax({
+                url: '../../Store/GetStoreById',
+                type: 'GET',
+                data: {
+                    StoreId: $(this).data('id'),
+                },
+                dataType: 'json',
+                beforeSend: function () {
+                    $('input[name="StoreId"]').val('');
+                    $('input[name="Name"]').val('');
+                    $('input[name="PhoneNumber"]').val('');
+
+                    $('select[name="PlatformId"]').val('').change();
+                },
+                success: function (data) {
+                    if (data) {
+                        $('input[name="StoreId"]').val(data.storeId);
+                        $('input[name="Name"]').val(data.name);
+                        $('input[name="PhoneNumber"]').val(data.phoneNumber);
+
+                        $('select[name="PlatformId"]').val(data.platformId).change();
+                    }
+                },
+                error: function (response) {
+                    console.log(response.responseText);
+                }
+            });
+        });
+
+        $('.btn-insert-division').on('click', function () {
+            $('input[name="Id"]').val('');
+            $('input[name="Name"]').val('');
+        });
+
+        $('.btn-update-division').on('click', function () {
+            $.ajax({
+                url: '../../TenantDivision/GetDivisionById',
+                type: 'GET',
+                data: {
+                    Id: $(this).data('id'),
+                },
+                dataType: 'json',
+                beforeSend: function () {
+                    $('input[name="Id"]').val('');
+                    $('input[name="Name"]').val('');
+                },
+                success: function (data) {
+                    if (data) {
+                        $('input[name="Id"]').val(data.id);
+                        $('input[name="Name"]').val(data.name);
+                    }
+                },
+                error: function (response) {
+                    console.log(response.responseText);
+                }
+            });
+        });
+    </script>
+}

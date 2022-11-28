@@ -1,0 +1,245 @@
+﻿@model IEnumerable<ProductMonitoringToExcel> 
+
+@{
+    ViewData["Title"]   = "Dashboards";
+    ViewData["MenuKey"] = "Dashboards";
+}
+
+<div class="card" style="min-height:700px">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Product Stock</strong></h5>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="input-group">
+                        <button class="btn btn-outline-primary" data-bs-toggle="dropdown">Export</button>
+                        <div class="dropdown-menu">
+                            <button class="dropdown-item btn-export" data-id="RekapProductToExcel" target="_blank">Rekap Product</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <button class="btn btn-group btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                        <i class="fas fa-fw fa-filter mt-1 me-2"></i>
+                        Filter
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped" >
+                <thead>
+                    <tr class="text-center">
+                        <th>
+                            Action
+                        </th>
+                        <th>
+                            Picture
+                        </th>
+                        <th>
+                            Product Name
+                        </th>
+                        <th>
+                            Warehouse
+                        </th>
+                        <th>
+                            Tenant
+                        </th>
+                        <th class="text-nowrap">
+                            <span id="Start_Stock">000-00-00</span><br />
+                            Stock 
+                        </th>
+                        <th>
+                            Inc.
+                        </th>
+                        <th>
+                            Out.
+                        </th>
+                        <th>
+                            Current <br />
+                            Stock
+                        </th>
+                        <th>
+                            UOM
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var item in Model)
+                    {
+                        <tr>
+                            <td class="text-center">
+                                <button type="button" class="btn btn-outline-tertiary" data-bs-toggle="dropdown"><i class="fas fa-fw fa-ellipsis-h"></i></button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" asp-action="DetailHistory" asp-route-Id="@item.Id">Histories</a></li>
+                                    @if (User.FindFirst("ProfileId").Value != SD.Role_Tenant)
+                                    { 
+                                        <li><a class="dropdown-item" asp-action="DetailInventory" asp-route-Id="@item.Id">Inventories</a></li>
+                                    }
+                                    @if (item.SerialNumber == "SN")
+                                    {
+                                        <li><a class="dropdown-item" asp-action="DetailSerialNumber" asp-route-Id="@item.Id">Serial Number</a></li>
+                                    }
+                                </ul>
+                            </td>
+                            <td class="text-center">
+                                <img src="~/img/product/@item.BeautyPicture" class="rounded-circle" height="40" width="40" asp-append-version="true" />
+                            </td>
+                            <td style="width: 25%">
+                                @item.ProductName<br>
+                                <span class="text-primary">@item.SKU</span> <br>
+                                @item.ProductCondition
+                            </td>
+                            <td>
+                                @item.HouseName
+                            </td>
+                            <td>
+                                @item.Tenant
+                            </td>
+                            <td class="text-center">
+                                <strong>@item.Start_Stock</strong> 
+                            </td>
+                            <td class="text-center">
+                                <strong>@item.Incoming</strong>
+                            </td>
+                            <td class="text-center">
+                                <strong>@item.Outgoing</strong>
+                            </td>
+                            <td class="text-center">
+                                <strong>@item.End_Stock</strong> 
+                            </td>
+                            <td>
+                                @item.UOM
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<partial name="Filter" />
+
+@section Scripts{
+    <script type="text/javascript">
+
+        var date = new Date();
+
+        var day2 = ("0" + date.getDate()).slice(-2);
+        var month2 = ("0" + (date.getMonth() + 1)).slice(-2);
+        var lastDay = date.getFullYear() + "-" + (month2) + "-" + (day2);
+
+        $(function () {
+            $('.table').DataTable({
+            });
+
+            var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+
+            var day1 = ("0" + firstDay.getDate()).slice(-2);
+            var month1 = ("0" + (firstDay.getMonth() + 1)).slice(-2);
+            firstDay = firstDay.getFullYear() + "-" + (month1) + "-" + (day1);
+
+
+            $('input[name="FilterDateFrom"]').val(lastDay);
+            $('input[name="FilterDateTo"]').val(lastDay);
+
+
+            const params = new URLSearchParams(window.location.search)
+
+            if (params.get('FilterDateFrom') == null)
+            {
+                $('#Start_Stock').html(lastDay);
+            }
+            else {
+                $('#Start_Stock').html(params.get('FilterDateFrom'));
+                $('input[name="FilterDateFrom"]').val(params.get('FilterDateFrom'));
+                $('input[name="FilterDateTo"]').val(params.get('FilterDateTo'));
+                $('select[name="FilterHouseCode"]').val(params.get('FilterHouseCode')).change();
+                $('select[name="FilterTenantId"]').val(params.get('FilterTenantId')).change();
+            }
+        });
+
+        const past7Days = [...Array(7).keys()].map(index => {
+            const date = new Date();
+            date.setDate(date.getDate() - (index + 1));
+
+            return date;
+        });
+
+
+        $('input[name="FilterDate"]').click(function () {
+            if ($(this).val() == "datepicker"){
+                $('input[name="FilterDateFrom"]').prop('readonly', false);
+                $('input[name="FilterDateTo"]').prop('readonly', false);
+
+                $('input[name="FilterDateFrom"]').val(lastDay);
+                $('input[name="FilterDateTo"]').val(lastDay);
+            }
+            else{
+                $('input[name="FilterDateFrom"]').prop('readonly', true);
+                $('input[name="FilterDateTo"]').prop('readonly', true);
+                if ($(this).val() == "last7days") {
+                    var date = new Date();
+                    var firstDay = date.setDate(date.getDate() - 7);
+                    firstDay = new Date(firstDay);
+
+                    var day1 = ("0" + firstDay.getDate()).slice(-2);
+                    var month1 = ("0" + (firstDay.getMonth() + 1)).slice(-2);
+                    firstDay = firstDay.getFullYear() + "-" + (month1) + "-" + (day1);
+                }
+                if ($(this).val() == "yesterday") {
+                    var date = new Date();
+                    var firstDay = date.setDate(date.getDate() - 1);
+                    firstDay = new Date(firstDay);
+
+                    var day1 = ("0" + firstDay.getDate()).slice(-2);
+                    var month1 = ("0" + (firstDay.getMonth() + 1)).slice(-2);
+                    firstDay = firstDay.getFullYear() + "-" + (month1) + "-" + (day1);
+                }
+                if ($(this).val() == "thismonth") {
+                    var date = new Date();
+                    var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+
+                    var day1 = ("0" + firstDay.getDate()).slice(-2);
+                    var month1 = ("0" + (firstDay.getMonth() + 1)).slice(-2);
+                    firstDay = firstDay.getFullYear() + "-" + (month1) + "-" + (day1);
+                }
+                if ($(this).val() == "last3months") {
+                    var date = new Date();
+                    var firstDay = date.setMonth(date.getMonth() - 3);
+                    firstDay = new Date(firstDay);
+
+                    var day1 = ("0" + firstDay.getDate()).slice(-2);
+                    var month1 = ("0" + (firstDay.getMonth() + 1)).slice(-2);
+                    firstDay = firstDay.getFullYear() + "-" + (month1) + "-" + (day1);
+                }
+
+                $('input[name="FilterDateFrom"]').val(firstDay);
+                $('input[name="FilterDateTo"]').val(lastDay);
+
+                if ($(this).val() == "thisday") {
+                    $('input[name="FilterDateFrom"]').val(lastDay);
+                    $('input[name="FilterDateTo"]').val(lastDay);
+                }
+            }
+        });
+
+        $('.btn-export').on('click', function () {
+            if ($(this).data('id') == "RekapProductToExcel") {
+                $('#RekapProductToExcel').submit();
+            }
+            if ($(this).data('id') == "RekapProductDetailToExcel") {
+                $('#RekapProductDetailToExcel').submit();
+            }
+        });
+
+        $('.btn-clearfilter').on('click', function () {
+            window.location.href = window.location.pathname;
+        })
+    </script>
+}

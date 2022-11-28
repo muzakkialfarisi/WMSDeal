@@ -1,0 +1,50 @@
+﻿@model StorageViewModel
+
+
+<div class="text-end mb-4">
+    <a class="btn btn-outline-primary btn-pill btn-insertsection" data-bs-toggle="modal" data-bs-target="#modalupsertsection">Add Section</a>
+</div>
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr class="text-center">
+                <th>
+                    Action
+                </th>
+                <th>
+                    Code
+                </th>
+                <th >
+                    Status
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.invStorageRow.InvStorageSections)
+            {
+                <tr>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-outline-tertiary btn-sm" data-bs-toggle="dropdown"><i class="fas fa-fw fa-ellipsis-h"></i></button>
+                        <ul class="dropdown-menu">
+                            <li><button class="dropdown-item btn-updatesection" data-id="@item.SectionCode" data-bs-toggle="modal" data-bs-target="#modalupsertsection">Edit</button></li>
+                        </ul>
+                    </td>
+                    <td class="text-nowrap">
+                        @item.SectionName
+                    </td>
+                    <td class="text-center">
+                        @if (item.Flag == FlagEnum.Active)
+                        {
+                            <span class="badge bg-success"> @Html.DisplayFor(modelItem => item.Flag)</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger"> @Html.DisplayFor(modelItem => item.Flag)</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>

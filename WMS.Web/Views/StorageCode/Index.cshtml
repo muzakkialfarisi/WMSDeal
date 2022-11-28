@@ -1,0 +1,209 @@
+﻿@model IEnumerable<InvStorageCode>
+@{
+    ViewData["Title"] = "Storage Code";
+    ViewData["MenuKey"] = "Storage";
+}
+
+<div class="card" style="min-height:700px">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>List of Storage Code</strong></h5>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="input-group">
+                        <button class="btn btn-outline-primary" data-bs-toggle="dropdown">Print</button>
+                        <div class="dropdown-menu">
+                            <button class="dropdown-item btn-print" data-id="A4" target="_blank">A4</button>
+                            <button class="dropdown-item btn-print" data-id="Printronix" target="_blank">Printronix</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <button class="btn btn-group btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                        <i class="fas fa-fw fa-filter mt-1 me-2"></i>
+                        Filter
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr class="text-center">
+                        <th>
+                            QRCode
+                        </th>
+                        <th>
+                            Storage Code
+                        </th>
+                        <th>
+                            Category
+                        </th>
+                        <th>
+                            Size
+                        </th>
+                        <th>
+                            Zone
+                        </th>
+                        <th>
+                            Warehouse
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr class="text-nowrap">
+                            <td>
+                                @Html.DisplayFor(modelItem => item.StorageCode)
+                            </td>
+                            <td class="text-nowrap">
+                                @item.InvStorageBin.BinName
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.InvStorageCategory.StorageCategoryName)
+                            </td>
+                            <td class="text-nowrap">
+                                <strong>@Html.DisplayFor(modelItem => item.InvStorageSize.SizeName)</strong><br>
+                                @item.InvStorageSize.InvStorageBesaran.MaxPanjang x @item.InvStorageSize.InvStorageBesaran.MaxLebar x @item.InvStorageSize.InvStorageTebal.MaxTinggi
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.InvStorageBin.InvStorageLevel.InvStorageColumn.InvStorageRow.InvStorageZone.ZoneName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.InvStorageBin.InvStorageLevel.InvStorageColumn.InvStorageRow.MasHouseCode.HouseName)
+                            </td>
+                            <td class="text-center">
+                                @if (item.Flag == 0)
+                                {
+                                    <span class="badge bg-dark">Disable</span>
+                                }
+                                @if (item.Flag == 1)
+                                {
+                                    <span class="badge bg-success">Available</span>
+                                }
+                                @if (item.Flag == 2)
+                                {
+                                    <span class="badge bg-warning">Booked</span>
+                                }
+                                @if (item.Flag == 3)
+                                {
+                                    <span class="badge bg-primary">Unavailable</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<partial name="Filter">
+
+@section Scripts{
+    <script type="text/javascript">
+        $(function () {
+            $('.table').DataTable({
+            });
+        });
+
+        $('select[name="RowCode"]').on('change', function () {
+
+            $('select[name="BinCode"]').empty();
+            $('select[name="BinCode"]').append('<option selected disabled value="">Select...</option>');
+
+            $.ajax({
+                url: '../StorageSection/GetSectionByRowCode',
+                type: 'GET',
+                data: {
+                    RowCode: $(this).val(),
+                },
+                dataType: 'json',
+                beforeSend: function () {
+                    $('select[name="SectionCode"]').empty();
+                    $('select[name="SectionCode"]').append('<option selected disabled value="">Select...</option>');
+                },
+                success: function (data) {
+                    for (let i = 0; i < data.length; i++) {
+                        $('select[name="SectionCode').append('<option value="' + data[i].sectionCode + '">' + data[i].sectionName + '</option>');
+                    }
+                },
+                error: function (data) {
+                    console.log(data.status + ':' + data.statusText, data.responseText);
+                }
+            });
+
+            $.ajax({
+                url: '../StorageColumn/GetColumnByRowCode',
+                type: 'GET',
+                data: {
+                    RowCode: $(this).val(),
+                },
+                dataType: 'json',
+                beforeSend: function () {
+                    $('select[name="ColumnCode"]').empty();
+                    $('select[name="ColumnCode"]').append('<option selected disabled value="">Select...</option>');
+                },
+                success: function (data) {
+                    for (let i = 0; i < data.length; i++) {
+                        $('select[name="ColumnCode').append('<option value="' + data[i].columnCode + '">' + data[i].columnName + '</option>');
+                    }
+                },
+                error: function (data) {
+                    console.log(data.status + ':' + data.statusText, data.responseText);
+                }
+            });
+        });
+
+
+        $('select[name="SectionCode"], select[name="ColumnCode"]').on('change', function () {
+            if ($('select[name="SectionCode"]').val() && $('select[name="ColumnCode"]').val()) {
+
+                $.ajax({
+                    url: '../StorageBin/GetBinBySectionCodeByColumnCode',
+                    type: 'GET',
+                    data: {
+                        SectionCode: $('select[name="SectionCode"]').val(),
+                        ColumnCode: $('select[name="ColumnCode"]').val(),
+                    },
+                    dataType: 'json',
+                    beforeSend: function () {
+                        $('select[name="BinCode"]').empty();
+                        $('select[name="BinCode"]').append('<option selected disabled value="">Select...</option>');
+                    },
+                    success: function (data) {
+                        for (let i = 0; i < data.length; i++) {
+                            $('select[name="BinCode').append('<option value="' + data[i].binCode + '">' + data[i].binName + '</option>');
+                        }
+                    },
+                    error: function (data) {
+                        console.log(data.status + ':' + data.statusText, data.responseText);
+                    }
+                });
+            }
+        });
+
+        $('.btn-print').on('click', function () {
+            const params = new URLSearchParams(window.location.search)
+            $('input[name="RowCode"]').val(params.get('RowCode'));
+            $('input[name="SectionCode"]').val(params.get('SectionCode'));
+            $('input[name="ColumnCode"]').val(params.get('ColumnCode'));
+            $('input[name="BinCode"]').val(params.get('BinCode'));
+
+            if ($(this).data('id') == "A4") {
+                $('#PrintStorageCode').submit();
+            }
+            else {
+                $('#PrintStorageCodeTronix').submit();
+            }
+        });
+    </script>
+}

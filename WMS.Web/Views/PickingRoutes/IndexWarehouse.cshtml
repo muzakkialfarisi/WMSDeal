@@ -1,0 +1,92 @@
+﻿@model IEnumerable<MasHouseCode>
+
+@{
+    ViewData["Title"] = "Picking Routes";
+    ViewData["MenuKey"] = "Storage";
+}
+
+<div class="card" style="min-height:700px">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center py-1">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>List Warehouse</strong></h5>
+            </div>
+        </div>
+    </div><br />
+    <div class="card-body">
+        <div class="table-responsive">
+
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr class="text-center">
+                        <th>
+                            House Code
+                        </th>
+                        <th>
+                            Warehouse
+                        </th>
+                        <th>
+                            Address
+                        </th>
+                        <th>
+                            Kelurahan
+                        </th>
+                        <th>
+                            Zip Code
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var item in Model) {
+                    <tr data-id="@item.HouseCode">
+                        <td>
+                            @Html.DisplayFor(modelItem => item.HouseCode)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.HouseName)
+                        </td>
+                        <td>
+                           @Html.DisplayFor(modelItem => item.Address)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.KelId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.KodePos)
+                        </td>
+                        <td class="text-center">
+                            @if (item.Flag == FlagEnum.Active)
+                            {
+                                <span class="badge bg-success"> @Html.DisplayFor(modelItem => item.Flag)</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger"> @Html.DisplayFor(modelItem => item.Flag)</span>
+                            }
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(function(){ 
+            $('.table').DataTable({
+            });
+
+            $('.table tbody').on('click', 'tr', function () {
+                window.location.href = window.location.protocol+'/PickingRoutes/Create/'+$(this).data('id');
+            });
+        });
+    </script>
+}

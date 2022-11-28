@@ -1,0 +1,79 @@
+﻿@model DashboardViewModel
+
+@{
+    ViewData["Title"] = "Home";
+    ViewData["MenuKey"] = "Home";
+}
+
+<partial name="Header" />
+<partial name="ChartIncomingOutgoing" />
+<partial name="TableIncomingOutgoing" />
+
+@section Scripts{
+    <script>
+        $(function () {
+            
+            $('.table').DataTable({
+                order: [[4, 'desc']],
+            });
+
+            setTimeout(function () {
+                new Chart(document.getElementById("chartjs-dashboard-bar-alt"), {
+                    type: "bar",
+                    data: {
+                        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                        datasets: [{
+                            label: "Incoming",
+                            backgroundColor: window.theme.primary,
+                            borderColor: window.theme.primary,
+                            hoverBackgroundColor: window.theme.primary,
+                            hoverBorderColor: window.theme.primary,
+                            data: [@Model.MonthlyIncoming[0], @Model.MonthlyIncoming[1], @Model.MonthlyIncoming[2],
+                            @Model.MonthlyIncoming[3], @Model.MonthlyIncoming[4], @Model.MonthlyIncoming[5], @Model.MonthlyIncoming[6],
+                            @Model.MonthlyIncoming[7], @Model.MonthlyIncoming[8], @Model.MonthlyIncoming[9], @Model.MonthlyIncoming[10],
+                            @Model.MonthlyIncoming[11]],
+                            barPercentage: .75,
+                            categoryPercentage: .5
+                        }, {
+                            label: "Outgoing",
+                            backgroundColor: window.theme.secondary,
+                            borderColor: window.theme.secondary,
+                            hoverBackgroundColor: window.theme.secondary,
+                            hoverBorderColor: window.theme.secondary,
+                            data: [@Model.MonthlyOutgoing[0], @Model.MonthlyOutgoing[1], @Model.MonthlyOutgoing[2],
+                            @Model.MonthlyOutgoing[3], @Model.MonthlyOutgoing[4], @Model.MonthlyOutgoing[5], @Model.MonthlyOutgoing[6],
+                            @Model.MonthlyOutgoing[7], @Model.MonthlyOutgoing[8], @Model.MonthlyOutgoing[9], @Model.MonthlyOutgoing[10],
+                            @Model.MonthlyOutgoing[11]],
+                            barPercentage: .75,
+                            categoryPercentage: .5
+                        }]
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        legend: {
+                            display: false
+                        },
+                        scales: {
+                            yAxes: [{
+                                gridLines: {
+                                    display: false
+                                },
+                                stacked: false,
+                                ticks: {
+                                    stepSize: 20
+                                }
+                            }],
+                            xAxes: [{
+                                stacked: false,
+                                gridLines: {
+                                    color: "transparent"
+                                }
+                            }]
+                        }
+                    }
+                });
+            }, 1000);
+        });
+       
+    </script>
+}

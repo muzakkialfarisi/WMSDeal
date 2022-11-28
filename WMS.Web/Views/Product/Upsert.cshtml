@@ -1,0 +1,643 @@
+﻿@model MasProductData
+
+@{
+    ViewData["Title"] = "Manage Product";
+    ViewData["MenuKey"] = "Product";
+}
+
+<form enctype="multipart/form-data" asp-action="Upsert">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    
+    <input asp-for="ProductId" hidden />
+
+    <div class="row">
+        <div class="col-12 col-sm-6">
+            <div class="card">
+                <div class="card-header border-bottom">
+                    <h5 class="card-title"><strong>Main Product</strong></h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-group required mb-3">
+                        <label class="control-label">Tenant</label>
+                        <select asp-for="TenantId" class ="form-control select2" data-bs-toggle="select2" id="TenantId" asp-items="ViewBag.TenantId">
+                        </select>
+                        <span asp-validation-for="TenantId" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group required mb-3">
+                        <label class="control-label">Flag</label>
+                        <select asp-for="Flag" class="form-control" asp-items="Html.GetEnumSelectList<FlagEnum>()">
+                        </select>
+                        <span asp-validation-for="Flag" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header border-bottom">
+                    <h5 class="card-title"><strong>Product Detail</strong></h5>
+                </div>
+                <div class="card-body">
+                    
+                    
+
+                    <div class="form-group required  mb-3">
+                        <label class="control-label">Product Name</label>
+                        <input asp-for="ProductName" class="form-control" />
+                        <span asp-validation-for="ProductName" class="text-danger"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group  mb-3">
+                                <label asp-for="FriendlyName" class="control-label"></label>
+                                <input asp-for="FriendlyName" class="form-control" />
+                                <span asp-validation-for="FriendlyName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group mb-3">
+                                <label asp-for="BrandName" class="control-label"></label>
+                                <input asp-for="BrandName" class="form-control" />
+                                <span asp-validation-for="BrandName" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group required mb-3">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="SKU" data-bs-toggle="tooltip" data-bs-placement="top" title="Generate SKU By System">
+                            <label class="control-label">SKU</label>
+                        </div>
+                        <input type="text" class="form-control" asp-for="SKU" minlength="3" maxlength="20">
+                        <small class="form-text text-muted">Min 3 Digits, Max 20 digits</small>
+                        <span asp-validation-for="SKU" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group required mb-3">
+                        <label class="control-label">Product Status</label>
+                        <select asp-for="ProductCondition" class ="form-control select2" data-bs-toggle="select2">
+                            <option selected disabled>Select...</option>
+                            <option value="Full Set Baru Baik">Full Set Baru Baik</option>
+                            <option value="Full Set Bekas Baik">Full Set Bekas Baik</option>
+                            <option value="Baru Baik">Baru Baik</option>
+                            <option value="Bekas Baik">Bekas Baik</option>
+                            <option value="Bekas Pelanggan">Bekas Pelanggan</option>
+                            <option value="Pairing Baru Baik">Pairing Baru Baik</option>
+                            <option value="Pairing Bekas Baik">Pairing Bekas Baik</option>
+                        </select>
+                        <span asp-validation-for="ProductCondition" class="text-danger"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 col-sm-6">
+                            <div class="form-group required mb-3">
+                                <label class="control-label">Category</label>
+                                <select asp-for="CategoryId" class ="form-control select2" data-bs-toggle="select2" asp-items="ViewBag.CategoryId">
+                                        <option selected disabled>Select...</option>
+                                </select>
+                                <span asp-validation-for="CategoryId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6">
+                            <div class="form-group required mb-3">
+                                <label class="control-label">Packaging</label>
+                                <select asp-for="PackagingId" class ="form-control select2" data-bs-toggle="select2" asp-items="ViewBag.PackagingId">
+                                    <option selected disabled>Select...</option>
+                                </select>
+                                <span asp-validation-for="PackagingId" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Description" class="control-label"></label>
+                        <textarea asp-for="Description" class="form-control" rows="2"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Supplier" class="control-label">Recommended Supplier</label>
+                        <select asp-for="Supplier" asp-items="ViewBag.SupplierId" class="form-control select2"  data-bs-toggle="select2" multiple="" id="SupplierId">
+                            <option disabled>Select...</option>
+                        </select>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 col-sm-6">
+                            <div class="form-group required mb-3">
+                                <label class="control-label">Unit</label>
+                                <div class="input-group">
+                                    <select asp-for="Unit" class="form-select flex-grow-1" asp-items="ViewBag.Unit" id="Unit">
+                                        <option selected disabled>Select...</option>
+                                    </select>
+                                    <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#CreateUnit" disabled><i class="fas fa-fw fa-plus"></i></button>
+                                </div>
+                                <span asp-validation-for="Unit" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6">
+                            <div class="form-group required mb-3">
+                                <label class="control-label">Item Per <span id="TextIpb">?</span></label>
+                                <input asp-for="Ipb" class="form-control" id="InputIpb" value="1" required/>
+                                <span asp-validation-for="Ipb" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group required mb-3">
+                        <label class="control-label">Storage Period</label>
+                        <div class="input-group">
+                            <input asp-for="Storageperiod" class="form-control" value="1" required />
+                            <span class="input-group-text">Days</span>
+                        </div>
+                        <span asp-validation-for="Storageperiod" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group required mb-3">
+                        <label class="control-label">
+                            Safety Stock
+                            <span data-bs-toggle="tooltip" title="Sistem akan memberikan pengingat apabila jumlah stok telah mencapai minimum"><i class="ion ion-md-information-circle me-2"></i></span>
+
+                        </label>
+                        <input asp-for="SafetyStock" class="form-control" value="10" required/>
+                        <span asp-validation-for="SafetyStock" class="text-danger"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 col-sm-6">
+                            <div class="form-group required mb-3">
+                                <label class="control-label">Purchase Price</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">Rp.</span>
+                                    <input asp-for="PurchasePrice" class="form-control number-separator" required />
+                                </div>
+                                <span asp-validation-for="PurchasePrice" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6">
+                            <div class="form-group required mb-3">
+                                <label class="control-label">Selling Price</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">Rp.</span>
+                                    <input asp-for="SellingPrice" class="form-control number-separator" required/>
+                                </div>
+                                <span asp-validation-for="SellingPrice" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group required mb-3">
+                        <label class="control-label">Resellable</label>
+                        <select asp-for="Resellable" class ="form-control  select2" data-bs-toggle="select2" id="WhichResellable">
+                            <option selected value="false">No</option>
+                            <option value="true">Yes</option>
+                        </select>
+                        <span asp-validation-for="Resellable" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group required mb-3" id="ResellableDiv">
+                        <label class="control-label">Resellable Price</label>
+                        <input asp-for="ResellablePrice" class="form-control number-separator"  id="ResellablePrice"/>
+                        <span asp-validation-for="ResellablePrice" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group required mb-3">
+                        <label class="control-label">Repackaging</label>
+                        <select asp-for="RePackaging" class ="form-control select2" data-bs-toggle="select2" id="WhichRePackaging">
+                            <option value="false" selected>No</option>
+                            <option value="true">Yes</option>
+                        </select>
+                        <span asp-validation-for="RePackaging" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group required mb-3" id="RePackagingDiv">
+                        <label class="control-label">Type Of Repack</label>
+                        <select asp-for="TypeOfRepackCode" class ="form-control select2" data-bs-toggle="select2" asp-items="ViewBag.TypeOfRepackCode" id="TypeOfRepackCode">
+                            <option value="" selected disabled>Select...</option>
+                        </select>
+                        <span asp-validation-for="RePackaging" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        @{
+            var FormBeautyPicture = "default-product.jpg";
+            var FormCloseUpPicture = "default-product.jpg";
+            if(Model != null)
+            {
+                if (Model.BeautyPicture != null)
+                {
+                    FormBeautyPicture = Model.BeautyPicture;
+                }
+                if (Model.CloseUpPicture != null)
+                {
+                    FormCloseUpPicture = Model.CloseUpPicture;
+                }
+            }
+        }
+        <div class="col-12 col-sm-6">
+            <div class="card">
+                <div class="card-header border-bottom">
+                    <h5 class="card-title"><strong>Product Picture</strong></h5>
+                </div>
+                <div class="card-body">
+                    <div class=row>
+                        <div class="col-12 col-sm-6">
+                            <div class="form-group required mb-3">
+                                <label class="control-label">Beauty Picture</label>
+                                <div class="custom-file">
+                                    <input asp-for="FormBeautyPicture" type="file" class="form-control custom-file-input" id="IdFormPhotoCantik" 
+                                    accept=".png,.jpg,.jpeg" />
+                                    <small class="form-text text-muted">Max Size 1 MB</small>
+                                </div>
+                                <span asp-validation-for="FormBeautyPicture" class="text-danger"></span>                                            
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 text-center">
+                            <label>Beauty Picture</label>
+                            <div>
+                                <img id="IdFormPhotoCantikPrv" src="~/img/product/@FormBeautyPicture" alt="Beauty Picture" class="rounded-circle" height="60" width="60" asp-append-version="true" />
+                                @*<img id="IdFormPhotoCantikPrv" src="~/img/product/default-product.jpg"  alt="Beauty Picture" height="150" style="border:1px; margin-top:20px;margin-left-120px;"/>*@
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 col-sm-6">
+                            <div class="form-group mb-3">
+                                <label class="control-label">CloseUp Picture</label>
+                                <div class="custom-file">
+                                    <input asp-for="FormCloseUpPicture" type="file" class="form-control custom-file-input" id="IdFormPhotoCloseUp" 
+                                    accept=".png,.jpg,.jpeg" />
+                                    <small class="form-text text-muted">Max Size 1 MB</small>
+                                </div>   
+                                <span asp-validation-for="FormCloseUpPicture" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 text-center">
+                            <label>Close Up Picture</label>
+                            <div>
+                                <img id="IdFormPhotoCloseUpPrv" src="~/img/product/@FormCloseUpPicture"  alt="Photo Close Up" class="rounded-circle" height="60" width="60" asp-append-version="true" />
+                                @*<img id="IdFormPhotoCloseUpPrv" src="~/img/product/default-product.jpg" alt="Photo Close Up" height="150" style="border:1px; margin-top:20px;margin-left-120px;"/>*@
+                            </div>                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header border-bottom">
+                    <h5 class="card-title"><strong>Product Storage</strong></h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-group required mb-3" >
+                        <label class="control-label">Product Level</label>
+                        <select class ="form-control select2" data-bs-toggle="select2" asp-for="ProductLevel" required>
+                            <option selected disabled>Select</option>
+                            @*<option value="IKU">IKU</option>*@
+                            <option value="SKU">SKU</option>
+                        </select>
+                        <span asp-validation-for="ProductLevel" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group required mb-3" >
+                        <label class="control-label">Serial Number</label>
+                        <select class="form-control select2" data-bs-toggle="select2" asp-for="SerialNumber" required>
+                            <option selected disabled>Select</option>
+                            <option value="SN">Yes</option>
+                            <option value="-">No</option>
+                        </select>
+                        <span asp-validation-for="SerialNumber" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group required mb-3">
+                        <label class="control-label">Zone</label>
+                        <select asp-for="ZoneCode" class ="form-control select2" data-bs-toggle="select2" asp-items="ViewBag.ZoneCode">
+                                <option selected disabled>Select...</option>
+                        </select>
+                        <span asp-validation-for="ZoneCode" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group required mb-3">
+                        <label class="control-label">Storage Method</label>
+                        <select asp-for="StorageMethod" class ="form-control select2" data-bs-toggle="select2">
+                            <option selected disabled>Select...</option>
+                            <option value="FIFO">First In First Out</option>
+                            <option value="FEFO">First Expired First Out</option>
+                        </select>
+                        <span asp-validation-for="StorageMethod" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group required mb-3">
+                        <label class="control-label">Priority</label>
+                        <select asp-for="CargoPriorityCode" class ="form-control select2" data-bs-toggle="select2" asp-items="ViewBag.CargoPriorityCode" required>
+                            <option selected disabled>Select...</option>
+                        </select>
+                        <span asp-validation-for="CargoPriorityCode" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header border-bottom">
+                    <h5 class="card-title"><strong>Product Variant Details</strong></h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12 col-sm-4">
+                            <div class="form-group required mb-3">
+                                <label class="control-label">Panjang</label>
+                                <div class="input-group">
+                                    <input asp-for="Panjang" class="form-control" id="Panjang" min="0"/>
+                                    <span class="input-group-text">CM</span>
+                                </div>
+                                <span asp-validation-for="Panjang" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-4">
+                            <div class="form-group required mb-3">
+                                <label class="control-label">Lebar</label>
+                                <div class="input-group">
+                                    <input asp-for="Lebar" class="form-control" id="Lebar" min="0" />
+                                    <span class="input-group-text">CM</span>
+                                </div>
+                                <span asp-validation-for="Lebar" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-4">
+                            <div class="form-group required mb-3">
+                                <label class="control-label">Tinggi</label>
+                                <div class="input-group">
+                                    <input asp-for="Tinggi" class="form-control" id="Tinggi" min="0" />
+                                    <span class="input-group-text">CM</span>
+                                </div>
+                                <span asp-validation-for="Tinggi" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 col-sm-6">
+                            <div class="form-group required mb-3">
+                                <label class="control-label">Product Size</label>
+                                <input asp-for="SizeCode" type="text" id="SizeCode" hidden/>
+                                <input type="text" class="form-control" disabled id="SizeName"/>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6">
+                            <div class="form-group required mb-3">
+                                <label class="control-label">Volumetric Weight</label>
+                                <div class="input-group">
+                                    <input asp-for="VolWight" type="text" class="VolWeight" hidden/>
+                                    <input  type="text" class="form-control VolWeight" disabled/>
+                                    <span class="input-group-text">Gram</span>
+                                </div>
+                                <span asp-validation-for="VolWight" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group required mb-3">
+                        <label class="control-label">Actual Weight</label>
+                        <div class="input-group">
+                            <input asp-for="ActualWeight" class="form-control" id="ActualWeight" min="0" />
+                            <span class="input-group-text">Gram</span>
+                        </div>
+                        <span asp-validation-for="ActualWeight" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-grid gap-2 mt-3">
+                <input type="submit" value="Save" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-dark">Back to List</a>
+            </div>
+        </div>
+    </div>
+    
+</form>
+
+<partial name="ModalUpsertUnit" />
+
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/js/number-separator.js"></script>
+
+    <script>
+
+        $(function(){
+            if ($('#Panjang').val() && $('#Lebar').val() && $('#Tinggi').val()) {
+                $.ajax({
+                    url: '@Url.Action("GetProductSize","Product")',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: {
+                        Tinggi: $('#Tinggi').val(),
+                        Panjang: $('#Panjang').val(),
+                        Lebar: $('#Lebar').val(),
+                    },
+                    success: function (data) {
+                        console.log(data)
+                        if(data){
+                            $('#SizeName').val(data.sizeName);
+                            $('#SizeCode').val(data.sizeCode);
+                        }else{
+                            $('#SizeCode').val('Storage Not Found');
+                            $('#SizeName').val('Storage Not Found');
+                        }
+                    },
+                    error: function () {
+                    }
+                });
+                $('.VolWeight').val(Math.ceil($('#Panjang').val() * $('#Lebar').val() * $('#Tinggi').val()));
+            } else {
+                $('#SizeCode').val('Storage Not Found');
+                $('.VolWeight').val(0);
+            }
+
+            if ($('#Unit').val()) {
+                $.ajax({
+                    url: '@Url.Action("GetUnitById","Product")',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: {
+                        Id: $('#Unit').val(),
+                    },
+                    success: function (data) {
+                        if (data) {
+                            $('#TextIpb').text(data.value.unitName);
+                            $('#InputIpb').prop("disabled", false);
+                        } else {
+                            $('#TextIpb').text('Not Found');
+                        }
+                    },
+                    error: function () {
+                    }
+                });
+            }
+
+            if ($('#TenantId').val()) {
+                $.ajax({
+                    url: '@Url.Action("GetSupplierByTenantId","Suppier")',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: {
+                        TenantId: $('#TenantId').val(),
+                    },
+                    success: function(data) {
+                        if (data) {
+                            $(data).each(function(index, item) {
+                                $('#SupplierId').append('<option value="' + item.supplierId + '">' + item.name + '</option>');
+                            });
+                        }
+                    },
+                    error: function() {
+                    }
+                });
+
+            }
+            else {
+                $('#SupplierId').empty();
+            }
+
+            $('#ResellableDiv').hide()
+            $('#WhichResellable').on('change', function () {
+                if (this.value == 'true') {
+                    $("#ResellableDiv").show();
+                    $('#ResellablePrice').attr('required', '');
+                    $('#ResellablePrice').attr('data-error', 'This field is required.');
+                }
+                else {
+                    $("#ResellableDiv").hide();
+                    $('#ResellablePrice').removeAttr('required');
+                    $('#ResellablePrice').removeAttr('data-error');
+                    $('#ResellablePrice').val(0);
+                }
+            });
+
+            $('#RePackagingDiv').hide()
+            $('#WhichRePackaging').on('change', function () {
+                if (this.value == 'true') {
+                    $("#RePackagingDiv").show();
+                    $('#TypeOfRepackCode').attr('required', '');
+                    $('#TypeOfRepackCode').attr('data-error', 'This field is required.');
+                }
+                else {
+                    $("#RePackagingDiv").hide();
+                    $('#TypeOfRepackCode').removeAttr('required');
+                    $('#TypeOfRepackCode').removeAttr('data-error');
+                    document.getElementById('TypeOfRepackCode').value = "";
+                }
+            });
+
+            $('#IdFormPhotoCantik').on('change', function () {
+                if (this.files[0].size > 524500) {
+                    alert('Max Image Size 500 kB');
+                    this.value = "";
+                }
+                else {
+                    $('#IdFormPhotoCantikPrv').attr('src', URL.createObjectURL(event.target.files[0]));
+                }
+            });
+
+            $('#IdFormPhotoCloseUp').on('change', function () {
+                if (this.files[0].size > 524500) {
+                    alert('Max Image Size 500 kB');
+                    this.value = "";
+                }
+                else {
+                    $('#IdFormPhotoCloseUpPrv').attr('src', URL.createObjectURL(event.target.files[0]));
+                }
+            });
+
+            $(".select2").each(function () {
+                $(this).wrap("<div class=\"position-relative\"></div>").select2({
+                    placeholder: "Select value",
+                    dropdownParent: $(this).parent()
+                });
+            });
+
+            $("form").attr('autocomplete', 'off');
+        });
+    </script>
+
+    <script>
+        $("#SKU").on('click', function () {
+            if ($(this).is(":checked")) {
+                $("input[name='SKU']").attr('readonly', true);
+                $("input[name='SKU']").val("@SD.AutoGenerated");
+            }
+            else {
+                $("input[name='SKU']").attr('readonly', false);
+                $("input[name='SKU']").val("");
+            }
+        });
+
+        $('#Panjang, #Lebar, #Tinggi').on('keyup', function () {
+            if ($('#Panjang').val() != '' && $('#Lebar').val() != '' && $('#Tinggi').val() != '') {
+                $.ajax({
+                    url: '@Url.Action("GetProductSize","Product")',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: {
+                        Tinggi: $('#Tinggi').val(),
+                        Panjang: $('#Panjang').val(),
+                        Lebar: $('#Lebar').val(),
+                    },
+                    success: function (data) {
+                        console.log(data)
+                        if(data){
+                            $('#SizeName').val(data.sizeName);
+                            $('#SizeCode').val(data.sizeCode);
+                        }else{
+                            $('#SizeCode').val('Storage Not Found');
+                            $('#SizeName').val('Storage Not Found');
+                        }
+                    },
+                    error: function () {
+                    }
+                });
+                $('.VolWeight').val(Math.ceil($('#Panjang').val() * $('#Lebar').val() * $('#Tinggi').val()));
+            } else {
+                $('#SizeCode').val('Storage Not Found');
+                $('#SizeName').val('Storage Not Found');
+                $('.VolWeight').val(0);
+            }
+        });
+
+        $('#InputIpb').prop("disabled", true);
+        $('#Unit').on('change', function () {
+            $('#TextIpb').text($(this).val());
+            $('#InputIpb').prop("disabled", false);
+        });
+
+
+        $('#TenantId').on('change', function () {
+            $.ajax({
+                url: '@Url.Action("GetSupplierByTenantId","Supplier")',
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    TenantId: $('#TenantId').val(),
+                },
+                beforeSend: function(){
+                    $('#SupplierId').empty()
+                },
+                success: function (data) {
+                    if(data){
+                        $(data).each(function (index, item) {
+                            $('#SupplierId').append('<option value="' + item.name + '">' + item.name + '</option>');
+                        });
+                    } 
+                },
+                error: function () {
+                }
+            });
+        });
+    </script>
+}    

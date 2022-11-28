@@ -1,0 +1,30 @@
+﻿@model IncRequestPurchase
+
+@{
+    ViewData["Title"] = "Request Purchases Order Detail";
+    ViewData["MenuKey"] = "Purchase Order";
+}
+
+<partial name="DetailRequestPurchaseOrder" />
+
+<partial name="DetailRequestPurchaseOrderProduct" />
+
+<div class="form-group text-end">
+    <form asp-action="Review" method="post">
+        <input asp-for="RequestId" hidden />
+        @if(Model.RequestStatus == "Applied")
+        {
+            <button type="submit" class="btn btn-primary">Review!</button>
+        }
+        <a asp-action="Index" class="btn btn-dark">Back to List</a>
+    </form>
+</div>
+
+@section Scripts{
+    <script>
+        $(function () {
+            $('#tbl-purchaseorderproductrequest').DataTable({
+            });
+        });
+    </script>
+}

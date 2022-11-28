@@ -1,0 +1,157 @@
+﻿@model PurchaseOrderViewModel
+
+@{
+    ViewData["Title"] = "Approval Purchase Order";
+    ViewData["MenuKey"] = "Purchase Order";
+}
+
+<div class="card" style="min-height:700px">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Request Purchases Order List</strong></h5>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr class="text-center">
+                    <th>
+                        Action
+                    </th>
+                    <th>
+                        Request Number
+                    </th>
+                    <th>
+                        Tenant
+                    </th>
+                    <th>
+                        Warehouse
+                    </th>
+                    <th>
+                        Division
+                    </th>
+                    <th>
+                        Product
+                    </th>
+                    <th>
+                        Quantity
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.IncRequestPurchases)
+                {
+                    <tr>
+                        <td class="text-center">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-outline-tertiary" data-bs-toggle="dropdown"><i class="fas fa-fw fa-ellipsis-h"></i></button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" asp-action="Detail" asp-route-RequestId="@item.RequestId">Details</a></li>
+                                    @if(item.RequestStatus == "Reviewed")
+                                    {
+                                        <li ><button class="dropdown-item btn-approval" data-id="@item.RequestId" data-status="Approved" type="button">Approve All Product</button></li>
+                                        <li ><button class="dropdown-item btn-approval brn-danger" data-id="@item.RequestId" data-status="Rejected" type="button">Reject All Product</button></li>
+                                    }
+                                </ul>
+                            </div>
+                        </td>
+                        <td class="text-center">
+                            @Html.DisplayFor(modelItem => item.RequestNumber)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.MasDataTenant.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.MasDataTenantWarehouse.MasHouseCode.HouseName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.masDataTenantDivision.Name)
+                        </td>
+                        <td class="text-center">
+                            @Html.DisplayFor(modelItem => item.IncRequestPurchaseProducts.Count)
+                        </td>
+                        <td>
+                            <ul class="list-group">
+                                <li class="d-flex justify-content-between align-items-center">
+                                    Req
+                                    <span class="badge bg-light text-dark rounded-pill">@item.IncRequestPurchaseProducts.Sum(m => m.Quantity)</span>
+                                </li>
+                                <li class="d-flex justify-content-between align-items-center">
+                                    Pro
+                                    <span class="badge bg-light text-dark rounded-pill">@item.IncRequestPurchaseProducts.Sum(m => m.ApprovedQuantity)</span>
+                                </li>
+                            </ul>
+                        </td>
+                        <td class="text-center">
+                            @if(item.RequestStatus == "Request")
+                            {
+                                <span>@item.RequestStatus</span>
+                            }
+                            @if(item.RequestStatus == "Applied")
+                            {
+                                <span class="badge bg-secondary">@item.RequestStatus</span>
+                            }
+                            @if(item.RequestStatus == "Reviewed")
+                            {
+                                <span class="badge bg-info">@item.RequestStatus</span>
+                            }
+                            @if(item.RequestStatus == "Approved")
+                            {
+                                <span class="badge bg-primary">@item.RequestStatus</span>
+                            }
+                            @if(item.RequestStatus == "Issued")
+                            {
+                                <span class="badge bg-success">@item.RequestStatus</span>
+                            }
+                            @if(item.RequestStatus == "Rejected")
+                            {
+                                <span class="badge bg-danger">@item.RequestStatus</span>
+                            }
+                            @if(item.RequestStatus == "Canceled")
+                            {
+                                <span class="badge bg-dark">@item.RequestStatus</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+<form id="form-approval" asp-action="Approval">
+    <input type="hidden" asp-for="IncRequestPurchase.RequestId" />
+    <input type="hidden" asp-for="IncRequestPurchase.RequestStatus" />
+</form>
+
+@section Scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $( document ).ready(function() {
+            $('.table').DataTable({
+            });
+        });
+
+        $('.btn-approval').click(function(e){
+            swal({
+                title:"Are you sure?",
+                text:"Are you sure you want to reject this record?",
+                icon:"warning",
+                buttons:true,
+                dangerMode:true
+            }).then((confirm) =>{
+                if(confirm){
+                    $('input[name="IncRequestPurchase.RequestId"]').val($(this).data("id"));
+                    $('input[name="IncRequestPurchase.RequestStatus"]').val($(this).data("status"));
+                    $('#form-approval').submit();
+                }
+            });
+        });
+    </script>
+}

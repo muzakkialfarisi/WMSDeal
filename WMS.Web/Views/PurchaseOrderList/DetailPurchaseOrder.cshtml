@@ -1,0 +1,121 @@
+﻿@model DeliveryOrderViewModel
+
+<div class="card">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Details</strong></h5>
+            </div>
+            <a class="btn btn-primary btn-md px-2" asp-controller="Print" asp-action="PurchaseOrderManifest" asp-route-PONumber="@Model.incPurchaseOrder.PONumber" target="_blank">
+                <i class="fas fa-fw fa-print"></i>
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <table class="table table-sm table-borderless p-0 m-0">
+            <tbody>
+                <tr>
+                    <td>
+                        PO Number
+                    </td>
+                    <td>
+                        : @Model.incPurchaseOrder.PONumber
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Tenant
+                    </td>
+                    <td>
+                        : @Model.incPurchaseOrder.MasDataTenant.Name
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Warehouse
+                    </td>
+                    <td>
+                        : @Model.incPurchaseOrder.MasDataTenantWarehouse.MasHouseCode.HouseName
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Division
+                    </td>
+                    <td>
+                        : @if (Model.incPurchaseOrder.TenantDivisionId.HasValue)
+                        {
+                            @Model.incPurchaseOrder.masDataTenantDivision.Name
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Created
+                    </td>
+                    <td>
+                        : @String.Format("{0:dd/MM/yyyy}", Model.incPurchaseOrder.DateCreated)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="align-baseline">
+                        Note
+                    </td>
+                    <td>
+                        : @Model.incPurchaseOrder.Note <br /><br />
+                    </td>
+                </tr>
+                <br />
+                <tr>
+                    <td>
+                        Supplier
+                    </td>
+                    <td>
+                        : @Model.incPurchaseOrder.MasSupplierData.Name
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Total Product
+                    </td>
+                    <td>
+                        : @Model.incPurchaseOrder.IncPurchaseOrderProducts.Count
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Total Price
+                    </td>
+                    <td>
+                        : @String.Format("{0:n0}", Model.incPurchaseOrder.IncPurchaseOrderProducts.Sum(m => m.SubTotal))
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Discount
+                    </td>
+                    <td>
+                        : @String.Format("{0:n0}", Model.incPurchaseOrder.Discount)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Tax
+                    </td>
+                    <td>
+                        : @String.Format("{0:n0}", Model.incPurchaseOrder.OrderTax)
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        Total
+                    </th>
+                    <th>
+                        : @String.Format("{0:n0}", (Model.incPurchaseOrder.IncPurchaseOrderProducts.Sum(m => m.SubTotal) + Model.incPurchaseOrder.OrderTax - Model.incPurchaseOrder.Discount))
+                    </th>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+</div>

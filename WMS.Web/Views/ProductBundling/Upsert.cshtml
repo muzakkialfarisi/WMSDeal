@@ -1,0 +1,175 @@
+﻿@model ProductBundlingCreateViewModel
+
+@{
+    ViewData["Title"] = "Product Bundling";
+    ViewData["MenuKey"] = "Product";
+}
+
+@{
+    var active_pb = "active";
+    var active_product = string.Empty;
+
+    if (Model.masProductBundling != null)
+    {
+        active_pb = string.Empty;
+        active_product = "active";
+    }
+}
+
+<div class="row">
+    <div class="col-12 col-sm-6 mb-3">
+
+        <div class="card tab bg-transparent p-0 m-0">
+            <div class="card-header p-0 m-0">
+                <ul class="nav nav-tabs bg-light w-100 text-center font-weight-bold" role="tablist">
+                    <li class="nav-item w-50">
+                        <a class="nav-link @active_pb" href="#tab-1" data-bs-toggle="tab" role="tab" aria-selected="false">
+                            Product Bundling <br /> Details
+                        </a>
+                    </li>
+                    @if (Model.masProductBundling != null)
+                    {
+                        <li class="nav-item w-50">
+                            <a class="nav-link @active_product" href="#tab-2" data-bs-toggle="tab" role="tab" aria-selected="false">
+                                Product <br /> List
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+            <div class="card-body p-0 m-0">
+                <div class="tab-content">
+                    <div class="tab-pane @active_pb" id="tab-1" role="tabpanel">
+                        <form asp-action="Upsert" method="post">
+                            <partial name="UpsertBundling" />
+                        </form>
+                    </div>
+                    @if (Model.masProductBundling != null)
+                    {
+                        <div class="tab-pane @active_product" id="tab-2" role="tabpanel">
+                            <partial name="ProductList" />
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="d-grid gap-2 mt-3">
+            <a asp-action="Index" class="btn btn-dark">Back to List</a>
+        </div>
+    </div>
+    <div class="col-12 col-sm-6">
+        @if (Model.masProductBundling != null)
+        {
+            <partial name="UpsertBundlingData" />
+        }
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(function () {
+            $('#tbl-productlist').DataTable({
+                lengthMenu: [
+                    [5, 10],
+                    [5, 10],
+                ],
+            });
+
+            $('#tbl-bundlingdata').DataTable({
+            });
+        });
+
+        function UpsertProduct(BundlingId, ProductId, Field, event) {
+            var model = "";
+
+            if (Field == "AddProduct") {
+                model = "BundlingId=" + BundlingId + "&ProductId=" + ProductId + "&Quantity=1" + "&Type=" + true;
+            }
+            if (Field == "UpdateQuantity") {
+                model = "BundlingId=" + BundlingId + "&ProductId=" + ProductId + "&Quantity=" + event.target.value + "&Type=" + false;
+            }
+            else if (Field == "DeleteProduct") {
+                model = "BundlingId=" + BundlingId + "&ProductId=" + ProductId + "&Quantity=" + 0 + "&Type=" + false;
+            }
+
+            $.ajax({
+                url: '../../ProductBundling/UpsertData',
+                type: 'POST',
+                dataType: 'json',
+                data: model,
+                success: function (data) {
+                    if (data.statusCode == 200) {
+
+                        $("#tbl-bundlingdata").DataTable().clear().draw();
+                        data = data.value.masProductBundlingDatas;
+
+                        var dataTable = $("#tbl-bundlingdata").dataTable().api();
+                        var Quantity = 0;
+
+                        for (let i = 0; i < data.length; i++) {
+                            Quantity = Quantity + data[i].quantity;
+
+                            tr = document.createElement("tr");
+                            tr.innerHTML = '' +
+                                '<tr>' +
+                                '<td class="text-center">' +
+                                '<button onclick="UpsertProduct(\'' + data[i].bundlingId + '\',\'' + data[i].productId + '\',\'' + 'DeleteProduct' + '\', event)" class="btn btn-outline-danger btn-sm"><i class="far fa-fw fa-trash-alt"></i></button>' +
+                                '</td>' +
+                                '<td class="text-center">' +
+                                '<img src="../../../img/product/' + data[i].masProductData.beautyPicture + '" class="rounded-circle" height="50" width="50"/>' +
+                                '</td>' +
+                                '<td>' +
+                                data[i].masProductData.productName + '<br>' +
+                                '<strong class="text-primary">' + data[i].masProductData.sku + '</strong> <br>' +
+                                data[i].masProductData.productCondition +
+                                '</td>' +
+                                '<td class="text-center">' +
+                                '<input onchange="UpsertProduct(\'' + data[i].bundlingId + '\',\'' + data[i].productId + '\',\'' + 'UpdateQuantity' + '\', event)" name="Quantity" value="' + data[i].quantity + '" size="3" style="text-align:center">' +
+                                '</td>' +
+                                '<td>' +
+                                data[i].masProductData.unit +
+                                '</td>' +
+                                '</tr>';
+
+                            dataTable.row.add(tr);
+                            dataTable.draw();
+                        }
+
+                        $('#Count').html(data.length)
+                        $('#Quantity').html(Quantity)
+
+                        toastr.success('Product berhasil diupdate', '', {
+                            positionClass: 'toast-top-right',
+                            closeButton: false,
+                            progressBar: false,
+                            newestOnTop: true,
+                            rtl: $("body").attr("dir") === "rtl" || $("html").attr("dir") === "rtl",
+                            timeOut: 3000
+                        });
+                    }
+                    else {
+                        toastr.error(data.value, '', {
+                            positionClass: 'toast-top-right',
+                            closeButton: false,
+                            progressBar: false,
+                            newestOnTop: true,
+                            rtl: $("body").attr("dir") === "rtl" || $("html").attr("dir") === "rtl",
+                            timeOut: 3000
+                        });
+                    }
+                },
+                error: function (response) {
+                    toastr.error("Internal Server Error!", '', {
+                        positionClass: 'toast-top-right',
+                        closeButton: false,
+                        progressBar: false,
+                        newestOnTop: true,
+                        rtl: $("body").attr("dir") === "rtl" || $("html").attr("dir") === "rtl",
+                        timeOut: 3000
+                    });
+                }
+            });
+        }
+    </script>
+}

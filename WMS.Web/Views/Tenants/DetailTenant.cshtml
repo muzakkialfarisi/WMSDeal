@@ -1,0 +1,91 @@
+﻿@model MasDataTenant
+
+
+<div class="card">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Details</strong></h5>
+            </div>
+            <div>
+                <div class="input-group">
+                    <button type="button" class="btn btn-outline-tertiary btn-sm" data-bs-toggle="dropdown"><i class="fas fa-fw fa-ellipsis-h"></i></button>
+                    <div class="dropdown-menu">
+                        <button type="button" class="dropdown-item" data-id="@Model.TenantId" disabled>Edit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+
+        <div class="text-center m-3">
+            <img src="~/img/tenant/@Model.ProfileImageUrl" class="rounded-circle img-thumbnail" height="50" width="50" alt="Logo" />
+            @Model.Name
+        </div>
+        <table class="table table-sm table-borderless p-0 m-0">
+            <tbody>
+                <tr>
+                    <td class="text-nowrap">
+                        Office Phone
+                    </td>
+                    <td>
+                        : @Model.OfficePhone
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">
+                        Phone Number
+                    </td>
+                    <td>
+                        : @Model.PhoneNumber
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Email
+                    </td>
+                    <td>
+                        : @Model.EmailAddress
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Warehouses
+                    </td>
+                    <td>
+                        : @Model.MasDataTenantWarehouses.Count
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Suppliers
+                    </td>
+                    <td>
+                        : @Model.MasSupplierDatas.Count
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Store
+                    </td>
+                    <td>
+                        : @Model.MasStores.Count
+                    </td>
+                </tr>
+                <tr>
+                    <td class="align-baseline">
+                        Address
+                    </td>
+                    <td>
+                        :   @Model.Address, @Model.MasKelurahan.KelName,
+                        @Model.MasKelurahan.MasKecamatan.KecName,
+                        @Model.MasKelurahan.MasKecamatan.MasKabupaten.KabName,
+                        @Model.MasKelurahan.MasKecamatan.MasKabupaten.MasProvinsi.ProName,
+                        @Model.KodePos.
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

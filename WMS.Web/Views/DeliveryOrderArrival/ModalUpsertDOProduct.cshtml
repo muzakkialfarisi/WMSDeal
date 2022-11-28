@@ -1,0 +1,29 @@
+﻿<div class="modal fade" id="ModalUpsertDeliveryOrderProduct" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+            <form asp-action="UpdateQuantity" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Update Product Quantity</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <input name="DONumber" hidden />
+                    <input name="TenantId" hidden />
+                    <input name="DOProductId" hidden />
+
+                    <div class="my-3 form-group required">
+                        <label class="control-label">Quantity</label>
+                        <input name="Quantity" class="form-control" required>
+                        <span class="text-danger field-validation-valid" data-valmsg-for="Quantity" data-valmsg-replace="true"></span>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                    <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

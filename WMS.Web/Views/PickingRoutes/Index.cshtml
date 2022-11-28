@@ -1,0 +1,158 @@
+﻿@model PickingRouteViewModel
+
+@{
+    ViewData["Title"] = "Picking Routes";
+    ViewData["MenuKey"] = "Storage";
+}
+
+
+<div class="card" style="min-height:700px">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center py-1">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>List Route</strong></h5>
+            </div>
+            <div>
+                <a class="btn btn-outline-primary btn-pill"asp-action="IndexWarehouse" >Add New</a>
+            </div>
+        </div>
+    </div><br />
+    <div class="card-body">
+        <div class="table-responsive">
+
+            <table class="table table-striped">
+                <thead>
+                    <tr class="text-center">
+                        <th>
+                            Route Code 
+                        </th>
+                        <th>
+                            Name
+                        </th>
+                        <th>
+                            Warehouse
+                        </th>
+                        <th>
+                            Log
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                        <th>
+                            Action
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var item in Model.invPickingRoutes) {
+                    <tr>
+                        
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.HouseCode" asp-route-routecode="@item.RouteCode" class="nav-link">
+                                <div>
+                                    @item.RouteCode
+                                </div>
+                            </a>
+                        </td>                        
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.HouseCode" asp-route-routecode="@item.RouteCode" class="nav-link">
+                                <div>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </div>
+                            </a>
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.HouseCode" class="nav-link">
+                                <div>
+                                    @Html.DisplayFor(modelItem => item.MasHouseCode.HouseName)
+                                </div>
+                            </a>
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.HouseCode" asp-route-routecode="@item.RouteCode" class="nav-link">
+                                <div>
+                                    @if(item.UpdatedBy != "")
+                                    {
+                                        @Html.DisplayFor(modelItem => item.Log) <br />
+                                        @Html.DisplayFor(modelItem => item.UpdatedBy) <br />
+                                        @Html.DisplayFor(modelItem => item.DateUpdated)
+                                    }else{
+                                        @Html.DisplayFor(modelItem => item.Log) <br />
+                                        @Html.DisplayFor(modelItem => item.CreatedBy) <br />
+                                        @Html.DisplayFor(modelItem => item.DateCreated)
+                                    }
+                                </div>
+                            </a>
+                        </td>
+                        <td class="text-center">
+                            <a asp-action="Edit" asp-route-id="@item.HouseCode" asp-route-routecode="@item.RouteCode" class="nav-link">
+                                <div>
+                                    @if (item.Flag == FlagEnum.Active)
+                                    {
+                                        <span class="badge bg-success"> @Html.DisplayFor(modelItem => item.Flag)</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger"> @Html.DisplayFor(modelItem => item.Flag)</span>
+                                    }
+                                </div>
+                            </a>
+                        </td>
+                        <td>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-outline-tertiary" data-bs-toggle="dropdown"><i class="fas fa-fw fa-ellipsis-h"></i></button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" asp-action="Edit" asp-route-id="@item.HouseCode" asp-route-routecode="@item.RouteCode">Edit</a></li>
+                                    @if(item.Flag == FlagEnum.Active)
+                                    {
+                                        <li ><button class="dropdown-item btn-activation" data-id="@item.RouteCode" data-flag="@FlagEnum.Active" type="button">Deactivate</button></li>
+                                    }
+                                    else
+                                    {
+                                        <li ><button class="dropdown-item btn-activation" data-id="@item.RouteCode" data-flag="@FlagEnum.NonActive" type="button">Activate</button></li>
+                                    }
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+<form asp-action="ActivationUpdate" id="ActivationUpdate">
+    <input asp-for="invPickingRoute.Flag" type="hidden" />
+    <input asp-for="invPickingRoute.RouteCode" type="hidden" />
+</form>
+
+@section Scripts{
+    <script>
+        $(function(){
+            $('.table').DataTable({
+            });
+        });
+    </script>
+
+    <script>
+        $('.btn-activation').on('click', function () {
+            swal({
+                title:"Are you sure?",
+                text:"Are you sure you want to delete this record?",
+                icon:"warning",
+                buttons:true,
+                dangerMode:true
+            }).then((confirm) =>{
+                if(confirm){
+                    console.log($(this).data('id'));
+                    console.log($(this).data('flag'));
+                    $("input[name='invPickingRoute.RouteCode']").val($(this).data('id'));
+                    $("input[name='invPickingRoute.Flag']").val($(this).data('flag'));
+                    $('#ActivationUpdate').submit();
+                }
+            });
+        });
+    </script>
+}

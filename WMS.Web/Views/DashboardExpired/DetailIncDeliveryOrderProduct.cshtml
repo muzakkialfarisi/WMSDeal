@@ -1,0 +1,110 @@
+﻿@model MasProductData
+
+
+<div class="card">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Products</strong></h5>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        @if(Model.ProductLevel == "IKU")
+        {
+            <table class="table table-striped" id="tbl-iku">
+                <thead>
+                    <tr>
+                        <th>
+                            IKU
+                        </th>
+                        <th>
+                            Storage
+                        </th>
+                        <th>
+                            Expired Date
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for(int i = 0; i < Model.IncDeliveryOrderProducts.Count; i++)
+                    { 
+                        @if(Model.IncDeliveryOrderProducts[i].IncItemProducts.Any())
+                        {
+                            @for(int j = 0; j < Model.IncDeliveryOrderProducts[i].IncItemProducts.Count; j++)
+                            {
+                                <tr>
+                                    <td>
+                                        @Model.IncDeliveryOrderProducts[i].IncItemProducts[j].IKU
+                                    </td>
+                                    <td>
+                                        @{
+                                            var housecode = User.FindFirst("HouseCode")?.Value;
+                                            var zonecode = Model.IncDeliveryOrderProducts[i].IncItemProducts[j].InvStorageCode.InvStorageBin.InvStorageLevel.InvStorageColumn.InvStorageRow.ZoneCode;
+                                            var rowcode = Model.IncDeliveryOrderProducts[i].IncItemProducts[j].InvStorageCode.InvStorageBin.InvStorageLevel.InvStorageColumn.RowCode.Substring(housecode.Length + zonecode.Length);
+                                            var levelcode = Model.IncDeliveryOrderProducts[i].IncItemProducts[j].InvStorageCode.InvStorageBin.LevelCode.Substring(housecode.Length + zonecode.Length + rowcode.Length);
+                                            var bincode = Model.IncDeliveryOrderProducts[i].IncItemProducts[j].InvStorageCode.BinCode.Substring(housecode.Length + zonecode.Length + rowcode.Length + levelcode.Length);
+                                                <span>@housecode - @zonecode - @rowcode - @levelcode / @bincode</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @String.Format("{0:dd/MM/yyyy}", Model.IncDeliveryOrderProducts[i].DateOfExpired)
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+        }
+               
+
+        @if(Model.ProductLevel == "SKU")
+        {
+            <table class="table table-striped" id="tbl-sku">
+                <thead>
+                    <tr>
+                        <th>
+                            DONumber
+                        </th>
+                        <th>
+                            Storage
+                        </th>
+                        <th>
+                            Expired Date
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for(int i = 0; i < Model.IncDeliveryOrderProducts.Count; i++)
+                    { 
+                        @if(Model.IncDeliveryOrderProducts[i].IncDeliveryOrderArrivals.InvProductPutaways.Any())
+                        {
+                            @for(int j = 0; j < Model.IncDeliveryOrderProducts[i].IncDeliveryOrderArrivals.InvProductPutaways.Count; j++)
+                            {
+                                <tr>
+                                    <td>
+                                        @Model.IncDeliveryOrderProducts[i].DONumber
+                                    </td>
+                                    <td>
+                                        @{
+                                            var housecode = User.FindFirst("HouseCode")?.Value;
+                                            var zonecode = Model.IncDeliveryOrderProducts[i].IncDeliveryOrderArrivals.InvProductPutaways[j].InvStorageCode.InvStorageBin.InvStorageLevel.InvStorageColumn.InvStorageRow.ZoneCode;
+                                            var rowcode = Model.IncDeliveryOrderProducts[i].IncDeliveryOrderArrivals.InvProductPutaways[j].InvStorageCode.InvStorageBin.InvStorageLevel.InvStorageColumn.RowCode.Substring(housecode.Length + zonecode.Length);
+                                            var levelcode = Model.IncDeliveryOrderProducts[i].IncDeliveryOrderArrivals.InvProductPutaways[j].InvStorageCode.InvStorageBin.LevelCode.Substring(housecode.Length + zonecode.Length + rowcode.Length);
+                                            var bincode = Model.IncDeliveryOrderProducts[i].IncDeliveryOrderArrivals.InvProductPutaways[j].InvStorageCode.BinCode.Substring(housecode.Length + zonecode.Length + rowcode.Length + levelcode.Length);
+                                                <span>@housecode - @zonecode - @rowcode - @levelcode / @bincode</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @String.Format("{0:dd/MM/yyyy}", Model.IncDeliveryOrderProducts[i].DateOfExpired)
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>

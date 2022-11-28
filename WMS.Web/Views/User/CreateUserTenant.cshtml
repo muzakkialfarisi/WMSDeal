@@ -1,0 +1,37 @@
+﻿@model UserViewModel
+
+<div class="modal fade" id="CreateTenant" tabindex="-1" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Tenant</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-action="CreateUserTenant" method="post">
+                <div class="modal-body m-3">
+
+                    <input asp-for="UserId" hidden />
+                    <div class="form-group required">
+                        <label class="control-label">User Name</label>
+                        <input asp-for="UserName" class="form-control" readonly />
+                        <span asp-validation-for="UserName" class="text-danger"></span>
+                    </div><br />
+                    <div class="form-group required">
+                        <label class="control-label">Tenant</label>
+                        <select name="TenantId" class="form-control select2" data-bs-toggle="select2" asp-items="ViewBag.TenantId" required>
+                            <option disabled selected value="">Select...</option>
+                        </select>
+                    </div><br />
+
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group">
+                        <input type="submit" value="Save" class="btn btn-primary" />
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>

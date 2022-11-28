@@ -1,0 +1,112 @@
+﻿@model IEnumerable<InvStockOpname>
+
+@{
+    ViewData["Title"] = "Stock Opname";
+    ViewData["MenuKey"] = "Stock Opname";
+}
+
+<div class="card" style="min-height:700px">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Stock Opname</strong></h5>
+            </div>
+            <div>
+                <a class="btn btn-outline-primary btn-pill" asp-action="Upsert"> Create Opname </a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+
+            <table class="table table-striped">
+                <thead>
+                    <tr class="text-center">
+                        <th>
+                            Action
+                        </th>
+                        <th>
+                            OpnameId
+                        </th>
+                        <th>
+                            Tenant
+                        </th>
+                        <th>
+                            Warehouse
+                        </th>
+                        <th>
+                            Product
+                        </th>
+                        <th>
+                            Opname By
+                        </th>
+                        <th>
+                            Opname Created
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="text-center">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-outline-tertiary" data-bs-toggle="dropdown"><i class="fas fa-fw fa-ellipsis-h"></i></button>
+                                    <ul class="dropdown-menu">
+                                        @if (item.Status == SD.FlagOpname_Open)
+                                        {
+                                            <li><a class="dropdown-item" asp-action="Upsert" asp-route-OpnameId="@item.OpnameId">Edit</a></li>
+                                        }
+                                        else
+                                        {
+                                            <li><a class="dropdown-item" asp-action="Upsert" asp-route-OpnameId="@item.OpnameId">Detail</a></li>
+                                        }
+                                    </ul>
+                                </div>
+                            </td>
+                            <td>
+                                @item.OpnameId
+                            </td>
+                            <td>
+                                @item.MasDataTenant.Name
+                            </td>
+                            <td>
+                                @item.MasHouseCode.HouseName
+                            </td>
+                            <td>
+                                @item.InvStockOpnameProducts.Count
+                            </td>
+                            <td>
+                                @item.CreatedBy
+                            </td>
+                            <td>
+                                @String.Format("{0:dd/MM/yyyy}", item.DateCreated)
+                            </td>
+                            <td class="text-center">
+                                @if (item.Status == SD.FlagOpname_Open)
+                                {
+                                    <span class="badge bg-primary"> Ongoing </span>
+                                }
+                                @if (item.Status == SD.FlagOpname_Done)
+                                {
+                                    <span class="badge bg-success"> Done </span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $('.table').DataTable({
+        });
+    </script>
+}

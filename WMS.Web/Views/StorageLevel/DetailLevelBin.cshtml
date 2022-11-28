@@ -1,0 +1,80 @@
+﻿@model StorageViewModel
+
+<div class="card">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Storage Bins</strong></h5>
+            </div>
+            <div>
+                <a class="btn btn-outline-primary btn-pill btn-insertbin" data-id="@Model.invStorageLevel.LevelCode" data-bs-toggle="modal" data-bs-target="#modalupsertbin">Add Bin</a>
+            </div>
+        </div>
+    </div><br />
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped tbl-bin">
+                <thead>
+                    <tr class="text-center">
+                        <th>
+                            Action
+                        </th>
+                        <th>
+                            Bin
+                        </th>
+                        <th>
+                            Category
+                        </th>
+                        <th>
+                            Size
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.invStorageLevel.InvStorageBins)
+                    {
+                        <tr>
+                            <td class="text-center">
+                                <button type="button" class="btn btn-outline-tertiary btn-sm" data-bs-toggle="dropdown"><i class="fas fa-fw fa-ellipsis-h"></i></button>
+                                <ul class="dropdown-menu">
+                                    <li><button class="dropdown-item btn-updatebin" data-id="@item.BinCode" data-bs-toggle="modal" data-bs-target="#modalupsertbin">Edit</button></li>
+                                </ul>
+                            </td>
+                            <td class="text-nowrap">
+                                @item.BinName
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.InvStorageCode.InvStorageCategory.StorageCategoryName)
+                            </td>
+                            <td class="text-nowrap">
+                                <strong>@Html.DisplayFor(modelItem => item.InvStorageCode.InvStorageSize.SizeName)</strong><br>
+                                @item.InvStorageCode.InvStorageSize.InvStorageBesaran.MaxPanjang x @item.InvStorageCode.InvStorageSize.InvStorageBesaran.MaxLebar x @item.InvStorageCode.InvStorageSize.InvStorageTebal.MaxTinggi
+                            </td>
+                            <td class="text-center">
+                                @if (item.InvStorageCode.Flag == 0)
+                                {
+                                    <span class="badge bg-dark">Disable</span>
+                                }
+                                @if (item.InvStorageCode.Flag == 1)
+                                {
+                                    <span class="badge bg-success">Available</span>
+                                }
+                                @if (item.InvStorageCode.Flag == 2)
+                                {
+                                    <span class="badge bg-warning">Booked</span>
+                                }
+                                @if (item.InvStorageCode.Flag == 3)
+                                {
+                                    <span class="badge bg-primary">Unavailable</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

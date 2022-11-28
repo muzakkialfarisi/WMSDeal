@@ -1,0 +1,132 @@
+﻿* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+
+.track-main {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: pop;
+    flex-direction: column;
+}
+
+
+.track-main ul {
+    display: flex;
+    margin-top: 20px;
+}
+
+.track-main ul li {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+    .track-main ul li .icon {
+        font-size: 35px;
+        color: #00004d;
+        margin: 0 60px;
+    }
+
+    .track-main ul li .text {
+        font-size: 14px;
+        font-weight: 600;
+        color: #00004d;
+    }
+
+        /* Progress Div Css  */
+
+.track-main ul li .track-progress {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: rgba(68, 68, 68, 0.781);
+    margin: 14px 0;
+    display: grid;
+    place-items: center;
+    color: #fff;
+    position: relative;
+    cursor: pointer;
+}
+
+.track-progress::after {
+    content: " ";
+    position: absolute;
+    width: 150px;
+    height: 5px;
+    background-color: rgba(68, 68, 68, 0.781);
+    right: 30px;
+}
+
+.one::after {
+    width: 0;
+    height: 0;
+}
+
+.track-main ul li .track-progress .uil {
+    display: none;
+}
+
+.track-main ul li .track-progress p {
+    font-size: 20px;
+}
+
+/* Active Css  */
+
+.track-main ul li .active {
+    background-color: #2DD613;
+    display: grid;
+    place-items: center;
+}
+
+.track-li .active::after {
+    background-color: #2DD613;
+}
+
+.track-main ul li .active p {
+    display: none;
+}
+
+.track-main ul li .active .uil {
+    font-size: 20px;
+    display: flex;
+}
+
+/* Responsive Css  */
+
+@media (max-width: 980px) {
+    .track-main ul {
+        flex-direction: column;
+    }
+
+    .track-main ul li {
+        flex-direction: row;
+    }
+
+        .track-main ul li .track-progress {
+            margin: 0 30px;
+        }
+
+    .track-progress::after {
+        width: 5px;
+        height: 55px;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: -1;
+    }
+
+    .one::after {
+        height: 0;
+    }
+
+    .track-main ul li .icon {
+        margin: 15px 0;
+    }
+}

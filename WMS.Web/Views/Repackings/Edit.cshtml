@@ -1,0 +1,68 @@
+﻿
+@model RepackAndRelableViewModel
+
+@{
+    ViewData["Title"] = "Repacking";
+    ViewData["MenuKey"] = "Pick and Pack";
+}
+
+<form asp-action="Edit" method="post">
+    <input asp-for="invRepacking.Id" type="hidden" />
+    <div class="row">
+        <div class="col-12 col-sm-6">
+            <partial name="CreateRepack" />
+        </div>
+        <div class="col-12 col-sm-6">
+            <partial name="ProductDetail" />
+        </div>
+    </div>
+
+    <div class="form-group text-end">
+        <a asp-action="Index" class="btn btn-dark">Back to List</a>
+        <button type="submit" class="btn btn-success">Save</button>
+    </div>
+</form>
+
+@section Scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(function(){
+            $('.span-notfound').hide();
+            $('.div-invRepacking_DOProductId').hide();
+            $('select[name="invRepacking.ProductId"]').attr("readonly", true)
+
+            $.ajax({
+                url: '@Url.Action("GetProductByDOProductId","Repackings")',
+                type: 'GET',
+                data: {
+                    DOProductId:$("#invRepacking_DOProductId").val(),
+                },
+                success: function (data) {
+                    $('.ProductDetail').show();
+                    $('.incDeliveryOrderProduct_Picture').attr("src", "../../../img/product/"+data.incDeliveryOrderProduct.masProductData.beautyPicture);
+                    $('.incDeliveryOrderProduct_ProductName').html(data.incDeliveryOrderProduct.masProductData.sku + '<br>' + data.incDeliveryOrderProduct.masProductData.productName);
+                    $('.incDeliveryOrderProduct_DateCreated').html(data.incDeliveryOrderProduct.incDeliveryOrder.dateCreated);
+                    $('.incDeliveryOrderProduct_Quantity').html(data.incDeliveryOrderProduct.quantity);
+
+                    let count = 0;
+                    for(let i = 0; i < data.invRepackings.length; i++){
+                        count = count + data.invRepackings[i].quantity;
+                    }
+
+                    $('.sum_Quantity').html(count);
+                    
+                    var now_qty = $('#invRepacking_Quantity').val();
+                    $('#invRepacking_Quantity').attr("max", data.incDeliveryOrderProduct.quantity-(count-now_qty));
+                },
+                error: function (response) {
+                    console.log(response.responseText);
+                }
+            });
+
+            $('.table').DataTable({
+
+            });
+
+        });
+    </script>
+}

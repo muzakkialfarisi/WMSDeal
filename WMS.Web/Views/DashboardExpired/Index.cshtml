@@ -1,0 +1,103 @@
+﻿@model IEnumerable<MasProductData> 
+
+@{
+    ViewData["Title"]   = "Expired Control";
+    ViewData["MenuKey"] = "Dashboards";
+}
+
+<div class="card" style="min-height:700px">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Product List</strong></h5>
+            </div>
+        </div>
+    </div>
+	<div class="card-body">
+		<div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr class="text-center">
+                        <th>
+                            Action
+                        </th>
+                        <th>
+                            Picture
+                        </th>
+                        <th>
+                            Product
+                        </th>
+                        <th>
+                            Tenant
+                        </th>
+                        <th>
+                            Expired Date
+                        </th>
+                        <th>
+                            Expired Days
+                        </th>
+                        <th>
+                            Stock
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="text-center">
+                                    <button type="button" class="btn btn-outline-tertiary" data-bs-toggle="dropdown"><i class="fas fa-fw fa-ellipsis-h"></i></button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" asp-action="Detail" asp-route-ProductId="@item.ProductId">Details</a></li>
+                                    </ul>
+                                </td>
+                                <td class="text-center">
+                                    <img src="~/img/product/@item.BeautyPicture" class="rounded-circle" height="40" width="40" asp-append-version="true" /> <br> @item.ProductLevel
+                                </td>
+                                <td>
+                                    @item.ProductName<br>
+                                    <span class="text-primary">@item.SKU</span>
+                                </td>
+                                <td>
+                                    @item.MasDataTenant.Name
+                                </td>
+                                <td>
+                                    @if (item.IncDeliveryOrderProducts.Any(m => m.IncItemProducts.Any(m => m.Status == 3 || m.Status == 4)) || item.IncDeliveryOrderProducts.Any(m => m.IncDeliveryOrderArrivals.InvProductPutaways.Any(m => m.QtyStock > 0)))
+                                    {
+                                        <span>@String.Format("{0:dd/MM/yyyy}", item.IncDeliveryOrderProducts.FirstOrDefault().DateOfExpired)</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.IncDeliveryOrderProducts.Any(m => m.IncItemProducts.Any(m => m.Status == 3 || m.Status == 4)) || item.IncDeliveryOrderProducts.Any(m => m.IncDeliveryOrderArrivals.InvProductPutaways.Any(m => m.QtyStock > 0)))
+                                    {
+                                        int temp = DateTime.Now.Subtract(item.IncDeliveryOrderProducts.FirstOrDefault().DateOfExpired).Days * -1;
+                                        <span>@temp</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.InvProductStocks.Any())
+                                    {
+                                        <span>@item.InvProductStocks.FirstOrDefault().Stock</span>
+                                    }
+                                    else
+                                    {
+                                        <span>0</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                </tbody>
+            </table>
+        </div>
+	</div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        $(function () {
+            $('.table').DataTable({
+                order: [[3, 'asc']],
+            });
+        });
+    </script>
+}

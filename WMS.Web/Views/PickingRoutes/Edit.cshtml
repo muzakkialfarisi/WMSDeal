@@ -1,0 +1,90 @@
+﻿@model PickingRouteViewModel
+
+<form asp-action="Edit">
+    <partial name="CreatePickingRoute" />
+
+    <div class="card">
+        <div class="card-header text-center">
+            <div class="row">
+                <h5>Progress Bar</h5>
+            </div>
+             <div class="row">
+                <div class="progress mb-3">
+                    @{
+                        float total = Model.invPickingRouteColumns.Count() + Model.invStorageColumns.Count();
+                        float progress = (Model.invPickingRouteColumns.Count() / total) * 100;
+            
+		                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: @progress%"
+			            aria-valuenow="@progress" aria-valuemin="0" aria-valuemax="@total">@progress %</div>
+                    }
+	            </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-12 col-sm-6">
+            <partial name="ColumnList" />
+        </div>
+        <div class="col-12 col-sm-6">
+            <partial name="CreatePickingRouteColumn" />
+        </div>
+    </div>
+
+    <div class="text-center">
+        <button type="submit" class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="top" title="Please select any column"><i class="align-middle me-2 fas fa-fw fa-angle-double-right" disabled></i>Rutekan</button>
+    </div>    
+
+</form>
+    
+<form asp-action="DeleteInvPickingRouteColumns" id="DeleteInvPickingRouteColumns">
+    <input asp-for="invPickingRouteColumn.RouteColumn" type="hidden"/>
+</form>
+
+<form asp-action="UpdateInsertInvPickingRouteColumns" id="UpdateInsertInvPickingRouteColumns">
+    <input asp-for="invPickingRouteColumn.RouteColumn" type="hidden"/>
+    <input asp-for="invPickingRoute.Log" type="hidden" />
+</form>
+
+@section Scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(function(){ 
+            $('.table').DataTable({
+                "lengthMenu": [5, 10],
+                "pageLength": 5
+            });
+
+            if($('#invPickingRoute_RouteCode').val() != "" && $('#invPickingRoute_Name').val() != ""){
+                $('input[name*="invPickingRouteColumn.RouteCode"]').val($('#invPickingRoute_RouteCode').val());
+                $('#invPickingRoute_RouteCode, #invPickingRoute_Name').prop('readonly', true);
+                $('.input-group-text').hide();
+            }
+
+            if($('input[name*="invPickingRouteColumn.RouteCode"]' ).length < 1){
+                $('button[type="submit"]').hide();
+            }
+        });
+    </script>
+
+    <script>
+        $("#invPickingRoute_RouteCode").change(function(){
+            $('input[name*="invPickingRouteColumn.RouteCode"]' ).val($(this).val());
+        });
+
+        $('input[type=radio]').change(function() {
+            $('button[type="submit"]').prop('disabled', false);
+        });
+
+        $('.updateButton').on('click', function () {
+            $('input[name*="invPickingRoute.Log"]').val($(this).data('type'));
+            $('input[name*="invPickingRouteColumn.RouteColumn"]').val($(this).data('id'));
+            $('#UpdateInsertInvPickingRouteColumns').submit();
+        });  
+
+        $('.delButton').on('click', function () {
+            $('input[name*="invPickingRouteColumn.RouteColumn"]').val($(this).data('id'));
+            $('#DeleteInvPickingRouteColumns').submit();
+        });            
+    </script>
+}

@@ -1,0 +1,128 @@
+﻿@model IncDeliveryOrder
+
+<div class="card">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center">
+            <div class="flex-grow-1 ps-3">
+                <h5 class="card-title"><strong>Details</strong></h5>
+            </div>
+            <a class="btn btn-primary btn-md px-2" asp-controller="Print" asp-action="DeliveryOrderManifest" asp-route-DONumber="@Model.DONumber" target="_blank">
+                <i class="fas fa-fw fa-print"></i>
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <table class="table table-sm table-borderless p-0 m-0">
+            <tbody>
+                <tr>
+                    <td>
+                        DO Number
+                    </td>
+                    <td>
+                        : @Model.DOSupplier
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        PO Number
+                    </td>
+                    <td>
+                        : @Model.PONumber
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Tenant
+                    </td>
+                    <td>
+                        : @Model.MasDataTenant.Name
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Warehouse
+                    </td>
+                    <td>
+                        : @Model.MasHouseCode.HouseName
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        DO Date
+                    </td>
+                    <td>
+                        : @String.Format("{0:dd/MM/yyyy}", Model.DateDelivered)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Supplier
+                    </td>
+                    <td>
+                        : @if (Model.MasSupplierData != null)
+                        {
+                            <span>@Model.MasSupplierData.Name</span>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td class="align-baseline">
+                        Note
+                    </td>
+                    <td>
+                        : @Model.Note <br /><br />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Delivered By
+                    </td>
+                    <td>
+                        : @String.Format("{0:n0}", Model.MasDeliveryOrderCourier.Name)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Person Id
+                    </td>
+                    <td>
+                        : @Model.KTP
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Name
+                    </td>
+                    <td>
+                        : @Model.Name
+                    </td>
+                </tr>
+                <tr>
+                    <td class="align-baseline">
+                        Shipping Cost
+                    </td>
+                    <td>
+                        : @String.Format("{0:n0}", Model.ShippingCost) <br /><br />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Total Product
+                    </td>
+                    <td>
+                        : @String.Format("{0:n0}", (Model.IncDeliveryOrderProducts.Count))
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        Total Quantity
+                    </th>
+                    <th>
+                        : @String.Format("{0:n0}", (Model.IncDeliveryOrderProducts.Sum(m => m.Quantity)))
+                    </th>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+</div>
